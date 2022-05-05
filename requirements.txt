@@ -1,0 +1,8 @@
+opencv_python==4.5.5.62
+transformers==4.18.0
+torch==1.10.2
+matplotlib==3.4.3
+requests==2.26.0
+pandas==1.3.2
+numpy==1.21.2
+Pillow==9.1.0
