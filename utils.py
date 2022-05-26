@@ -15,7 +15,13 @@ def compute_entropy(freqs: list):
 
 
 # ------------------------------------------------
-def read_json(path):
+def read_txt(path) -> list:
+    with open(path) as f:
+        data = f.read().split()
+    return data
+
+
+def read_json(path) -> dict:
     with open(path) as json_data:
         data = json.load(json_data)
     return data

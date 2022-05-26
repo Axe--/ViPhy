@@ -1,3 +1,4 @@
+import PIL
 import torch
 import numpy as np
 from PIL import Image
@@ -13,7 +14,7 @@ import transformers
 if transformers.__version__ == '4.18.0':
     from transformers import DPTFeatureExtractor, DPTForDepthEstimation
 elif transformers.__version__ == '4.18.0.dev0':
-    from transformers import OFATokenizer, OFAForConditionalGeneration
+    from transformers import OFATokenizer, OFAForConditionalGeneration, OFAModel
 
 from torchvision.transforms import Compose, Resize, ToTensor, Normalize
 
@@ -48,6 +49,9 @@ class OFA(nn.Module):
     mean = [0.5, 0.5, 0.5]
     std = [0.5, 0.5, 0.5]
 
+    # Monkey patch
+    OFAModel.padding_idx = 1
+
     def __init__(self, path, device='cpu'):
         super().__init__()
 
@@ -58,16 +62,18 @@ class OFA(nn.Module):
         self.model = OFAForConditionalGeneration.from_pretrained(path)
 
         # Processor
-        self.transform = Compose([lambda im: im.convert("RGB"),
+        self.transform = Compose([lambda img: img.convert("RGB"),
                                   Resize((self.size, self.size), Image.BICUBIC),
                                   ToTensor(), Normalize(self.mean, self.std)])
         # Device
         self.to(device)
 
+        self.device = device
+
     def forward(self, text: str, image: Image) -> str:
         # Process
-        text = self.tokenizer([text], return_tensors="pt")["input_ids"]
-        image = self.transform(image).unsqueeze(0)
+        text = self.tokenizer([text], return_tensors="pt")["input_ids"].to(self.device)
+        image = self.transform(image).unsqueeze(0).to(self.device)
 
         # Generate
         out = self.model.generate(inputs=text,
@@ -77,6 +83,39 @@ class OFA(nn.Module):
         # Decode
         out = self.tokenizer.batch_decode(out, skip_special_tokens=True)
         out = out[0].strip()
+
+        return out
+
+    def inference(self, batch_text: List[str], batch_image: List) -> List[str]:
+        """
+        Implements `forward()` at batch-level.
+        """
+        # Process
+        text = self.tokenizer(text=batch_text,
+                              padding=True,
+                              return_tensors='pt')
+        text = text['input_ids']
+
+        image = [self.transform(img) for img in batch_image]
+        image = torch.stack(image)
+
+        p_mask = torch.tensor([True] * len(image))
+
+        # To Device
+        text = text.to(self.device)
+        image = image.to(self.device)
+        p_mask = p_mask.to(self.device)
+
+        # Generate
+        out = self.model.generate(inputs=text,
+                                  patch_images=image,
+                                  patch_masks=p_mask,
+                                  num_beams=4,
+                                  max_length=8)
+
+        # Decode
+        out = self.tokenizer.batch_decode(out, skip_special_tokens=True)
+        out = [o.strip() for o in out]
 
         return out
 
@@ -118,38 +157,30 @@ class DepthTransformer(nn.Module):
         return depth
 
 
-def _plot(im: Image):
+def _plot(img: Image):
     # plt.figure(figsize=(14, 14))
-    plt.imshow(im)
+    plt.imshow(img)
     plt.show()
-
-
-# class SpellCorrector(nn.Module):
-#     def __init__(self):
-#         super().__init__()
-#         from textblob import TextBlob
-#         self.corrector = TextBlob
-#
-#     def forward(self, sent: str) -> str:
-#         return ' '.join([self.corrector(word) for word in sent.split()])
 
 
 if __name__ == '__main__':
     import requests
 
     url = 'https://image.cnbcfm.com/api/v1/image/107037293-IMG-9997.jpg?v=1648561728'
-    img = Image.open(requests.get(url, stream=True).raw)
+    im = Image.open(requests.get(url, stream=True).raw)
+    # _plot(im)
 
     txt = "what color is the mirror?"
 
     # Color
-    model = OFA(path='../OFA/OFA-large')
-    o = model(txt, img)
+    model = OFA(path='../OFA/OFA-large', device='cuda:0')
+    _o = model(txt, im)
+    print(_o)
 
-    print(o)
-    _plot(img)
+    o_b = model.inference([txt, txt], [im, im])
+    print(o_b)
 
     # Depth
     # model = DepthTransformer(device='cuda:0')
-    # o = model(img)
+    # o = model(im)
     # _plot(o)

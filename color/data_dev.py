@@ -35,16 +35,6 @@ IGNORE_IMAGE = ['2331541.jpg', '2416218.jpg', '2325661.jpg', '2330142.jpg', '240
                 '2315674.jpg', '2394940.jpg', '2325625.jpg', '2355831.jpg', '2324980.jpg', '2388284.jpg',
                 '2399366.jpg', '2407937.jpg', '2354396.jpg', '2397424.jpg', '2386421.jpg']
 
-# Map attributes to color
-ATTR2COLOR = {'gold': '', 'golden': '',
-              'blond': '', 'blonde': '',
-              'wooden': '', 'tan': '',
-              'beige': '', 'bronze': '',
-              'silver': '', 'metal': '',}
-
-COLOR_SET = ['red', 'orange', 'yellow', 'brown', 'green',
-             'blue', 'purple', 'pink', 'white', 'gray', 'black']
-
 
 class ColorDataDev:
     """
