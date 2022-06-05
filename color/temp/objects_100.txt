@@ -98,6 +98,3 @@ umbrella.n.01
 shoe.n.01
 helmet.n.02
 logo.n.01
-
-
-

@@ -1,4 +1,3 @@
-import PIL
 import torch
 import numpy as np
 from PIL import Image
@@ -11,12 +10,14 @@ from flair.models import SequenceTagger
 
 import transformers
 
-if transformers.__version__ == '4.18.0':
+# DPT
+if transformers.__version__ >= '4.19.0':
     from transformers import DPTFeatureExtractor, DPTForDepthEstimation
-elif transformers.__version__ == '4.18.0.dev0':
-    from transformers import OFATokenizer, OFAForConditionalGeneration, OFAModel
 
-from torchvision.transforms import Compose, Resize, ToTensor, Normalize
+# OFA
+if transformers.__version__ == '4.18.0.dev0':
+    from transformers import OFATokenizer, OFAForConditionalGeneration, OFAModel
+    from torchvision.transforms import Compose, Resize, ToTensor, Normalize
 
 
 class POSTagger(nn.Module):
@@ -27,18 +28,21 @@ class POSTagger(nn.Module):
         super().__init__()
         self.tagger = SequenceTagger.load("flair/pos-english")
 
-    def forward(self, sent: str) -> List[Dict]:
-        tokens = sent.split()
+    def forward(self, sent: str) -> Dict:
+        # Preprocess
+        words = sent.split()
 
         sent = Sentence(sent)
+
         # Tagging
         self.tagger.predict(sent)
 
         tags = [word.value for word in sent.labels]
 
-        token_tag_list = [dict(token=tok, tag=tag) for tok, tag in zip(tokens, tags)]
+        # Dict
+        token_tag_dict = {word: tag for word, tag in zip(words, tags)}
 
-        return token_tag_list
+        return token_tag_dict
 
 
 class OFA(nn.Module):

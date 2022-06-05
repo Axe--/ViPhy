@@ -2,26 +2,27 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from typing import List, Dict
-from utils import read_json, save_json
+from utils import read_json, compute_entropy, to_prob_dist
 
-# Map attributes to color
+
+# Map Attribute to Color
 ATTR2COLOR = {'gold': 'yellow', 'golden': 'yellow', 'blond': 'yellow', 'blonde': 'yellow',
               'wooden': 'brown', 'tan': 'brown', 'beige': 'yellow brown', 'bronze': 'brown',
-              'grey': 'gray', 'silver': 'gray', 'metal': 'gray', 'copper': 'brown',
+              'grey': 'gray', 'silver': 'gray', 'metal': 'gray', 'steel': 'gray', 'copper': 'brown',
               'peach': 'yellow pink', 'cream': 'yellow', 'violet': 'purple',
               'maroon': 'red', 'turquoise': 'blue', 'teal': 'blue green'}
 
 # Primary Colors
 COLOR_SET = ['red', 'orange', 'yellow', 'brown', 'green',
-             'blue', 'purple', 'pink', 'gray', 'black', 'white']
+             'blue', 'purple', 'pink', 'white', 'gray', 'black']
 
 
-def find_closest_color(rgb):
+def _nearest_color(rgb):
     """
     Compute closest color in RGB space (L2 distance).
 
     >>> col = [155, 155, 155]
-    >>> find_closest_color(col)
+    >>> _nearest_color(col)
     """
     # CSS_COLORS = ['green', 'deepskyblue', 'purple', 'hotpink', 'orange',
     #               'red', 'yellow', 'saddlebrown', 'gray', 'black', 'white']
@@ -62,9 +63,23 @@ def _map_pred_to_color(pred: Dict[str, int]) -> Dict[str, int]:
     return color2freq
 
 
-def _visualize(df: pd.DataFrame):
-    df.plot.bar(x='object', stacked=True, color=COLOR_SET,
-                edgecolor="lightgray", figsize=(40, 24), rot=90)
+def _visualize(_df: pd.DataFrame, color_set: List[str]):
+    # Replace color codes
+    def _rename(c):
+        c = c.replace('white', 'whitesmoke')
+        c = c.replace('blue', 'deepskyblue')
+        # c = c.replace('green', 'limegreen')
+        c = c.replace('gray', 'silver')
+        c = c.replace('brown', 'saddlebrown')
+        c = c.replace('pink', 'deeppink')
+        c = c.replace('purple', 'blueviolet')
+        return c
+
+    color_set = [_rename(color) for color in color_set]
+
+    # plot
+    _df.plot.bar(x='object', stacked=True, color=color_set,
+                 edgecolor="lightgray", figsize=(40, 24), rot=90)
     plt.xticks(fontsize=16)
     plt.legend(loc=(1.02, 0))
     plt.show()
@@ -72,13 +87,10 @@ def _visualize(df: pd.DataFrame):
 
 if __name__ == '__main__':
     # Read Raw Color data
-    raw_color_data = read_json('./obj_raw_colors_90.json')
+    raw_color_data = read_json('./temp/obj_raw_colors_90.json')
 
     data = []
     for obj in raw_color_data:
-        # Object Name
-        out = dict(object=obj['name'])
-
         # Primary Colors
         c2f = _map_pred_to_color(obj['raw_colors'])
 
@@ -86,12 +98,30 @@ if __name__ == '__main__':
         total = sum(c2f.values())
         c2f = {col: freq/total for col, freq in c2f.items()}
 
+        # Entropy
+        entropy = compute_entropy(freqs=list(c2f.values()))
+
+        # Store to dict
+        out = dict(object=obj['name'],
+                   entropy=entropy,
+                   total=total)
+
         out = {**out, **c2f}
 
         # Append
         data.append(out)
 
-    # Stacked Bar Plot
-    data = pd.DataFrame(data)
+    # Sort by Entropy
+    data = sorted(data, key=lambda x: x['entropy'])
 
-    _visualize(data)
+    # To DF
+    df = pd.DataFrame(data)
+
+    # Remove columns
+    df = df.drop(columns=['entropy', 'total'])
+
+    # Stacked Bar Plot
+    _visualize(df, COLOR_SET)
+
+    # TODO: Save DF as CSV
+    # pd.DataFrame(data).to_csv()

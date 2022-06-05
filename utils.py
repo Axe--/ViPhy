@@ -2,16 +2,36 @@ import time
 import json
 import torch
 from torch.distributions import Categorical
+from typing import List, Dict, Union
+from collections import OrderedDict
 
 
-def compute_entropy(freqs: list):
+def compute_entropy(freqs: List[float]) -> float:
     """The entropy is computed with natural logarithm (`e`)"""
     # tensor
     freqs = torch.tensor(freqs)
+
     # entropy
-    entropy = Categorical(freqs).entropy()
+    entropy = Categorical(freqs).entropy().item()
 
     return entropy
+
+
+def to_prob_dist(freqs: List[int]) -> List[float]:
+    # tensor
+    freqs = torch.tensor(freqs)
+
+    # distribution
+    probs = Categorical(freqs).probs.tolist()
+
+    return probs
+
+
+def sort_dict(d: Dict, **kwargs) -> Dict:
+    d = sorted(d.items(), **kwargs)
+    d = OrderedDict(d)
+    d = dict(d)
+    return d
 
 
 # ------------------------------------------------
@@ -21,15 +41,15 @@ def read_txt(path) -> list:
     return data
 
 
-def read_json(path) -> dict:
+def read_json(path) -> Union[List, Dict]:
     with open(path) as json_data:
         data = json.load(json_data)
     return data
 
 
-def save_json(data, path: str):
+def save_json(data, path: str, indent=None):
     with open(path, 'w', encoding='utf-8') as f:
-        json.dump(data, f, ensure_ascii=False, indent=4)
+        json.dump(data, f, ensure_ascii=False, indent=indent)
 
 
 class Timer:

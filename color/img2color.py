@@ -1,14 +1,12 @@
 import transformers
-import pandas as pd
 from PIL import Image
 from glob import glob
 from tqdm import tqdm
 from os.path import join as osj
-import matplotlib.pyplot as plt
 from typing import List, Dict
 from collections import Counter
-from utils import read_json
-from data_dev import ATTR2COLOR, COLOR_SET, IGNORE_IMAGE
+from utils import read_json, save_json
+from data_dev import IGNORE_IMAGE
 if transformers.__version__ == '4.18.0.dev0':
     from models import OFA
 
@@ -68,13 +66,8 @@ if __name__ == '__main__':
     # Object to Images data
     obj2images = read_json('./temp/objects_to_images_100.json')
 
-    # Object-to-Color
-    cols = ['synset', 'freq'] + COLOR_SET
-
-    obj2color = {k: [] for k in cols}
-
     # OFA Model
-    model = OFA(path='../../OFA/OFA-large', device='cuda:0')
+    model = OFA(path='../../OFA/OFA-large', device='cuda:1')
 
     for synset, images in tqdm(obj2images.items()):
         # Object Name
@@ -83,10 +76,15 @@ if __name__ == '__main__':
 
         # Associated Images
         for img in images:
+            # Skip `Corrupt Images`
+            if f"{img['id']}.jpg" in IGNORE_IMAGE:
+                continue
+
             # Path
-            path = id2path[img['id']]
+            im_path = id2path[img['id']]
+
             # Read Image
-            image = Image.open(path)
+            image = Image.open(im_path)
 
             # Image Regions
             regions = []
@@ -111,3 +109,6 @@ if __name__ == '__main__':
         colors = dict(Counter(colors))
 
         print(f'{name}: {colors} \n')
+
+    # TODO: Save output
+    save_json()
