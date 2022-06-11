@@ -27,8 +27,13 @@ def to_prob_dist(freqs: List[int]) -> List[float]:
     return probs
 
 
-def sort_dict(d: Dict, **kwargs) -> Dict:
-    d = sorted(d.items(), **kwargs)
+def sort_dict(d: Dict, by: str = None, **kwargs) -> Dict:
+    assert by in ['k', 'v', None], 'Sort `by` k / v  OR  provide `key` arg'
+    if by in ['k', 'v']:
+        d = sorted(d.items(), key=lambda x: x[by == 'v'], **kwargs)
+    else:
+        d = sorted(d.items(), **kwargs)
+
     d = OrderedDict(d)
     d = dict(d)
     return d

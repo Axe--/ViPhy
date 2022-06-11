@@ -16,6 +16,10 @@ ATTR2COLOR = {'gold': 'yellow', 'golden': 'yellow', 'blond': 'yellow', 'blonde':
 COLOR_SET = ['red', 'orange', 'yellow', 'brown', 'green',
              'blue', 'purple', 'pink', 'white', 'gray', 'black']
 
+# Colors mentioned in VG
+ALL_COLORS = COLOR_SET + ['grey', 'violet', 'gold', 'golden', 'blond', 'blonde', 'tan', 'beige',
+                          'bronze', 'silver', 'peach', 'cream', 'maroon', 'turquoise', 'teal']
+
 
 def _nearest_color(rgb):
     """
@@ -40,7 +44,7 @@ def _nearest_color(rgb):
 
 def _map_pred_to_color(pred: Dict[str, int]) -> Dict[str, int]:
     """
-    Given model predictions {"colors": freq}, compute the
+    Given model prediction {"colors": freq}, compute the
     frequencies of the primary color set.
 
     :param pred: raw color count
@@ -61,6 +65,18 @@ def _map_pred_to_color(pred: Dict[str, int]) -> Dict[str, int]:
                 color2freq[color] += freq
 
     return color2freq
+
+
+def _cluster_objects_by_color_dist(_df: pd.DataFrame, k=3):
+    """
+    Given object names & associated color distribution,
+    clusters all objects based on entropy into `k` sets.
+
+    :param _df: object name and primary colors as columns
+    :param k: num of clusters
+    :return:
+    """
+    pass
 
 
 def _visualize(_df: pd.DataFrame, color_set: List[str]):
@@ -116,6 +132,9 @@ if __name__ == '__main__':
 
     # To DF
     df = pd.DataFrame(data)
+
+    # Cluster colors
+    # clusters = _cluster_objects_by_color_dist(df, k=3)
 
     # Remove columns
     df = df.drop(columns=['entropy', 'total'])

@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 from typing import Dict, List
 from flair.data import Sentence
 from flair.models import SequenceTagger
+from sentence_transformers import SentenceTransformer
 
 import transformers
 
@@ -28,7 +29,7 @@ class POSTagger(nn.Module):
         super().__init__()
         self.tagger = SequenceTagger.load("flair/pos-english")
 
-    def forward(self, sent: str) -> Dict:
+    def forward(self, sent: str) -> Dict[str, str]:
         # Preprocess
         words = sent.split()
 
@@ -74,6 +75,7 @@ class OFA(nn.Module):
 
         self.device = device
 
+    @torch.inference_mode()
     def forward(self, text: str, image: Image) -> str:
         # Process
         text = self.tokenizer([text], return_tensors="pt")["input_ids"].to(self.device)
@@ -90,6 +92,7 @@ class OFA(nn.Module):
 
         return out
 
+    @torch.inference_mode()
     def inference(self, batch_text: List[str], batch_image: List) -> List[str]:
         """
         Implements `forward()` at batch-level.
@@ -124,9 +127,99 @@ class OFA(nn.Module):
         return out
 
 
+class Image2TextSimilarity(nn.Module):
+    """
+    Implements Image-to-Text Semantic Similarity Transformer
+    """
+    def __init__(self, device):
+        super().__init__()
+        self.model = SentenceTransformer('clip-ViT-L-14')
+        self.device = device
+
+    def forward(self, **kwargs):
+        return self.inference(**kwargs)
+
+    @torch.inference_mode()
+    def inference(self, img_path: str, anchor: str, candidates: List[str], top_k: int = None) -> List[str]:
+        """
+        Selects `candidates` whose similarity score (dot) with the query image
+        exceeds that of the `anchor`.
+        Returns the `top-k` candidates, if provided.
+        """
+        # Load Image
+        image = Image.open(img_path).convert('RGB')
+
+        # Image embeddings (normalized)
+        image_emb = self.model.encode(image,
+                                      normalize_embeddings=True,
+                                      device=self.device,
+                                      batch_size=1)
+
+        # Pack
+        text = [anchor] + candidates
+
+        # Text embeddings (normalized)
+        text_emb = self.model.encode(text,
+                                     normalize_embeddings=True,
+                                     device=self.device,
+                                     batch_size=32)
+        # Unpack
+        anchor_emb = text_emb[0, :]
+        candidates_emb = text_emb[1:, :]
+
+        # Similarity (dot)
+        candidate_scores = candidates_emb @ image_emb
+        anchor_score = anchor_emb @ image_emb
+
+        # Select candidates that score better than anchor
+        idxs = (anchor_score <= candidate_scores)
+
+        selected = np.asarray(candidates)[idxs].tolist()
+
+        # Filter top-k
+        selected = selected[:top_k] if top_k else selected
+
+        return selected
+
+
+class Text2TextSimilarity(nn.Module):
+    """
+    Implements Text-to-Text Semantic Similarity Transformer.
+    """
+    def __init__(self, device):
+        super().__init__()
+        self.model = SentenceTransformer('sentence-transformers/all-mpnet-base-v2')
+        self.device = device
+
+    def forward(self, **kwargs):
+        return self.inference(**kwargs)
+
+    @torch.inference_mode()
+    def inference(self, query: str, candidates: List[str]) -> str:
+        """
+        Selects best candidate, given the query.
+        """
+        # Compute query & candidate embeddings (normalized)
+        embeddings = self.model.encode(sentences=[query] + candidates,
+                                       normalize_embeddings=True,
+                                       device=self.device,
+                                       batch_size=32)
+        q_emb = embeddings[0, :]
+        c_emb = embeddings[1:, :]
+
+        # Compute similarity (dot)
+        sim_scores = c_emb @ q_emb
+
+        # Best candidate
+        _i = sim_scores.argmax()
+        best = candidates[_i]
+
+        return best
+
+
 class DepthTransformer(nn.Module):
     """
-    Implements Depth prediction model (Transformer)
+    Implements Monocular Depth Model
     """
     def __init__(self, device='cpu'):
         super().__init__()
@@ -138,7 +231,7 @@ class DepthTransformer(nn.Module):
         self.to(device)
 
     @torch.inference_mode()
-    def forward(self, image: Image) -> Image:
+    def forward(self, image: Image) -> Image:       # TODO: Handle Batch of Images (list)
         # prepare image for the model
         inputs = self.feat_ext(images=image, return_tensors="pt")
 
@@ -167,7 +260,7 @@ def _plot(img: Image):
     plt.show()
 
 
-if __name__ == '__main__':
+def _test():
     import requests
 
     url = 'https://image.cnbcfm.com/api/v1/image/107037293-IMG-9997.jpg?v=1648561728'
@@ -188,3 +281,23 @@ if __name__ == '__main__':
     # model = DepthTransformer(device='cuda:0')
     # o = model(im)
     # _plot(o)
+
+    # Similarity
+    # model = Text2TextSimilarity(device='cpu')
+    #
+    # res = model.inference(query='person at the hospital bed',
+    # candidates=['glove', 'medical glove', 'baseball glove', 'ski glove'])
+    # print(res)
+
+
+if __name__ == '__main__':
+    import requests
+
+    im_path = './VG/old-fridge.jpg'
+    cds = ['handle', 'door handle', 'knife handle', 'drawer handle', 'umbrella handle',
+           'car door handle', 'bike handle', 'luggage handle', 'fridge handle', 'toilet handle']
+
+    im2txt = Image2TextSimilarity('cpu')
+
+    res = im2txt.inference(im_path, cds[0], cds)
+    print(res)

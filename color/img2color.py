@@ -1,3 +1,4 @@
+import argparse
 import transformers
 from PIL import Image
 from glob import glob
@@ -6,7 +7,7 @@ from os.path import join as osj
 from typing import List, Dict
 from collections import Counter
 from utils import read_json, save_json
-from data_dev import IGNORE_IMAGE
+from constants import IGNORE_IMAGES
 if transformers.__version__ == '4.18.0.dev0':
     from models import OFA
 
@@ -56,6 +57,18 @@ def _synset2object(syn: str) -> str:
     return obj
 
 
+def main():
+    parser = argparse.ArgumentParser(description="Image Region to Color")
+
+    parser.add_argument("--inp", type=str, help="path to ???? json", required=True)
+    parser.add_argument("--out", type=str, help="path to ???? json", required=True)
+    parser.add_argument("--gpu", type=int, help="cuda device ID", required=True)
+
+    args = parser.parse_args()
+
+    # TODO: Move the __main__ code, HERE!
+
+
 if __name__ == '__main__':
     # Dataset Directory
     data_dir = '../../../Datasets/Visual_Genome'
@@ -77,7 +90,7 @@ if __name__ == '__main__':
         # Associated Images
         for img in images:
             # Skip `Corrupt Images`
-            if f"{img['id']}.jpg" in IGNORE_IMAGE:
+            if f"{img['id']}.jpg" in IGNORE_IMAGES:
                 continue
 
             # Path
