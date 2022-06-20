@@ -1,6 +1,7 @@
 import time
 import json
 import torch
+import pickle
 from torch.distributions import Categorical
 from typing import List, Dict, Union
 from collections import OrderedDict
@@ -40,13 +41,13 @@ def sort_dict(d: Dict, by: str = None, **kwargs) -> Dict:
 
 
 # ------------------------------------------------
-def read_txt(path) -> list:
+def read_txt(path: str) -> list:
     with open(path) as f:
         data = f.read().split()
     return data
 
 
-def read_json(path) -> Union[List, Dict]:
+def read_json(path: str) -> Union[List, Dict]:
     with open(path) as json_data:
         data = json.load(json_data)
     return data
@@ -55,6 +56,17 @@ def read_json(path) -> Union[List, Dict]:
 def save_json(data, path: str, indent=None):
     with open(path, 'w', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False, indent=indent)
+
+
+def save_pkl(data, path: str):
+    with open(path, 'wb') as handle:
+        pickle.dump(data, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+
+def read_pkl(path: str) -> Union[List, Dict]:
+    with open(path, 'rb') as handle:
+        data = pickle.load(handle)
+    return data
 
 
 class Timer:

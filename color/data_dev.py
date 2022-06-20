@@ -1,9 +1,17 @@
+import os
 import inflect
+import argparse
+import numpy as np
 from tqdm import tqdm
+from PIL import Image
+from os.path import join as osj
 from typing import List, Dict, Union
 from spellchecker import SpellChecker
-from color.col_utils import ALL_COLORS
-from models import POSTagger, OFA, Text2TextSimilarity, Image2TextSimilarity
+from easydict import EasyDict as edict
+from color.constants import ALL_COLORS
+from color.constants import IGNORE_IMAGES, IGNORE_OBJECTS, ADD_OBJECTS, DROP_QUALIFIERS
+from models import POSTagger, OFA, CLIPImageText, UniCLImageText
+from img2color import get_img_id_to_path
 from utils import read_json, save_json, sort_dict
 
 
@@ -12,20 +20,21 @@ class ColorDataDev:
     Implements preprocessing & extraction functions
     for deriving object names from Visual Genome.
     """
-    ofa_path = '../../OFA/OFA-large'
+    ofa_path = os.environ['OFA']
+    root = os.environ['VisCS']
+    emb = dict(obj_emb_path=osj(root, 'data/obj_emb.pkl'),
+               img_emb_path=osj(root, 'data/img_emb.pkl'))
 
     def __init__(self,
                  pos_tag=False,
                  use_ofa=False,
-                 use_t2t_sim=False,
                  use_im2txt_sim=False,
                  device='cpu'):
 
         # Models
         self.tagger = POSTagger() if pos_tag else None
         self.model_ofa = OFA(self.ofa_path).to(device) if use_ofa else None
-        self.text2text_sim = Text2TextSimilarity(device) if use_t2t_sim else None
-        self.img2text_sim = Image2TextSimilarity(device) if use_im2txt_sim else None
+        self.img2text_sim = UniCLImageText(device, **self.emb) if use_im2txt_sim else None
 
         # Utils
         self.inflect = inflect.engine()
@@ -43,16 +52,13 @@ class ColorDataDev:
         def _search_synset(synset: str) -> List[dict]:
             """Finds image regions that contain the synset."""
             image_regions = []
-
             for img in data:
                 bboxes = []
                 for reg in img['attributes']:
                     if synset in reg['synsets']:
                         bboxes.append(reg)
-
                 # Region: Image + BBoxes
                 image = dict(id=img['image_id'], bboxes=bboxes)
-
                 if len(bboxes) > 0:
                     image_regions.append(image)
 
@@ -66,63 +72,244 @@ class ColorDataDev:
 
         return synset2images
 
-    def map_object_to_image_regions(self, data_pos: List[Dict[str, str]], objects: List[str]) -> Dict[str, List[str]]:
-        """
-        # TODO: -----------------------------------------------
-
-        :param data_pos:
-        :param objects:
-        :return:
-        """
-        pass
-
-    def _get_best_subtype(self, img_path: str, caption: str, anchor: str, candidates: List[str]) -> str:
+    def _get_best_subtype(self, im_path: str, bbox: List[int], anchor: str, candidates: List[str]) -> str:
         """
         Selects the best subtype of the anchor object (from the candidate set).
 
         We first use image as query to filter candidates (which score better than anchor),
-        and then include dense captions (objects) as query to choose the best candidate.
+        and then incorporate cropped region to query the best candidate.
 
-        TODO: Image (anchor) --> Caption (anchor) --> Region (best)
+        [anchor + candidates + Image] --> [selected + Region] --> best subtype
         """
-        # Filter subtype candidates using image query
-        selected = self.img2text_sim.inference(img_path, anchor, candidates, top_k=10)
+        def _crop_region(im, box):
+            x, y, w, h = box
 
-        # Select the best subtype using caption query
-        best = self.text2text_sim.inference(caption, selected)
+            left, top = x, y
+            right, down = x + w, y + h
+
+            box = (left, top, right, down)
+
+            return im.crop(box)
+
+        def _extend_bbox(box, im_size, min_size=224):
+            """
+            Increases `box` dims (w, h) to `min_size`,
+            ensuring (x, y) are unchanged.
+            """
+            # unpack
+            x, y, w, h = box
+            im_w, im_h = im_size
+
+            # increase size
+            if w < min_size:
+                x = x - (min_size - w) / 2
+                w = min_size
+
+            if h < min_size:
+                y = y - (min_size - h) / 2
+                h = min_size
+
+            # to coordinates
+            x1, x2 = x, x+w
+            y1, y2 = y, y+h
+
+            # clip to img dims
+            x1, x2 = np.clip([x1, x2], 0, im_w).astype(int)
+            y1, y2 = np.clip([y1, y2], 0, im_h).astype(int)
+
+            # to box
+            box = [x1, y1, x2-x1, y2-y1]
+
+            return box
+
+        # Load image
+        image = Image.open(im_path)
+
+        # Crop bbox
+        bbox = _extend_bbox(bbox, image.size, min_size=224)
+        crop = _crop_region(image, bbox)
+
+        # If noisy annotation: set best = anchor
+        if 0 in crop.size:
+            return anchor
+
+        # Filter subtype candidates using image query
+        selected = self.img2text_sim.inference(image, anchor, candidates)
+        selected = list(selected)
+
+        # Select the best subtype using cropped region query
+        best = self.img2text_sim.inference(crop, anchor, selected, pick_best=True)
+        best = list(best)[0]
 
         return best
 
     def map_region_obj_to_best_subtype(self,
-                                       data_pos: List[Dict[str, str]],
-                                       obj2subtypes: Dict[str, Dict[str, int]]) -> List[Dict[str, str]]:
+                                       data_regs: List[Dict[str, Union[int, List]]],
+                                       data_pos: List[Dict[str, Union[int, List]]],
+                                       data_obj2subs: Dict[str, Dict[str, int]],
+                                       image_id2path: Dict[int, str]) -> List[Dict[str, Union[int, List]]]:
         """
-        ...
+        Computes the best object subtype, for all objects mentioned in the region captions.
 
-        :param data_pos:
-        :param obj2subtypes:
-        :return:
+        :param data_regs: image region annotation (json)
+        :param data_pos: pos-tagged region captions (json)
+        :param data_obj2subs: object-to-subtype mapping
+        :param image_id2path: image-ID to file-path mapping
+        :return: object subtypes for regions, for all images
         """
-        # TODO: After `get_objs()`, remove any colors mentioned in the name.split()
-        def _remove_color(_obj: str):
-            # ignore uni-grams
+        def _get_bbox(region_annot: Dict) -> List[int]:
+            return [region_annot['x'], region_annot['y'],
+                    region_annot['width'], region_annot['height']]
+
+        def _drop_color(_obj: str) -> str:
+            # +1-grams
             if len(_obj.split()) > 1:
                 for col in ALL_COLORS:
                     qualifiers = _obj.split()[:-1]
-                    # if present
+                    # remove
                     if col in qualifiers:
-                        # remove
                         _obj = _obj.replace(col + ' ', '')
             return _obj
 
-        pass
+        def _ignore_object(_obj: str) -> bool:
+            """Check if object should be skipped"""
+            if _obj in IGNORE_OBJECTS:
+                return True
+            # check within subtypes as well
+            for o in IGNORE_OBJECTS:
+                subs = data_obj2subs.get(o, [])
+                if _obj in subs:
+                    return True
+            return False
 
-    def _fix_typos(self, words: List[str]) -> List[str]:
-        # TODO: Handle bi-gram & tri-gram words!
-        misspelled = self.spell.unknown(words)
+        def _retrieve_subtypes(obj_name: str, obj2subs: Dict[str, Dict[str, int]]):
+            """
+            Searches `obj_name` to find the most specific name
+            by incrementally dropping qualifiers.
+            """
+            obj_words = obj_name.split()
 
-        for word in misspelled:
-            fix = self.spell.correction(word)
+            while len(obj_words) > 0:
+                obj_name = ' '.join(obj_words)
+
+                subs = obj2subs.get(obj_name, False)
+                if subs:
+                    return dict(object=obj_name, subtypes=list(subs))
+                # drop qualifier
+                obj_words.pop(0)
+            return False
+
+        region_obj2subtype = []
+
+        for i in tqdm(range(len(data_regs))):
+            im_id = data_regs[i]['image_id']
+            # Skip corrupt images
+            if im_id in IGNORE_IMAGES:
+                continue
+
+            im_path = image_id2path[im_id]
+            regions = data_regs[i]['regions']
+            sent_tags = data_pos[i]['pos_tags']
+
+            image_regions = []
+
+            for region, sent in zip(regions, sent_tags):
+                # Retrieve names
+                if 'of' in sent or 'has' in sent:
+                    obj_names = [self._concat_obj_part(sent)]
+                else:
+                    obj_names = self._get_obj_names(sent)
+
+                # Remove color words
+                obj_names = [_drop_color(o) for o in obj_names]
+                # Remove specified objects
+                obj_names = [o for o in obj_names if not _ignore_object(o)]
+
+                # Get bbox
+                bbox = _get_bbox(region)
+
+                # Compute best subtype
+                obj2subtype = {}
+
+                for obj in obj_names:
+                    # get subtype names
+                    res = _retrieve_subtypes(obj, data_obj2subs)
+
+                    if res:
+                        # unpack
+                        obj = res['object']
+                        subtypes = res['subtypes']
+
+                        # if multiple subtypes
+                        if len(subtypes) > 1:
+                            best_subtype = self._get_best_subtype(im_path, bbox, obj, subtypes)
+                        else:
+                            best_subtype = obj
+
+                        obj2subtype[obj] = best_subtype
+
+                # Add object-subtypes for the region
+                image_regions.append(obj2subtype)
+
+            image_regions = dict(image_id=im_id,
+                                 ros=image_regions)
+
+            region_obj2subtype.append(image_regions)
+
+        return region_obj2subtype
+
+    def _concat_obj_part(self, sent: Dict[str, str]) -> str:
+        """
+        Extracts 'part-whole' object relations from POS-tagged sentence.
+
+        We consider "HAS" & "OF" relations to determine object parts.
+
+        >>> In:  {'piano': 'NN', 'keyboard': 'NN', 'has': 'IN', 'keys': 'NNS'}
+        >>> Out: "piano keyboard key"
+        >>> In: {'box': 'NN', 'of': 'IN', 'matches': 'NNS'}
+        >>> Out: "match box"
+        >>> In:  {'wheel': 'NN', 'of': 'IN', 'a': 'DT', 'bike': 'NN'}
+        >>> Out: "bike wheel"
+
+        :param sent: paired word-tag sentence
+        :return: merged object-part name
+        """
+        # objects (nouns)
+        obj_names = self._get_obj_names(sent)
+
+        if len(obj_names) == 1:
+            return obj_names[0]
+
+        # relation keyword
+        if 'of' in sent:
+            rel = ' of '
+        else:
+            rel = ' has '
+
+        # split about keyword
+        sent_str = ' '.join(sent)
+        try:
+            seg1, seg2 = sent_str.split(rel)
+        except ValueError:
+            return obj_names[0]
+
+        part, whole = '', ''
+        for o in obj_names:
+            if rel == ' of ':
+                if (o + rel in seg1 + rel) and part is '':
+                    part = o
+                if o in seg2 and whole is '':
+                    whole = o
+            else:
+                if (o + rel in seg1 + rel) and whole is '':
+                    whole = o
+                if o in seg2 and part is '':
+                    part = o
+
+        # merge
+        object_name = whole + ' ' + part
+
+        return object_name
 
     def _get_obj_names(self, sent: Dict[str, str]) -> List[str]:
         """
@@ -134,6 +321,11 @@ class ColorDataDev:
 
         :param sent: paired word-tag sentence
         :return: object names
+
+        TODO: Include Part-based parsing:
+        `box OF matches` --> `match box`
+        `car HAS door` --> `car door`
+        See `self.parts_from_pos_tags()`
         """
         def _singular(_word: str) -> str:
             out = self.inflect.singular_noun(_word)
@@ -181,7 +373,7 @@ class ColorDataDev:
         return _objs
 
     @staticmethod
-    def parts_from_pos_tags(data_pos_tags: List[Dict[str, str]], obj_names: Dict[str, int], min_count=0):
+    def parts_from_pos_tags(data_pos_tags: List[Dict[str, str]], obj_names: Dict[str, int], min_count: int):
         """
         Given POS-Tagged Region captions, extracts part-whole relations for objects.
 
@@ -193,23 +385,7 @@ class ColorDataDev:
         :return: object-part relations
         :rtype: Dict[str, Dict[str, int]]
         """
-        def _get_part_obj_relations(sent: Dict[str, str]) -> Dict:
-            """
-            Extracts 'part-whole' object relations from POS-tagged sentence.
-
-            We consider "HAS" & "OF" relations to determine object parts.
-
-            >>> In:  {'laptop': 'NN', 'keyboard': 'NN', 'has': 'IN', 'keys': 'NNS'}
-            >>> Out: {'obj': 'laptop keyboard', 'part': 'key'}
-            >>> In:  {'nose': 'NN', 'of': 'IN', 'a': 'DT', 'man': 'NN'}
-            >>> Out: {'obj': 'man', 'part': 'nose'}
-
-            :param sent: paired word-tag sentence
-            :return: object names
-            """
-            ...
-
-        # TODO: I think we only need to "subtype" the Object (not needed for Part)
+        # I think we only need to "subtype" the Object (not needed for Part)
         pass
 
     @staticmethod
@@ -295,12 +471,39 @@ class ColorDataDev:
             return False
 
         def _is_noun(_obj: str):
-            # POS Tagging
-            _obj = self.tagger(_obj)
-            # check if all are Nouns
-            tags = list(_obj.values())
+            tag_set = ['NN', 'NNP', 'NNS', 'NNPS']
+            # Tagging
+            tags = self.tagger(_obj).values()
+            # Check
+            return all(t in tag_set for t in tags)
 
-            return all(t in ['NN', 'NNS'] for t in tags)
+        def _drop_typos(object_set: Dict[str, int], _obj: str) -> Dict[str, int]:
+            # check
+            typos = self.spell.unknown(_obj.split())
+            # drop
+            if len(typos) > 0:
+                object_set.pop(_obj)
+            return object_set
+
+        def _drop_objs_and_merge(obj2freq: Dict[str, int], _obj: str) -> Dict[str, int]:
+            """
+            Drops objects with specific qualifiers &
+            merge with existing names (if exists).
+            """
+            _o = _obj
+            qualifiers = _obj.split()[:-1]
+
+            for q in qualifiers:
+                _o = _o.replace(f'{q} ', '')
+                # drop
+                if q in DROP_QUALIFIERS:
+                    freq = obj2freq.pop(_obj)
+                    # merge
+                    if _o in obj2freq:
+                        obj2freq[_o] += freq
+                    break
+
+            return obj2freq
 
         objects = {}
 
@@ -318,15 +521,27 @@ class ColorDataDev:
         # Filter low freq
         objects = {o: f for o, f in objects.items() if f >= min_count}
 
-        # Remove typos (1-gram)
-        typos = self.spell.unknown(objects)     # TODO: Fix typos (n-grams)
-        [objects.pop(typo) for typo in typos if len(typo.split()) == 1]
+        # Drop objects with more than 3 words
+        objects = {o: f for o, f in objects.items() if len(o.split()) <= 3}
+
+        # Remove words containing typos
+        for obj in list(objects):
+            objects = _drop_typos(objects, obj)
+
+        # Drop objects that mention color (e.g. blue sky)
+        objects = {o: f for o, f in objects.items() if not _has_color(o)}
 
         # Retain only Noun objects
         objects = {o: f for o, f in tqdm(objects.items()) if _is_noun(o)}
 
-        # Drop objects that mention color (e.g. blue sky)
-        objects = {o: f for o, f in objects.items() if not _has_color(o)}
+        # Drop & Merge objects containing specific qualifiers
+        for obj in list(objects):
+            objects = _drop_objs_and_merge(objects, obj)
+
+        # Add missing objects with default freq
+        additional = {o: 200 for o in ADD_OBJECTS}
+
+        objects = {**objects, **additional}
 
         # Sort by freq
         objects = sort_dict(objects, by='v', reverse=True)
@@ -365,8 +580,40 @@ class ColorDataDev:
         print('Done!')
 
 
-def _region_obj_subtype(regions_fp: str, subtype_fp: str):
-    ...
+def _region_obj_subtype():
+    parser = argparse.ArgumentParser(description="Region Object Subtypes")
+
+    parser.add_argument("--regions",    type=str, required=True)
+    parser.add_argument("--pos_tags",   type=str, required=True)
+    parser.add_argument("--subtypes",   type=str, required=True)
+    parser.add_argument("--data_dir",   type=str, required=True)
+    parser.add_argument("--out",        type=str, required=True)
+    parser.add_argument("--gpu",        type=int, required=True)
+
+    args = parser.parse_args()
+
+    # args = edict()
+    # args.regions = '../VG/regions/r_1.json'
+    # args.pos_tags = '../VG/pos_tags/p_1.json'
+    # args.subtypes = '../data/object_subtypes_o100_s10.json'
+    # args.data_dir = '../VG/'
+    # args.out = '../VG/ros_1.json'
+    # args.gpu = 1
+
+    # Image Paths
+    im_id2path = get_img_id_to_path(_dir=args.data_dir)
+
+    # Read
+    d_regs = read_json(args.regions)
+    d_pos = read_json(args.pos_tags)
+    d_subs = read_json(args.subtypes)
+
+    ddev = ColorDataDev(use_im2txt_sim=True,
+                        device=f'cuda:{args.gpu}')
+
+    res = ddev.map_region_obj_to_best_subtype(d_regs, d_pos, d_subs, im_id2path)
+
+    save_json(res, path=args.out)
 
 
 def _obj_subtypes(obj_min: int, sub_min: int):
@@ -401,8 +648,6 @@ def _obj_names(min_count: int):
 
 
 def _pos_tag():
-    import argparse
-
     parser = argparse.ArgumentParser(description="POS Tagging (regions)")
 
     parser.add_argument("--inp", type=str, help="path to regions json", required=True)
@@ -426,5 +671,5 @@ def _pos_tag():
 
 if __name__ == '__main__':
     # _obj_names(min_count=5)
-    _obj_subtypes(obj_min=100, sub_min=5)
-    ...
+    # _obj_subtypes(obj_min=100, sub_min=10)
+    _region_obj_subtype()

@@ -3,22 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from typing import List, Dict
 from utils import read_json, compute_entropy, to_prob_dist
-
-
-# Map Attribute to Color
-ATTR2COLOR = {'gold': 'yellow', 'golden': 'yellow', 'blond': 'yellow', 'blonde': 'yellow',
-              'wooden': 'brown', 'tan': 'brown', 'beige': 'yellow brown', 'bronze': 'brown',
-              'grey': 'gray', 'silver': 'gray', 'metal': 'gray', 'steel': 'gray', 'copper': 'brown',
-              'peach': 'yellow pink', 'cream': 'yellow', 'violet': 'purple',
-              'maroon': 'red', 'turquoise': 'blue', 'teal': 'blue green'}
-
-# Primary Colors
-COLOR_SET = ['red', 'orange', 'yellow', 'brown', 'green',
-             'blue', 'purple', 'pink', 'white', 'gray', 'black']
-
-# Colors mentioned in VG
-ALL_COLORS = COLOR_SET + ['grey', 'violet', 'gold', 'golden', 'blond', 'blonde', 'tan', 'beige',
-                          'bronze', 'silver', 'peach', 'cream', 'maroon', 'turquoise', 'teal']
+from constants import COLOR_SET, ATTR2COLOR
 
 
 def _nearest_color(rgb):
@@ -76,6 +61,7 @@ def _cluster_objects_by_color_dist(_df: pd.DataFrame, k=3):
     :param k: num of clusters
     :return:
     """
+    # TODO: ****************************
     pass
 
 
@@ -133,7 +119,7 @@ if __name__ == '__main__':
     # To DF
     df = pd.DataFrame(data)
 
-    # Cluster colors
+    # TODO: Cluster colors
     # clusters = _cluster_objects_by_color_dist(df, k=3)
 
     # Remove columns

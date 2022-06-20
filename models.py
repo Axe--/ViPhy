@@ -4,10 +4,21 @@ from PIL import Image
 import torch.nn as nn
 import torch.nn.functional as F
 import matplotlib.pyplot as plt
-from typing import Dict, List
+from os.path import join as osj
+from typing import Dict, List, Union
 from flair.data import Sentence
 from flair.models import SequenceTagger
 from sentence_transformers import SentenceTransformer
+
+from torchvision import transforms as T
+from timm.data.constants import IMAGENET_DEFAULT_MEAN as M
+from timm.data.constants import IMAGENET_DEFAULT_STD as S
+
+from unicl.config import get_config
+from unicl.model.model import UniCLModel
+
+from tqdm import tqdm
+from utils import read_pkl, read_json, save_pkl
 
 import transformers
 
@@ -127,7 +138,7 @@ class OFA(nn.Module):
         return out
 
 
-class Image2TextSimilarity(nn.Module):
+class CLIPImageText(nn.Module):
     """
     Implements Image-to-Text Semantic Similarity Transformer
     """
@@ -135,26 +146,35 @@ class Image2TextSimilarity(nn.Module):
         super().__init__()
         self.model = SentenceTransformer('clip-ViT-L-14')
         self.device = device
+        self.to(device)
 
     def forward(self, **kwargs):
         return self.inference(**kwargs)
 
     @torch.inference_mode()
-    def inference(self, img_path: str, anchor: str, candidates: List[str], top_k: int = None) -> List[str]:
+    def inference(self,
+                  image: Image,
+                  anchor: str,
+                  candidates: List[str],
+                  pick_best=False,
+                  caption: str = None,
+                  top_k: int = None) -> Dict[str, float]:
         """
-        Selects `candidates` whose similarity score (dot) with the query image
-        exceeds that of the `anchor`.
+        Selects `candidates` whose similarity score (dot)
+        with query `image` exceeds that of the `anchor`.
+
         Returns the `top-k` candidates, if provided.
+
+        TODO: include region `caption` as additional query
         """
-        # Load Image
-        image = Image.open(img_path).convert('RGB')
+        # Prepare
+        image = image.convert('RGB')
 
         # Image embeddings (normalized)
         image_emb = self.model.encode(image,
                                       normalize_embeddings=True,
                                       device=self.device,
                                       batch_size=1)
-
         # Pack
         text = [anchor] + candidates
 
@@ -168,16 +188,23 @@ class Image2TextSimilarity(nn.Module):
         candidates_emb = text_emb[1:, :]
 
         # Similarity (dot)
-        candidate_scores = candidates_emb @ image_emb
-        anchor_score = anchor_emb @ image_emb
+        scores = candidates_emb @ image_emb
 
-        # Select candidates that score better than anchor
-        idxs = (anchor_score <= candidate_scores)
+        # Select Best
+        if pick_best:
+            i = scores.argmax()
+            best = {candidates[i]: scores[i]}
 
-        selected = np.asarray(candidates)[idxs].tolist()
+            return best
 
-        # Filter top-k
-        selected = selected[:top_k] if top_k else selected
+        # Filter candidates scoring better than anchor
+        preds = {c: score for c, score in zip(candidates, scores)}
+
+        anchor_score = preds[anchor]
+
+        tol = 1e-4
+        selected = {c: score for c, score in preds.items()
+                    if anchor_score <= score + tol}
 
         return selected
 
@@ -190,6 +217,7 @@ class Text2TextSimilarity(nn.Module):
         super().__init__()
         self.model = SentenceTransformer('sentence-transformers/all-mpnet-base-v2')
         self.device = device
+        self.to(device)
 
     def forward(self, **kwargs):
         return self.inference(**kwargs)
@@ -254,14 +282,134 @@ class DepthTransformer(nn.Module):
         return depth
 
 
-def _plot(img: Image):
-    # plt.figure(figsize=(14, 14))
-    plt.imshow(img)
-    plt.show()
+class UniCLImageText(nn.Module):
+    """
+    Implements UniCL model for Image-Text Similarity.
+    """
+    _DIR = __file__.split('/')[:-1]
+    _DIR = '/'.join(_DIR) + '/unicl'
+
+    cfg_path = osj(_DIR, 'configs/unicl_swin_base.yaml')
+    ckpt_path = osj(_DIR, 'in21k_yfcc14m_gcc15m_swin_base.pth')
+
+    def __init__(self, device: str, obj_emb_path: str = None, img_emb_path: str = None):
+        super().__init__()
+        # Config
+        self.cfg = get_config(self.cfg_path)
+        self.device = device
+
+        # Precomputed Embeddings
+        self.text_emb = read_pkl(obj_emb_path) if obj_emb_path else None
+        self.img_emb = read_pkl(img_emb_path) if img_emb_path else None
+
+        # Model
+        self.model = UniCLModel(self.cfg)
+        self._load_wts()
+        self.model.eval()
+
+        self.transform = self._build_transforms()
+        self.to(device)
+
+    def _load_wts(self):
+        ckpt = torch.load(self.ckpt_path, 'cpu')
+
+        self.model.load_state_dict(ckpt["model"])
+
+    @staticmethod
+    def _build_transforms(im_size=224, center_crop=True):
+        trf = [T.Resize(im_size)]
+        if center_crop:
+            size = int((256 / 224) * im_size)
+            trf = [T.Resize(size), T.CenterCrop(im_size)]
+        trf += [T.ToTensor(), T.Normalize(M, S)]
+        return T.Compose(trf)
+
+    def forward(self, **kwargs):
+        return self.inference(**kwargs)
+
+    @torch.inference_mode()
+    def inference(self,
+                  image: Image,
+                  anchor: str,
+                  candidates: List[str],
+                  pick_best: bool = False,
+                  img_id: str = None) -> Dict[str, float]:
+        """
+        Selects `candidates` whose similarity score (dot)
+        with query `image` exceeds that of the `anchor`.
+
+        If `pick_best` is set, returns max scoring candidate.
+        """
+        # Image
+        if img_id and self.img_emb:
+            img_emb = self.img_emb[img_id].to(self.device)
+        else:
+            image = image.convert('RGB')
+            image = self.transform(image).unsqueeze(0)
+
+            img_emb = self.model.encode_image(image.to(self.device))
+
+        # Text
+        if self.text_emb:
+            text_emb = torch.stack([self.text_emb[o] for o in candidates])
+            text_emb = text_emb.to(self.device)
+        else:
+            text_emb = self.model.get_text_embeddings(candidates, self.device)
+
+        # Score
+        output = self.model.logit_scale.exp() * img_emb @ text_emb.t()
+        scores = output.softmax(-1).flatten()
+
+        # Select Best
+        if pick_best:
+            i = scores.argmax()
+            best = {candidates[i]: scores[i].item()}
+
+            return best
+
+        # Filter candidates scoring better than anchor
+        preds = {c: score.item() for c, score in zip(candidates, scores)}
+
+        anchor_score = preds[anchor]
+
+        tol = 1e-4
+        selected = {c: score for c, score in preds.items()
+                    if anchor_score <= score + tol}
+
+        return selected
+
+    @torch.inference_mode()
+    def precompute_text_emb(self, objs: List[str], save_fp: str):
+        obj2emb = {}
+        for o in tqdm(objs):
+            emb = self.model.get_text_embeddings([o], self.device)[0]
+            obj2emb[o] = emb
+
+        save_pkl(obj2emb, save_fp)
+
+    @torch.inference_mode()
+    def precompute_image_emb(self, im_paths: List[str], save_fp: str):
+        from color.constants import IGNORE_IMAGES
+
+        img2emb = {}
+        for path in tqdm(im_paths):
+            im_id = path.split('/')[-1].split('.jpg')[0]
+
+            if int(im_id) not in IGNORE_IMAGES:
+                im = Image.open(path).convert('RGB')
+                im = self.transform(im).unsqueeze(0)
+
+                emb = self.model.encode_image(im.to(self.device))[0]
+                img2emb[im_id] = emb
+
+        save_pkl(img2emb, save_fp)
 
 
 def _test():
-    import requests
+    def _plot(_im: Image):
+        # plt.figure(figsize=(14, 14))
+        plt.imshow(_im)
+        plt.show()
 
     url = 'https://image.cnbcfm.com/api/v1/image/107037293-IMG-9997.jpg?v=1648561728'
     im = Image.open(requests.get(url, stream=True).raw)
@@ -277,27 +425,36 @@ def _test():
     o_b = model.inference([txt, txt], [im, im])
     print(o_b)
 
-    # Depth
     # model = DepthTransformer(device='cuda:0')
-    # o = model(im)
-    # _plot(o)
-
-    # Similarity
-    # model = Text2TextSimilarity(device='cpu')
-    #
-    # res = model.inference(query='person at the hospital bed',
-    # candidates=['glove', 'medical glove', 'baseball glove', 'ski glove'])
-    # print(res)
+    # o = model(im); _plot(o)
 
 
 if __name__ == '__main__':
     import requests
+    from glob import glob
+    from utils import Timer
 
-    im_path = './VG/old-fridge.jpg'
-    cds = ['handle', 'door handle', 'knife handle', 'drawer handle', 'umbrella handle',
-           'car door handle', 'bike handle', 'luggage handle', 'fridge handle', 'toilet handle']
+    url = 'https://t4.ftcdn.net/jpg/02/99/23/49/360_F_299234924_cBWFTruM7TGGoahcDabUn0b65PTtiZOA.jpg'
+    img = Image.open(requests.get(url, stream=True).raw)
 
-    im2txt = Image2TextSimilarity('cpu')
+    obj = 'ball'
+    cds = read_json('./data/object_subtypes_o100_s10.json')
 
-    res = im2txt.inference(im_path, cds[0], cds)
-    print(res)
+    # im2txt = UniCLImageText('cuda:1', './data/obj_emb.pkl', './data/img_emb.pkl')
+
+    # t = Timer('Precomputed')
+    # for _ in range(50):
+    #     im2txt.inference(None, obj, list(cds[obj]), img_id='1')
+    # t.end()
+
+    # t = Timer('UniCL')
+    # for _ in range(50):
+    #     res = im2txt.inference(img, obj, list(cds[obj]))
+    # t.end()
+
+    im2txt = UniCLImageText('cuda:1')
+    # img_paths = glob('./VG/images_1/*.jpg') + glob('./VG/images_2/*.jpg')
+    # im2txt.precompute_image_emb(img_paths, save_fp='./data/img_emb.pkl')
+
+    objects = list(read_json('./data/object_names_c5.json'))
+    im2txt.precompute_text_emb(objects, save_fp='./data/obj_emb.pkl')

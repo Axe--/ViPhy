@@ -60,9 +60,10 @@ def _synset2object(syn: str) -> str:
 def main():
     parser = argparse.ArgumentParser(description="Image Region to Color")
 
-    parser.add_argument("--inp", type=str, help="path to ???? json", required=True)
-    parser.add_argument("--out", type=str, help="path to ???? json", required=True)
-    parser.add_argument("--gpu", type=int, help="cuda device ID", required=True)
+    parser.add_argument("--data",   type=str, help="path to dataset dir", required=True)
+    parser.add_argument("--inp",    type=str, help="path to ???? json", required=True)
+    parser.add_argument("--out",    type=str, help="path to ???? json", required=True)
+    parser.add_argument("--gpu",    type=int, help="cuda device ID", required=True)
 
     args = parser.parse_args()
 
