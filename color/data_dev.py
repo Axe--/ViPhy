@@ -296,14 +296,14 @@ class ColorDataDev:
         part, whole = '', ''
         for o in obj_names:
             if rel == ' of ':
-                if (o + rel in seg1 + rel) and part is '':
+                if (o + rel in seg1 + rel) and part == '':
                     part = o
-                if o in seg2 and whole is '':
+                if o in seg2 and whole == '':
                     whole = o
             else:
-                if (o + rel in seg1 + rel) and whole is '':
+                if (o + rel in seg1 + rel) and whole == '':
                     whole = o
-                if o in seg2 and part is '':
+                if o in seg2 and part == '':
                     part = o
 
         # merge
