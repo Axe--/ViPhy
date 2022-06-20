@@ -11,7 +11,7 @@ sentence_transformers==2.2.0
 spellchecker==0.4
 torch==1.11.0
 torchvision==0.12.0
-timm==0.3.2
+timm==0.4.12
 tqdm==4.64.0
 transformers==4.18.0.dev0
 yacs==0.1.8

@@ -351,8 +351,7 @@ class UniCLImageText(nn.Module):
 
         # Text
         if self.text_emb:
-            text_emb = torch.stack([self.text_emb[o] for o in candidates])
-            text_emb = text_emb.to(self.device)
+            text_emb = torch.stack([self.text_emb[o] for o in candidates]).to(self.device)
         else:
             text_emb = self.model.get_text_embeddings(candidates, self.device)
 
@@ -383,7 +382,7 @@ class UniCLImageText(nn.Module):
         obj2emb = {}
         for o in tqdm(objs):
             emb = self.model.get_text_embeddings([o], self.device)[0]
-            obj2emb[o] = emb
+            obj2emb[o] = emb.cpu()
 
         save_pkl(obj2emb, save_fp)
 
@@ -400,7 +399,7 @@ class UniCLImageText(nn.Module):
                 im = self.transform(im).unsqueeze(0)
 
                 emb = self.model.encode_image(im.to(self.device))[0]
-                img2emb[im_id] = emb
+                img2emb[im_id] = emb.cpu()
 
         save_pkl(img2emb, save_fp)
 
@@ -441,20 +440,17 @@ if __name__ == '__main__':
     cds = read_json('./data/object_subtypes_o100_s10.json')
 
     # im2txt = UniCLImageText('cuda:1', './data/obj_emb.pkl', './data/img_emb.pkl')
-
     # t = Timer('Precomputed')
     # for _ in range(50):
     #     im2txt.inference(None, obj, list(cds[obj]), img_id='1')
     # t.end()
 
-    # t = Timer('UniCL')
-    # for _ in range(50):
-    #     res = im2txt.inference(img, obj, list(cds[obj]))
-    # t.end()
-
     im2txt = UniCLImageText('cuda:1')
+
+    # Image
     # img_paths = glob('./VG/images_1/*.jpg') + glob('./VG/images_2/*.jpg')
     # im2txt.precompute_image_emb(img_paths, save_fp='./data/img_emb.pkl')
 
+    # Text
     objects = list(read_json('./data/object_names_c5.json'))
     im2txt.precompute_text_emb(objects, save_fp='./data/obj_emb.pkl')

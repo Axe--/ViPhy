@@ -124,6 +124,7 @@ class ColorDataDev:
 
         # Load image
         image = Image.open(im_path)
+        im_id = im_path.split('/')[-1].replace('.jpg', '')
 
         # Crop bbox
         bbox = _extend_bbox(bbox, image.size, min_size=224)
@@ -134,7 +135,7 @@ class ColorDataDev:
             return anchor
 
         # Filter subtype candidates using image query
-        selected = self.img2text_sim.inference(image, anchor, candidates)
+        selected = self.img2text_sim.inference(None, anchor, candidates, img_id=im_id)
         selected = list(selected)
 
         # Select the best subtype using cropped region query
