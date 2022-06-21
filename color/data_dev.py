@@ -3,15 +3,15 @@ import inflect
 import argparse
 import numpy as np
 from tqdm import tqdm
+from glob import glob
 from PIL import Image
 from os.path import join as osj
-from typing import List, Dict, Union
+from typing import List, Dict, Tuple, Union
 from spellchecker import SpellChecker
 from easydict import EasyDict as edict
 from color.constants import ALL_COLORS
 from color.constants import IGNORE_IMAGES, IGNORE_OBJECTS, ADD_OBJECTS, DROP_QUALIFIERS
 from models import POSTagger, OFA, CLIPImageText, UniCLImageText
-from img2color import get_img_id_to_path
 from utils import read_json, save_json, sort_dict
 
 
@@ -26,51 +26,89 @@ class ColorDataDev:
                img_emb_path=osj(root, 'data/img_emb.pkl'))
 
     def __init__(self,
+                 data_dir=None,
                  pos_tag=False,
                  use_ofa=False,
                  use_im2txt_sim=False,
                  device='cpu'):
+        # Data
+        self.img_id2path = self.get_img_id_to_path(data_dir) if data_dir else None
 
         # Models
         self.tagger = POSTagger() if pos_tag else None
-        self.model_ofa = OFA(self.ofa_path).to(device) if use_ofa else None
-        self.img2text_sim = UniCLImageText(device, **self.emb) if use_im2txt_sim else None
+        self.model_ofa = OFA(self.ofa_path, device) if use_ofa else None
+        self.img2text = UniCLImageText(device, **self.emb) if use_im2txt_sim else None
 
         # Utils
         self.inflect = inflect.engine()
         self.spell = SpellChecker()
 
     @staticmethod
-    def map_synset_to_images(synsets: List[str], data: List[Dict]) -> Dict[str, List[dict]]:
+    def get_img_id_to_path(_dir: str) -> Dict[int, str]:
+        _p1 = glob(osj(_dir, 'images_1', '*.jpg'))
+        _p2 = glob(osj(_dir, 'images_2', '*.jpg'))
+
+        img_paths = _p1 + _p2
+
+        def _path2id(p: str):
+            p = p.split('/')[-1]
+            p = p.split('.')[0]
+            return int(p)
+
+        img_id2path = {}
+        for path in img_paths:
+            # get id from path
+            img_id = _path2id(path)
+
+            img_id2path[img_id] = path
+
+        return img_id2path
+
+    @staticmethod
+    def _extend_bbox(box: List[int], im_size: Tuple[int, int], min_size=224) -> List[int]:
         """
-        Tracks images & associated regions for each object.
-
-        :param synsets: list of object synsets
-        :param data: attributes file (json)
-        :return: object to image regions mapping
+        Increases `box` dims (w, h) to `min_size`,
+        ensuring center (x,y) remain unchanged.
         """
-        def _search_synset(synset: str) -> List[dict]:
-            """Finds image regions that contain the synset."""
-            image_regions = []
-            for img in data:
-                bboxes = []
-                for reg in img['attributes']:
-                    if synset in reg['synsets']:
-                        bboxes.append(reg)
-                # Region: Image + BBoxes
-                image = dict(id=img['image_id'], bboxes=bboxes)
-                if len(bboxes) > 0:
-                    image_regions.append(image)
+        # unpack
+        x, y, w, h = box
+        im_w, im_h = im_size
 
-            return image_regions
+        # increase size
+        if w < min_size:
+            x = x - (min_size - w) / 2
+            w = min_size
 
-        # Iterate over all synset names
-        synset2images = {}
+        if h < min_size:
+            y = y - (min_size - h) / 2
+            h = min_size
 
-        for syn in tqdm(synsets):
-            synset2images[syn] = _search_synset(syn)
+        # to coordinates
+        x1, x2 = x, x + w
+        y1, y2 = y, y + h
 
-        return synset2images
+        # clip to img dims
+        x1, x2 = np.clip([x1, x2], 0, im_w).astype(int)
+        y1, y2 = np.clip([y1, y2], 0, im_h).astype(int)
+
+        # to box
+        box = [x1, y1, x2 - x1, y2 - y1]
+
+        return box
+
+    @staticmethod
+    def _crop_region(im: Image, box: List[int]) -> Image:
+        """
+        Returns cropped region from image.
+        """
+        x, y, w, h = box
+
+        left, top = x, y
+        right, down = x + w, y + h
+
+        box = (left, top, right, down)
+
+        return im.crop(box)
 
     def _get_best_subtype(self, im_path: str, bbox: List[int], anchor: str, candidates: List[str]) -> str:
         """
@@ -81,65 +119,25 @@ class ColorDataDev:
 
         [anchor + candidates + Image] --> [selected + Region] --> best subtype
         """
-        def _crop_region(im, box):
-            x, y, w, h = box
-
-            left, top = x, y
-            right, down = x + w, y + h
-
-            box = (left, top, right, down)
-
-            return im.crop(box)
-
-        def _extend_bbox(box, im_size, min_size=224):
-            """
-            Increases `box` dims (w, h) to `min_size`,
-            ensuring (x, y) are unchanged.
-            """
-            # unpack
-            x, y, w, h = box
-            im_w, im_h = im_size
-
-            # increase size
-            if w < min_size:
-                x = x - (min_size - w) / 2
-                w = min_size
-
-            if h < min_size:
-                y = y - (min_size - h) / 2
-                h = min_size
-
-            # to coordinates
-            x1, x2 = x, x+w
-            y1, y2 = y, y+h
-
-            # clip to img dims
-            x1, x2 = np.clip([x1, x2], 0, im_w).astype(int)
-            y1, y2 = np.clip([y1, y2], 0, im_h).astype(int)
-
-            # to box
-            box = [x1, y1, x2-x1, y2-y1]
-
-            return box
 
         # Load image
         image = Image.open(im_path)
         im_id = im_path.split('/')[-1].replace('.jpg', '')
 
         # Crop bbox
-        bbox = _extend_bbox(bbox, image.size, min_size=224)
-        crop = _crop_region(image, bbox)
+        bbox = self._extend_bbox(bbox, image.size, min_size=224)
+        crop = self._crop_region(image, bbox)
 
         # If noisy annotation: set best = anchor
         if 0 in crop.size:
             return anchor
 
         # Filter subtype candidates using image query
-        selected = self.img2text_sim.inference(None, anchor, candidates, img_id=im_id)
+        selected = self.img2text.inference(None, anchor, candidates, img_id=im_id)
         selected = list(selected)
 
         # Select the best subtype using cropped region query
-        best = self.img2text_sim.inference(crop, anchor, selected, pick_best=True)
+        best = self.img2text.inference(crop, anchor, selected, pick_best=True)
         best = list(best)[0]
 
         return best
@@ -147,15 +145,13 @@ class ColorDataDev:
     def map_region_obj_to_best_subtype(self,
                                        data_regs: List[Dict[str, Union[int, List]]],
                                        data_pos: List[Dict[str, Union[int, List]]],
-                                       data_obj2subs: Dict[str, Dict[str, int]],
-                                       image_id2path: Dict[int, str]) -> List[Dict[str, Union[int, List]]]:
+                                       data_obj2subs: Dict[str, Dict[str, int]]) -> List[Dict[str, Union[int, List]]]:
         """
         Computes the best object subtype, for all objects mentioned in the region captions.
 
         :param data_regs: image region annotation (json)
         :param data_pos: pos-tagged region captions (json)
         :param data_obj2subs: object-to-subtype mapping
-        :param image_id2path: image-ID to file-path mapping
         :return: object subtypes for regions, for all images
         """
         def _get_bbox(region_annot: Dict) -> List[int]:
@@ -208,7 +204,7 @@ class ColorDataDev:
             if im_id in IGNORE_IMAGES:
                 continue
 
-            im_path = image_id2path[im_id]
+            im_path = self.img_id2path[im_id]
             regions = data_regs[i]['regions']
             sent_tags = data_pos[i]['pos_tags']
 
@@ -217,7 +213,7 @@ class ColorDataDev:
             for region, sent in zip(regions, sent_tags):
                 # Retrieve names
                 if 'of' in sent or 'has' in sent:
-                    obj_names = [self._concat_obj_part(sent)]
+                    obj_names = self._concat_obj_part(sent)
                 else:
                     obj_names = self._get_obj_names(sent)
 
@@ -259,7 +255,7 @@ class ColorDataDev:
 
         return region_obj2subtype
 
-    def _concat_obj_part(self, sent: Dict[str, str]) -> str:
+    def _concat_obj_part(self, sent: Dict[str, str]) -> List[str]:
         """
         Extracts 'part-whole' object relations from POS-tagged sentence.
 
@@ -278,8 +274,8 @@ class ColorDataDev:
         # objects (nouns)
         obj_names = self._get_obj_names(sent)
 
-        if len(obj_names) == 1:
-            return obj_names[0]
+        if len(obj_names) <= 1:
+            return obj_names
 
         # relation keyword
         if 'of' in sent:
@@ -292,7 +288,7 @@ class ColorDataDev:
         try:
             seg1, seg2 = sent_str.split(rel)
         except ValueError:
-            return obj_names[0]
+            return obj_names
 
         part, whole = '', ''
         for o in obj_names:
@@ -310,7 +306,7 @@ class ColorDataDev:
         # merge
         object_name = whole + ' ' + part
 
-        return object_name
+        return [object_name]
 
     def _get_obj_names(self, sent: Dict[str, str]) -> List[str]:
         """
@@ -580,8 +576,62 @@ class ColorDataDev:
         save_json(output, save_path)
         print('Done!')
 
+    def image2color(self,
+                    data_reg: List[Dict[str, Union[int, List]]],
+                    data_ros: List[Dict[str, Union[int, List]]]) -> Dict[str, Dict[str, int]]:
+        """
+        Given region bboxes and corresponding object names (subtyped),
+        computes the object color by querying the cropped region.
 
-def _region_obj_subtype():
+        :return: object to color distribution mapping
+        """
+        obj2colors = {}
+
+        for i in tqdm(range(len(data_reg))):
+            # Regions
+            regions_bbox = data_reg[i]['regions']
+            regions_obj = data_ros[i]['ros']
+
+            # Image
+            im_id = data_ros[i]['image_id']
+            im_path = self.img_id2path[im_id]
+
+            image = Image.open(im_path).convert('RGB')
+
+            # Iterate over regions
+            for b, objects in zip(regions_bbox, regions_obj):
+                # Text queries & Image regions
+                queries = []
+                images = []
+                names = []
+
+                # Queries
+                for _, obj in objects.items():
+                    queries += [f"what color is the {obj}?"]
+                    names += [obj]
+
+                # Bounding box
+                bbox = [b['x'], b['y'], b['width'], b['height']]
+                bbox = self._extend_bbox(bbox, image.size)
+
+                # Duplicate Regions
+                images += [self._crop_region(image, bbox)] * len(objects)
+
+                if len(objects) > 0:
+                    colors = self.model_ofa.inference(queries, images)
+
+                    for obj, col in zip(names, colors):
+                        if obj not in obj2colors:
+                            obj2colors[obj] = {}
+                        if col not in obj2colors[obj]:
+                            obj2colors[obj][col] = 0
+
+                        obj2colors[obj][col] += 1
+
+        return obj2colors
+
+
+def _reg_obj_subtype():
     parser = argparse.ArgumentParser(description="Region Object Subtypes")
 
     parser.add_argument("--regions",    type=str, required=True)
@@ -594,25 +644,23 @@ def _region_obj_subtype():
     args = parser.parse_args()
 
     # args = edict()
-    # args.regions = '../VG/regions/r_1.json'
-    # args.pos_tags = '../VG/pos_tags/p_1.json'
+    # args.regions = '../VG/regions/r_8.json'
+    # args.pos_tags = '../VG/pos_tags/p_8.json'
     # args.subtypes = '../data/object_subtypes_o100_s10.json'
     # args.data_dir = '../VG/'
-    # args.out = '../VG/ros_1.json'
+    # args.out = '../VG/ros_8.json'
     # args.gpu = 1
-
-    # Image Paths
-    im_id2path = get_img_id_to_path(_dir=args.data_dir)
 
     # Read
     d_regs = read_json(args.regions)
     d_pos = read_json(args.pos_tags)
     d_subs = read_json(args.subtypes)
 
-    ddev = ColorDataDev(use_im2txt_sim=True,
+    ddev = ColorDataDev(data_dir=args.data_dir,
+                        use_im2txt_sim=True,
                         device=f'cuda:{args.gpu}')
 
-    res = ddev.map_region_obj_to_best_subtype(d_regs, d_pos, d_subs, im_id2path)
+    res = ddev.map_region_obj_to_best_subtype(d_regs, d_pos, d_subs)
 
     save_json(res, path=args.out)
 
@@ -670,7 +718,38 @@ def _pos_tag():
     dev.compute_pos_tags(data_regions, save_path=args.out)
 
 
+def _im_col():
+    parser = argparse.ArgumentParser(description="Region Colors")
+
+    parser.add_argument("--regions",    type=str, required=True)
+    parser.add_argument("--ros",        type=str, required=True)
+    parser.add_argument("--data_dir",   type=str, required=True)
+    parser.add_argument("--out",        type=str, required=True)
+    parser.add_argument("--gpu",        type=int, required=True)
+
+    args = parser.parse_args()
+
+    # args = edict()
+    # args.regions = '../VG/regions/r_8.json'
+    # args.ros = '../VG/reg_obj_subtype/ros_8.json'
+    # args.data_dir = '../VG/'
+    # args.out = '../VG/c_8.json'
+    # args.gpu = 0
+
+    ddev = ColorDataDev(data_dir=args.data_dir,
+                        use_ofa=True,
+                        device=f'cuda:{args.gpu}')
+
+    regions = read_json(args.regions)
+    reg_obj_subtype = read_json(args.ros)
+
+    res = ddev.image2color(regions, reg_obj_subtype)
+
+    save_json(res, path=args.out)
+
+
 if __name__ == '__main__':
     # _obj_names(min_count=5)
     # _obj_subtypes(obj_min=100, sub_min=10)
-    _region_obj_subtype()
+    # _reg_obj_subtype()
+    _im_col()

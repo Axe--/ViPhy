@@ -1,3 +1,4 @@
+import os
 import torch
 import numpy as np
 from PIL import Image
@@ -76,9 +77,10 @@ class OFA(nn.Module):
 
         # Model
         self.model = OFAForConditionalGeneration.from_pretrained(path)
+        self.model.eval()
 
         # Processor
-        self.transform = Compose([lambda img: img.convert("RGB"),
+        self.transform = Compose([lambda im: im.convert("RGB"),
                                   Resize((self.size, self.size), Image.BICUBIC),
                                   ToTensor(), Normalize(self.mean, self.std)])
         # Device
@@ -114,7 +116,7 @@ class OFA(nn.Module):
                               return_tensors='pt')
         text = text['input_ids']
 
-        image = [self.transform(img) for img in batch_image]
+        image = [self.transform(im) for im in batch_image]
         image = torch.stack(image)
 
         p_mask = torch.tensor([True] * len(image))
@@ -164,8 +166,6 @@ class CLIPImageText(nn.Module):
         with query `image` exceeds that of the `anchor`.
 
         Returns the `top-k` candidates, if provided.
-
-        TODO: include region `caption` as additional query
         """
         # Prepare
         image = image.convert('RGB')
@@ -417,7 +417,8 @@ def _test():
     txt = "what color is the mirror?"
 
     # Color
-    model = OFA(path='../OFA/OFA-large', device='cuda:0')
+    model = OFA(path=os.environ['OFA'],
+                device='cuda:0')
     _o = model(txt, im)
     print(_o)
 
@@ -445,12 +446,12 @@ if __name__ == '__main__':
     #     im2txt.inference(None, obj, list(cds[obj]), img_id='1')
     # t.end()
 
-    im2txt = UniCLImageText('cuda:1')
+    # im2txt = UniCLImageText('cuda:1')
 
     # Image
     # img_paths = glob('./VG/images_1/*.jpg') + glob('./VG/images_2/*.jpg')
     # im2txt.precompute_image_emb(img_paths, save_fp='./data/img_emb.pkl')
 
     # Text
-    objects = list(read_json('./data/object_names_c5.json'))
-    im2txt.precompute_text_emb(objects, save_fp='./data/obj_emb.pkl')
+    # objects = list(read_json('./data/object_names_c5.json'))
+    # im2txt.precompute_text_emb(objects, save_fp='./data/obj_emb.pkl')
