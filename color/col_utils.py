@@ -40,6 +40,7 @@ def _to_primary_colors(raw_color_dist: Dict[str, int]) -> Dict[str, int]:
     for raw, freq in raw_color_dist.items():
         # Map Raw to Primary Colors
         for attr, color in ATTR2COLOR.items():
+            # TODO: Maybe replace words via List
             raw = raw.replace(attr, color)
 
         # Compute Frequency
@@ -129,21 +130,62 @@ def _object_typical_colors(obj_color_dists: Dict[str, Dict[str, float]], save_fp
     save_json(object2typical, save_fp, indent=4)
 
 
+def _merge_color_jsn(_dir: str, save_fp: str):
+    from glob import glob
+    from os.path import join as osj
+
+    def _num_instances(js: Dict[str, Dict]):
+        return sum(sum(col.values()) for ob, col in js.items())
+
+    paths = sorted(glob(osj(_dir, '*.json')))
+
+    object2colors = {}
+
+    for path in paths:
+        jsn = read_json(path)
+
+        total = _num_instances(jsn)
+        print(path.split('/')[-1], total)
+
+        for obj, colors in jsn.items():
+            if obj not in object2colors:
+                object2colors[obj] = {}
+
+            for color, freq in colors.items():
+                if color not in object2colors[obj]:
+                    object2colors[obj][color] = 0
+
+                object2colors[obj][color] += freq
+
+    print('Merged: ', _num_instances(object2colors))
+
+    save_json(object2colors, save_fp, indent=4)
+
+
 if __name__ == '__main__':
+    # _merge_color_jsn(_dir='../VG/colors',
+    #                  save_fp='../data/colors_raw.json')
+    # import sys; sys.exit()
+
     # Args
     show_viz = False
-    save = '../results/col_90{}'
+    save = '../results/colors{}'
 
     # Raw Colors
-    raw_color_data = read_json('../results/raw_90.json')
+    raw_data = read_json('../data/colors_raw.json')
 
     viz_data = []
     obj_color_data = {}
 
-    for obj_name, raw_colors in raw_color_data.items():
+    for obj_name, raw_col in raw_data.items():
         # Primary Colors
-        color_dist = _to_primary_colors(raw_colors)
+        color_dist = _to_primary_colors(raw_col)
         freqs = list(color_dist.values())
+
+        # Skip objects with no colors
+        if sum(freqs) == 0:
+            print(obj_name)
+            continue
 
         # Distribution
         color_dist = to_prob_dist(color_dist)
@@ -173,13 +215,14 @@ if __name__ == '__main__':
         _object_typical_colors(obj_color_data,
                                save.format('.json'))
 
-        # Primary Colors
+        # Primary Colors Frequency
         # save = save.format('.csv')
         # pd.DataFrame(viz_data).to_csv(save, sep=',', index=False)
 
     # Stacked Bar Plot
     if show_viz:
         df = pd.DataFrame(viz_data)
+        # TODO: Filter (~100) before Plotting
         df = df.drop(columns=['entropy', 'total'])
 
         _visualize(df, COLOR_SET)
