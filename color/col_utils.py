@@ -1,8 +1,10 @@
 import numpy as np
 import pandas as pd
+from tqdm import tqdm
 import matplotlib.pyplot as plt
-from typing import List, Dict
-from utils import read_json, compute_entropy, to_prob_dist
+from typing import List, Dict, Union
+from utils import read_json, save_json
+from utils import compute_entropy, to_prob_dist
 from constants import COLOR_SET, ATTR2COLOR
 
 
@@ -27,20 +29,16 @@ def _nearest_color(rgb):
     return smallest_distance
 
 
-def _map_pred_to_color(pred: Dict[str, int]) -> Dict[str, int]:
+def _to_primary_colors(raw_color_dist: Dict[str, int]) -> Dict[str, int]:
     """
-    Given model prediction {"colors": freq}, compute the
-    frequencies of the primary color set.
-
-    :param pred: raw color count
-    :return: primary color frequency
+    Given model predictions -- raw color frequencies,
+    computes the primary color distribution.
     """
-    # Initialize
+    # Primary colors
     color2freq = dict.fromkeys(COLOR_SET, 0)
 
-    # Iterate over raw colors
-    for raw, freq in pred.items():
-        # Map Raw Colors & Attributes to Primary Color Names
+    for raw, freq in raw_color_dist.items():
+        # Map Raw to Primary Colors
         for attr, color in ATTR2COLOR.items():
             raw = raw.replace(attr, color)
 
@@ -52,22 +50,20 @@ def _map_pred_to_color(pred: Dict[str, int]) -> Dict[str, int]:
     return color2freq
 
 
-def _cluster_objects_by_color_dist(_df: pd.DataFrame, k=3):
+def _cluster_objects_by_color_dist(obj_color_dist, k: int = 4):
     """
     Given object names & associated color distribution,
     clusters all objects based on entropy into `k` sets.
 
-    :param _df: object name and primary colors as columns
+    :param obj_color_dist: object color distributions
     :param k: num of clusters
-    :return:
     """
-    # TODO: ****************************
     pass
 
 
 def _visualize(_df: pd.DataFrame, color_set: List[str]):
-    # Replace color codes
-    def _rename(c):
+    # replace color codes
+    def _map(c):
         c = c.replace('white', 'whitesmoke')
         c = c.replace('blue', 'deepskyblue')
         # c = c.replace('green', 'limegreen')
@@ -77,7 +73,7 @@ def _visualize(_df: pd.DataFrame, color_set: List[str]):
         c = c.replace('purple', 'blueviolet')
         return c
 
-    color_set = [_rename(color) for color in color_set]
+    color_set = [_map(color) for color in color_set]
 
     # plot
     _df.plot.bar(x='object', stacked=True, color=color_set,
@@ -87,46 +83,104 @@ def _visualize(_df: pd.DataFrame, color_set: List[str]):
     plt.show()
 
 
+def _object_typical_colors(obj_color_dists: Dict[str, Dict[str, float]], save_fp: str):
+    """
+    Given object names & associated primary color distribution,
+    identifies typical colors from the distribution.
+    """
+    def _get_typical(_color_dist: Dict[str, float]) -> Dict[str, float]:
+        p_min = 0.1
+        done = False
+        n = len(_color_dist)
+
+        while not done:
+            # filter colors
+            _color_dist = {c: p for c, p in _color_dist.items() if p > p_min}
+
+            # re-normalize
+            _color_dist = to_prob_dist(_color_dist)
+
+            # if unchanged --> done
+            if len(_color_dist) == n:
+                done = True
+
+            # num colors
+            n = len(_color_dist)
+
+            # threshold
+            if n >= 4:
+                p_min = 0.1
+            elif n == 3:
+                p_min = 0.2
+            elif n == 2:
+                p_min = 0.3
+            else:
+                done = True
+
+        return _color_dist
+
+    # Typical Colors
+    object2typical = {}
+
+    for obj, colors in tqdm(obj_color_dists.items()):
+        object2typical[obj] = _get_typical(colors)
+
+    # Save to disk
+    save_json(object2typical, save_fp, indent=4)
+
+
 if __name__ == '__main__':
-    # Read Raw Color data
-    raw_color_data = read_json('./temp/obj_raw_colors_90.json')
+    # Args
+    show_viz = False
+    save = '../results/col_90{}'
 
-    data = []
-    for obj in raw_color_data:
+    # Raw Colors
+    raw_color_data = read_json('../results/raw_90.json')
+
+    viz_data = []
+    obj_color_data = {}
+
+    for obj_name, raw_colors in raw_color_data.items():
         # Primary Colors
-        c2f = _map_pred_to_color(obj['raw_colors'])
+        color_dist = _to_primary_colors(raw_colors)
+        freqs = list(color_dist.values())
 
-        # Normalize
-        total = sum(c2f.values())
-        c2f = {col: freq/total for col, freq in c2f.items()}
+        # Distribution
+        color_dist = to_prob_dist(color_dist)
 
         # Entropy
-        entropy = compute_entropy(freqs=list(c2f.values()))
+        entropy = compute_entropy(freqs)
 
-        # Store to dict
-        out = dict(object=obj['name'],
+        # Visualization
+        out = dict(object=obj_name,
                    entropy=entropy,
-                   total=total)
+                   total=sum(freqs))
+        out = {**out, **color_dist}
 
-        out = {**out, **c2f}
+        viz_data.append(out)
 
-        # Append
-        data.append(out)
+        # Object-to-Color
+        obj_color_data[obj_name] = color_dist
 
     # Sort by Entropy
-    data = sorted(data, key=lambda x: x['entropy'])
+    viz_data = sorted(viz_data, key=lambda x: x['entropy'])
+    # Round-off values
+    viz_data = [{c: round(f, 4) if type(f) == float else f
+                 for c, f in d.items()} for d in viz_data]
 
-    # To DF
-    df = pd.DataFrame(data)
+    if save:
+        # Typical Primary Colors
+        _object_typical_colors(obj_color_data,
+                               save.format('.json'))
 
-    # TODO: Cluster colors
-    # clusters = _cluster_objects_by_color_dist(df, k=3)
-
-    # Remove columns
-    df = df.drop(columns=['entropy', 'total'])
+        # Primary Colors
+        # save = save.format('.csv')
+        # pd.DataFrame(viz_data).to_csv(save, sep=',', index=False)
 
     # Stacked Bar Plot
-    _visualize(df, COLOR_SET)
+    if show_viz:
+        df = pd.DataFrame(viz_data)
+        df = df.drop(columns=['entropy', 'total'])
 
-    # TODO: Save DF as CSV
-    # pd.DataFrame(data).to_csv()
+        _visualize(df, COLOR_SET)
+        # TODO: Likewise, Plot Typical colors!

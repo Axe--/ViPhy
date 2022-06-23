@@ -3,7 +3,7 @@ import json
 import torch
 import pickle
 from torch.distributions import Categorical
-from typing import List, Dict, Union
+from typing import List, Dict, Union, Any
 from collections import OrderedDict
 
 
@@ -18,12 +18,19 @@ def compute_entropy(freqs: List[float]) -> float:
     return entropy
 
 
-def to_prob_dist(freqs: List[int]) -> List[float]:
+def to_prob_dist(freqs: Union[List[int], Dict[str, int]]) -> \
+                        Union[List[float], Dict[str, float]]:
+    # check dict
+    probs = list(freqs.values()) if type(freqs) == dict else freqs
+
     # tensor
-    freqs = torch.tensor(freqs)
+    probs = torch.tensor(probs)
 
     # distribution
-    probs = Categorical(freqs).probs.tolist()
+    probs = Categorical(probs).probs.tolist()
+
+    if type(freqs) == dict:
+        probs = {key: prob for key, prob in zip(freqs, probs)}
 
     return probs
 

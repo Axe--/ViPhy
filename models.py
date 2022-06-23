@@ -1,6 +1,7 @@
 import os
 import torch
 import numpy as np
+from glob import glob
 from PIL import Image
 import torch.nn as nn
 import torch.nn.functional as F
@@ -22,6 +23,8 @@ from tqdm import tqdm
 from utils import read_pkl, read_json, save_pkl
 
 import transformers
+from transformers import pipeline
+from transformers import T5Tokenizer, T5ForConditionalGeneration
 
 # DPT
 if transformers.__version__ >= '4.19.0':
@@ -33,111 +36,178 @@ if transformers.__version__ == '4.18.0.dev0':
     from torchvision.transforms import Compose, Resize, ToTensor, Normalize
 
 
-class POSTagger(nn.Module):
+# -------------------------------------------
+# ************ EVALUATION MODELS ************
+# -------------------------------------------
+
+class LanguageModel(nn.Module):
     """
-    Implements Part-of-Speech Tagger (LSTM-CRF)
+    Implements models supported under `pipeline`.
     """
-    def __init__(self):
+    def __init__(self, task: str, name: str, device='cpu'):
         super().__init__()
-        self.tagger = SequenceTagger.load("flair/pos-english")
+        device = torch.device(device)
 
-    def forward(self, sent: str) -> Dict[str, str]:
-        # Preprocess
-        words = sent.split()
+        self.model = pipeline(task, model=name, device=device)
 
-        sent = Sentence(sent)
+        if 'mask' in task:
+            self.key = 'token_str'
+            self.t2t = False
+        else:
+            self.key = 'generated_text'
+            self.t2t = True
 
-        # Tagging
-        self.tagger.predict(sent)
+    def forward(self, text: str) -> str:
+        if self.t2t:
+            text = dict(text_inputs=text,
+                        max_new_tokens=2)
+        else:
+            text = dict(inputs=text)
 
-        tags = [word.value for word in sent.labels]
+        pred = self.model(**text)
 
-        # Dict
-        token_tag_dict = {word: tag for word, tag in zip(words, tags)}
+        pred = pred[0][self.key]
 
-        return token_tag_dict
+        return pred
 
 
-class OFA(nn.Module):
+class UnifiedQA(nn.Module):
     """
-    Implements OFA model for VQA (color extraction)
+    Implements Unified-QA (T5) model.
     """
-    size = 384
-    mean = [0.5, 0.5, 0.5]
-    std = [0.5, 0.5, 0.5]
-
-    # Monkey patch
-    OFAModel.padding_idx = 1
-
-    def __init__(self, path, device='cpu'):
+    def __init__(self, name: str, device='cpu'):
         super().__init__()
-
         # Tokenizer
-        self.tokenizer = OFATokenizer.from_pretrained(path)
-
+        self.tokenizer = T5Tokenizer.from_pretrained(name)
         # Model
-        self.model = OFAForConditionalGeneration.from_pretrained(path)
+        self.model = T5ForConditionalGeneration.from_pretrained(name)
         self.model.eval()
-
-        # Processor
-        self.transform = Compose([lambda im: im.convert("RGB"),
-                                  Resize((self.size, self.size), Image.BICUBIC),
-                                  ToTensor(), Normalize(self.mean, self.std)])
         # Device
-        self.to(device)
-
+        self.model.to(device)
         self.device = device
 
-    @torch.inference_mode()
-    def forward(self, text: str, image: Image) -> str:
-        # Process
-        text = self.tokenizer([text], return_tensors="pt")["input_ids"].to(self.device)
-        image = self.transform(image).unsqueeze(0).to(self.device)
-
-        # Generate
-        out = self.model.generate(inputs=text,
-                                  patch_images=image,
-                                  num_beams=4,
-                                  max_length=8)
-        # Decode
-        out = self.tokenizer.batch_decode(out, skip_special_tokens=True)
-        out = out[0].strip()
-
-        return out
+        # TODO: self.model.parallelize()
 
     @torch.inference_mode()
-    def inference(self, batch_text: List[str], batch_image: List) -> List[str]:
+    def forward(self, text: str) -> str:
+        tokens = self.tokenizer(text, return_tensors="pt")
+        tokens = tokens.input_ids.to(self.device)
+
+        pred = self.model.generate(input_ids=tokens,
+                                   max_length=2)
+
+        pred = self.tokenizer.decode(token_ids=pred[0],
+                                     skip_special_tokens=True)
+        return pred
+
+
+if transformers.__version__ == '4.18.0.dev0':
+    class OFA(nn.Module):
         """
-        Implements `forward()` at batch-level.
+        Implements OFA model for VQA (color extraction)
         """
-        # Process
-        text = self.tokenizer(text=batch_text,
-                              padding=True,
-                              return_tensors='pt')
-        text = text['input_ids']
+        size = 384
+        mean = [0.5, 0.5, 0.5]
+        std = [0.5, 0.5, 0.5]
 
-        image = [self.transform(im) for im in batch_image]
-        image = torch.stack(image)
+        # Monkey patch
+        OFAModel.padding_idx = 1
 
-        p_mask = torch.tensor([True] * len(image))
+        def __init__(self, path, device='cpu'):
+            super().__init__()
 
-        # To Device
-        text = text.to(self.device)
-        image = image.to(self.device)
-        p_mask = p_mask.to(self.device)
+            # Tokenizer
+            self.tokenizer = OFATokenizer.from_pretrained(path)
 
-        # Generate
-        out = self.model.generate(inputs=text,
-                                  patch_images=image,
-                                  patch_masks=p_mask,
-                                  num_beams=4,
-                                  max_length=8)
+            # Model
+            self.model = OFAForConditionalGeneration.from_pretrained(path)
+            self.model.eval()
 
-        # Decode
-        out = self.tokenizer.batch_decode(out, skip_special_tokens=True)
-        out = [o.strip() for o in out]
+            # Processor
+            self.transform = Compose([lambda im: im.convert("RGB"),
+                                      Resize((self.size, self.size), Image.BICUBIC),
+                                      ToTensor(), Normalize(self.mean, self.std)])
+            # Device
+            self.to(device)
 
-        return out
+            self.device = device
+
+        @torch.inference_mode()
+        def forward(self, text: str, image: Image) -> str:
+            # Preprocess
+            text = self.tokenizer([text], return_tensors="pt")["input_ids"].to(self.device)
+            image = self.transform(image).unsqueeze(0).to(self.device)
+
+            # Generate
+            out = self.model.generate(inputs=text,
+                                      patch_images=image,
+                                      num_beams=4,
+                                      max_length=8)
+            # Decode
+            out = self.tokenizer.batch_decode(out, skip_special_tokens=True)
+            out = out[0].strip()
+
+            return out
+
+        @torch.inference_mode()
+        def prompt(self, text: str) -> str:
+            """
+            Performs text-only prompting by masking out image.
+            """
+            # Preprocess
+            text = self.tokenizer([text], return_tensors="pt")["input_ids"].to(self.device)
+            image = torch.zeros([1, 3, self.size, self.size]).to(self.device)
+            p_mask = torch.tensor([False]).to(self.device)
+
+            # Generate
+            out = self.model.generate(inputs=text,
+                                      patch_images=image,
+                                      patch_masks=p_mask,
+                                      max_length=2)
+            # Decode
+            out = self.tokenizer.batch_decode(out, skip_special_tokens=True)
+            out = out[0].strip()
+
+            return out
+
+        @torch.inference_mode()
+        def inference(self, batch_text: List[str], batch_image: List) -> List[str]:
+            """
+            Implements `forward()` at batch-level.
+            """
+            # Preprocess
+            text = self.tokenizer(text=batch_text,
+                                  padding=True,
+                                  return_tensors='pt')
+            text = text['input_ids']
+
+            image = [self.transform(im) for im in batch_image]
+            image = torch.stack(image)
+
+            p_mask = torch.tensor([True] * len(image))
+
+            # To Device
+            text = text.to(self.device)
+            image = image.to(self.device)
+            p_mask = p_mask.to(self.device)
+
+            # Generate
+            out = self.model.generate(inputs=text,
+                                      patch_images=image,
+                                      patch_masks=p_mask,
+                                      num_beams=4,
+                                      max_length=8)
+
+            # Decode
+            out = self.tokenizer.batch_decode(out, skip_special_tokens=True)
+            out = [o.strip() for o in out]
+
+            return out
+
+
+# -----------------------------------------
+# ************ PIPELINE MODELS ************
+# -----------------------------------------
 
 
 class CLIPImageText(nn.Module):
@@ -159,13 +229,10 @@ class CLIPImageText(nn.Module):
                   anchor: str,
                   candidates: List[str],
                   pick_best=False,
-                  caption: str = None,
-                  top_k: int = None) -> Dict[str, float]:
+                  caption: str = None) -> Dict[str, float]:
         """
         Selects `candidates` whose similarity score (dot)
         with query `image` exceeds that of the `anchor`.
-
-        Returns the `top-k` candidates, if provided.
         """
         # Prepare
         image = image.convert('RGB')
@@ -209,7 +276,7 @@ class CLIPImageText(nn.Module):
         return selected
 
 
-class Text2TextSimilarity(nn.Module):
+class Text2TextSim(nn.Module):
     """
     Implements Text-to-Text Semantic Similarity Transformer.
     """
@@ -245,9 +312,9 @@ class Text2TextSimilarity(nn.Module):
         return best
 
 
-class DepthTransformer(nn.Module):
+class DPT(nn.Module):
     """
-    Implements Monocular Depth Model
+    Implements DPT Model for monocular depth estimation.
     """
     def __init__(self, device='cpu'):
         super().__init__()
@@ -259,7 +326,7 @@ class DepthTransformer(nn.Module):
         self.to(device)
 
     @torch.inference_mode()
-    def forward(self, image: Image) -> Image:       # TODO: Handle Batch of Images (list)
+    def forward(self, image: Image) -> Image:
         # prepare image for the model
         inputs = self.feat_ext(images=image, return_tensors="pt")
 
@@ -271,7 +338,7 @@ class DepthTransformer(nn.Module):
 
         # interpolate to original size
         prediction = F.interpolate(input=pred.unsqueeze(1),
-                                   size=image.im_size[::-1],
+                                   size=image.size[::-1],
                                    mode="bicubic")
 
         # visualize the prediction
@@ -404,41 +471,54 @@ class UniCLImageText(nn.Module):
         save_pkl(img2emb, save_fp)
 
 
-def _test():
-    def _plot(_im: Image):
-        # plt.figure(figsize=(14, 14))
-        plt.imshow(_im)
-        plt.show()
+class POSTagger(nn.Module):
+    """
+    Implements Part-of-Speech Tagger (LSTM-CRF)
+    """
 
-    url = 'https://image.cnbcfm.com/api/v1/image/107037293-IMG-9997.jpg?v=1648561728'
-    im = Image.open(requests.get(url, stream=True).raw)
-    # _plot(im)
+    def __init__(self):
+        super().__init__()
+        self.tagger = SequenceTagger.load("flair/pos-english")
 
+    def forward(self, sent: str) -> Dict[str, str]:
+        # Preprocess
+        words = sent.split()
+        sent = Sentence(sent)
+
+        # Tagging
+        self.tagger.predict(sent)
+        tags = [word.value for word in sent.labels]
+
+        # Dict
+        token_tag_dict = {word: tag for word, tag
+                          in zip(words, tags)}
+        return token_tag_dict
+
+
+def _demo():
+    im = None
     txt = "what color is the mirror?"
 
     # Color
-    model = OFA(path=os.environ['OFA'],
-                device='cuda:0')
-    _o = model(txt, im)
+    ofa = OFA(path=os.environ['OFA'], device='cuda:0')
+    _o = ofa(txt, im)
     print(_o)
 
-    o_b = model.inference([txt, txt], [im, im])
+    o_b = ofa.inference([txt, txt], [im, im])
     print(o_b)
 
-    # model = DepthTransformer(device='cuda:0')
-    # o = model(im); _plot(o)
+    # m = DepthTransformer('cpu')
+    # o = m(im); _plot(o)
 
-
-if __name__ == '__main__':
-    import requests
-    from glob import glob
-    from utils import Timer
-
-    url = 'https://t4.ftcdn.net/jpg/02/99/23/49/360_F_299234924_cBWFTruM7TGGoahcDabUn0b65PTtiZOA.jpg'
-    img = Image.open(requests.get(url, stream=True).raw)
-
-    obj = 'ball'
-    cds = read_json('./data/object_subtypes_o100_s10.json')
+    # import requests
+    # from glob import glob
+    # from utils import Timer
+    #
+    # url = 'https://t4.ftcdn.net/jpg/02/99/23/49/360_F_299234924_cBWFTruM7TGGoahcDabUn0b65PTtiZOA.jpg'
+    # img = Image.open(requests.get(url, stream=True).raw)
+    #
+    # obj = 'ball'
+    # cds = read_json('./data/object_subtypes_o100_s10.json')
 
     # im2txt = UniCLImageText('cuda:1', './data/obj_emb.pkl', './data/img_emb.pkl')
     # t = Timer('Precomputed')
@@ -455,3 +535,41 @@ if __name__ == '__main__':
     # Text
     # objects = list(read_json('./data/object_names_c5.json'))
     # im2txt.precompute_text_emb(objects, save_fp='./data/obj_emb.pkl')
+
+
+def _plot(_im: Image, save: str = None):
+    plt.figure(figsize=(14, 14))
+    plt.imshow(_im, cmap='gray')
+    if save:
+        plt.savefig(save, bbox_inches='tight')
+    else:
+        plt.show()
+
+
+def _depth_ade20k():
+    _dir = '/home/axe/Datasets/ADE20K_2021_17_01'
+
+    paths = glob(osj(_dir, '**', '*.jpg'), recursive=True)
+
+    model = DPT(device='cuda:0')
+
+    for p in tqdm(paths):
+        # Image
+        img = Image.open(p).convert('RGB')
+
+        # Depth
+        depth = model(img)
+
+        # Save
+        depth.save(p.replace('.jpg', '_depth.jpeg'))
+
+
+if __name__ == '__main__':
+    # m = LanguageModel(task='fill-mask', name='bert-base-uncased')
+    # prompt = "banana is of [MASK] color"
+    # m = LanguageModel(task='text-generation', name='gpt2', device='cuda:1')
+    # prompt = "the color of banana is "
+    m = UnifiedQA(name='allenai/unifiedqa-t5-small', device='cuda:1')
+    prompt = "is banana red in color?"
+
+    print(m(prompt))

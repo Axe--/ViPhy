@@ -1,3 +1,4 @@
+easydict~=1.9
 flair==0.11.3
 inflect==5.6.0
 matplotlib==3.4.3
@@ -13,5 +14,9 @@ torch==1.11.0
 torchvision==0.12.0
 timm==0.4.12
 tqdm==4.64.0
-transformers==4.18.0.dev0
+# transformers==4.18.0.dev0
+transformers==4.20.1
 yacs==0.1.8
+PyYAML~=6.0
+scikit-learn~=1.1.1
+opencv-python~=4.5.5.62
