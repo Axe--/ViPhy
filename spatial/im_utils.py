@@ -1,29 +1,13 @@
-# Adapted from ADE-20K GitHub repo
-
-from PIL import Image
-import matplotlib._color_data as mcd
-import cv2
+import os
 import json
 import numpy as np
-import os
-
-
-# ** For ADE20K json files **
-def read_json(p) -> dict:
-    with open(p, encoding='windows-1252') as fp:
-        return json.load(fp)
-
-
-_NUMERALS = '0123456789abcdefABCDEF'
-_HEXDEC = {v: int(v, 16) for v in (x + y for x in _NUMERALS for y in _NUMERALS)}
-LOWERCASE, UPPERCASE = 'x', 'X'
-
-
-def rgb(triplet):
-    return _HEXDEC[triplet[0:2]], _HEXDEC[triplet[2:4]], _HEXDEC[triplet[4:6]]
+from PIL import Image
 
 
 def loadAde20K(file):
+    """
+    Source: https://github.com/CSAILVision/ADE20K/blob/main/utils/utils_ade20k.py
+    """
     fileseg = file.replace('.jpg', '_seg.png');
     with Image.open(fileseg) as io:
         seg = np.array(io);
@@ -54,7 +38,6 @@ def loadAde20K(file):
             PartsClassMasks.append((np.int32(R) / 10) * 256 + np.int32(G));
             PartsInstanceMasks = PartsClassMasks
             # TODO:  correct partinstancemasks
-
 
         else:
             break
@@ -98,26 +81,3 @@ def loadAde20K(file):
             'class_mask': ObjectClassMasks, 'instance_mask': ObjectInstanceMasks,
             'partclass_mask': PartsClassMasks, 'part_instance_mask': PartsInstanceMasks,
             'objects': objects, 'parts': parts}
-
-
-def plot_polygon(img_name, info, show_obj=True, show_parts=False):
-    colors = mcd.CSS4_COLORS
-    color_keys = list(colors.keys())
-    all_objects = []
-    all_poly = []
-    if show_obj:
-        all_objects += info['objects']['class']
-        all_poly += info['objects']['polygon']
-    if show_parts:
-        all_objects += info['parts']['class']
-        all_poly += info['objects']['polygon']
-
-    img = cv2.imread(img_name)
-    thickness = 5
-    for it, (obj, poly) in enumerate(zip(all_objects, all_poly)):
-        curr_color = colors[color_keys[it % len(color_keys)]]
-        pts = np.concatenate([poly['x'][:, None], poly['y'][:, None]], 1)[None, :]
-        color = rgb(curr_color[1:])
-        img = cv2.polylines(img, pts, True, color, thickness)
-    return img
-
