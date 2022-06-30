@@ -24,7 +24,8 @@ from utils import read_pkl, read_json, save_pkl
 
 import transformers
 from transformers import pipeline
-from transformers import T5Tokenizer, T5ForConditionalGeneration
+from transformers import T5Tokenizer
+from transformers import T5ForConditionalGeneration as T5
 
 # DPT
 if transformers.__version__ >= '4.19.0':
@@ -48,14 +49,18 @@ class LanguageModel(nn.Module):
         super().__init__()
         device = torch.device(device)
 
-        self.model = pipeline(task, model=name, device=device)
+        self.model = pipeline(task=task,
+                              model=name,
+                              device=device)
 
-        if 'mask' in task:
-            self.key = 'token_str'
+        if task == 'fill-mask':
             self.t2t = False
+            self.key = 'token_str'
         else:
-            self.key = 'generated_text'
             self.t2t = True
+            self.key = 'generated_text'
+
+        self.name = name
 
     def forward(self, text: str) -> str:
         if self.t2t:
@@ -80,13 +85,16 @@ class UnifiedQA(nn.Module):
         # Tokenizer
         self.tokenizer = T5Tokenizer.from_pretrained(name)
         # Model
-        self.model = T5ForConditionalGeneration.from_pretrained(name)
+        self.model = T5.from_pretrained(name, low_cpu_mem_usage=True)
         self.model.eval()
         # Device
         self.model.to(device)
         self.device = device
+        self.name = name
 
-        # TODO: self.model.parallelize()
+        # T5-11B
+        if '11b' in name and 'cuda' in device:
+            self.model.parallelize()
 
     @torch.inference_mode()
     def forward(self, text: str) -> str:
@@ -99,6 +107,19 @@ class UnifiedQA(nn.Module):
         pred = self.tokenizer.decode(token_ids=pred[0],
                                      skip_special_tokens=True)
         return pred
+
+
+class VisualBERT(nn.Module):
+    """
+    Implements VisualBERT for probing.
+    """
+    def __init__(self, name):
+        super().__init__()
+
+        self.name = name
+
+    def forward(self, x):
+        ...
 
 
 if transformers.__version__ == '4.18.0.dev0':
