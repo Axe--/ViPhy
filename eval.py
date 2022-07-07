@@ -1,9 +1,7 @@
 """
 Evaluate Models on VisCS dataset.
-- BERT  (mask)
-- UniQA (txt)
-- OFA   (txt)
 """
+
 import argparse
 import numpy as np
 import pandas as pd
@@ -15,29 +13,43 @@ from collections import Counter
 from sklearn.metrics import f1_score
 from utils import read_json
 from color.constants import COLOR_SET
-from models import LanguageModel, UnifiedQA
+from models import (ZeroShotLM, MaskedLM, UnifiedQA, ViLT)
 
 
-def _eval_colors(dataset, model):
+def _eval_colors(dataset, model, top_k):
     is_correct = []
     preds = []
 
     for d in tqdm(dataset):
         # sample
         inp = d['prompt']
-        true_set = d['labels']
+        true = d['labels']
         # inference
-        pred = model(inp)
-        # clean
-        pred = pred.lower().strip()
+        if top_k:
+            pred = model(inp, top_k)
+            # clean
+            pred = [p.lower().strip() for p in pred]
+            # overlaps with true set
+            cond = len(set(true) & set(pred)) > 0
 
-        is_correct.append(pred in true_set)
-        preds.append(pred)
+            preds += pred
+        else:
+            pred = model(inp)
+            # clean
+            pred = pred.lower().strip()
+            # belongs to true set
+            cond = pred in true
+
+            preds += [pred]
+
+        # append
+        is_correct.append(cond)
 
     # Metrics
     acc = np.mean(is_correct)
 
     print(f'\n---- {model.name} ----\n')
+    print(f'Top-K: {top_k}')
 
     print('Accuracy** : {:.4f}'.format(acc*100))
     # print('F1-score: {:.4f}'.format(f1))
@@ -47,7 +59,7 @@ def _eval_colors(dataset, model):
 
 
 def _color_prompts(obj_colors: Dict[str, Dict[str, float]],
-                   task_type: str, model_name: str) -> List[Dict]:
+                   task_type: str, model) -> List[Dict]:
     """
     Given object name & associated typical colors,
     generates textual prompts for model evaluation.
@@ -56,9 +68,7 @@ def _color_prompts(obj_colors: Dict[str, Dict[str, float]],
     """
     # Masked LM
     if task_type == 'fill-mask':
-        tok = AutoTokenizer.from_pretrained(model_name)
-
-        template = "{} is of {} color".format('{}', tok.mask_token)
+        template = "{} is of {} color".format('{}', model.mask)
 
     # Text-to-Text
     elif task_type == 'text-generation':
@@ -88,26 +98,40 @@ def _color_prompts(obj_colors: Dict[str, Dict[str, float]],
     return dataset
 
 
-def _eval_spatial(dataset, model):
+def _eval_spatial(dataset, model, top_k):
     is_correct = []
     preds = []
 
     for d in tqdm(dataset):
         # sample
         inp = d['prompt']
-        true_set = d['labels']
+        true = d['labels']
         # inference
-        pred = model(inp)
-        # clean
-        pred = pred.lower().strip()
+        if top_k:
+            pred = model(inp, top_k)
+            # clean
+            pred = [p.lower().strip() for p in pred]
+            # overlaps with true set
+            cond = len(set(true) & set(pred)) > 0
 
-        is_correct.append(pred in true_set)
-        preds.append(pred)
+            preds += pred
+        else:
+            pred = model(inp)
+            # clean
+            pred = pred.lower().strip()
+            # belongs to true set
+            cond = pred in true
+
+            preds += [pred]
+
+        # append
+        is_correct.append(cond)
 
     # Metrics
     acc = np.mean(is_correct)
 
     print(f'\n---- {model.name} ----\n')
+    print(f'Top-K: {top_k}')
 
     print('Accuracy** : {:.4f}'.format(acc * 100))
     # print('F1-score: {:.4f}'.format(f1))
@@ -117,7 +141,7 @@ def _eval_spatial(dataset, model):
 
 
 def _spatial_prompts(spatial_rels: List[Dict[str, Any]],
-                     task_type: str, model_name: str) -> List[Dict]:
+                     task_type: str, model) -> List[Dict]:
     """
     Given object name & associated typical colors,
     generates textual prompts for model evaluation.
@@ -126,9 +150,7 @@ def _spatial_prompts(spatial_rels: List[Dict[str, Any]],
     """
     # Masked LM
     if task_type == 'fill-mask':
-        tok = AutoTokenizer.from_pretrained(model_name)
-
-        template = f"in a {'{}'}, the {'{}'} is located {tok.mask_token} the {'{}'}"
+        template = f"in a {'{}'}, the {'{}'} is located {model.mask} the {'{}'}"
 
     # Text-to-Text
     elif task_type == 'text-generation':
@@ -170,20 +192,22 @@ def _increment_char(c: str):
 
 
 if __name__ == '__main__':
-    # parser = argparse.ArgumentParser(description="Region Object Subtypes")
-    #
-    # parser.add_argument("--task",   type=str, required=True)
-    # parser.add_argument("--model",  type=str, required=True)
-    # parser.add_argument("--gpu",    type=int, required=True)
-    # parser.add_argument("--eval",   type=str, required=True)
-    #
-    # args = parser.parse_args()
+    parser = argparse.ArgumentParser(description="Evaluate Models")
+
+    parser.add_argument("--task",   type=str)
+    parser.add_argument("--model",  type=str)
+    parser.add_argument("--eval",   type=str)
+    parser.add_argument("--gpu",    type=int)
+    parser.add_argument("--top_k",  type=int)
+
+    args = parser.parse_args()
 
     # Args
     args = edict()
-    args.task = 'fill-mask'             # 'QA'
-    args.model = 'microsoft/deberta-base'    # 'allenai/unifiedqa-t5-large'
+    args.task = 'QA'            # 'QA'
+    args.model = 'allenai/unifiedqa-t5-base'    # 'allenai/unifiedqa-t5-large'
     args.eval = 'spatial'
+    args.top_k = None
     args.gpu = 1
 
     # Device
@@ -196,17 +220,14 @@ if __name__ == '__main__':
     elif 'gpt-neo' in args.model:
         ...
 
-    elif 'clip' in args.model:
-        ...
-
-    elif 'vilt' in args.model:
-        ...
-
-    elif 'visualbert' in args.model:
+    elif 'ofa' in args.model:
         ...
 
     else:
-        model = LanguageModel(task=args.task, name=args.model, device=device)
+        if args.task == 'fill-mask':
+            model = MaskedLM(name=args.model, device=device)
+        # else:
+        #     model = LanguageModel(task=args.task, name=args.model, device=device)
 
     # Read --> Dataset --> Evaluate
     if args.eval == 'color':
@@ -214,9 +235,9 @@ if __name__ == '__main__':
 
         data = _color_prompts(obj_colors=data,
                               task_type=args.task,
-                              model_name=args.model)
+                              model=model)
 
-        _eval_colors(data, model)
+        _eval_colors(data, model, args.top_k)
 
     elif args.eval == 'spatial':
         data = pd.read_csv('./results/spatial.csv')
@@ -224,9 +245,9 @@ if __name__ == '__main__':
 
         data = _spatial_prompts(spatial_rels=data,
                                 task_type=args.task,
-                                model_name=args.model)
+                                model=model)
 
-        _eval_spatial(data, model)
+        _eval_spatial(data, model, args.top_k)
 
     else:
         raise NotImplemented()

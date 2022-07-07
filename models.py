@@ -8,7 +8,9 @@ import torch.nn.functional as F
 import matplotlib.pyplot as plt
 from os.path import join as osj
 from typing import Dict, List, Union
+from torch import Tensor, LongTensor
 from flair.data import Sentence
+from collections import OrderedDict
 from flair.models import SequenceTagger
 from sentence_transformers import SentenceTransformer
 
@@ -24,8 +26,15 @@ from utils import read_pkl, read_json, save_pkl
 
 import transformers
 from transformers import pipeline
-from transformers import T5Tokenizer
-from transformers import T5ForConditionalGeneration as T5
+from transformers import AutoTokenizer, AutoModel
+from transformers import BertTokenizer, BertForMaskedLM
+from transformers import RobertaTokenizer, RobertaForMaskedLM
+from transformers import DebertaTokenizer, DebertaPreTrainedModel
+from transformers import DebertaV2Tokenizer, DebertaV2ForMaskedLM
+from transformers import T5Tokenizer, T5ForConditionalGeneration as T5
+from transformers import GPT2Tokenizer, GPT2LMHeadModel, GPTNeoForCausalLM
+from transformers import VisualBertForPreTraining
+
 
 # DPT
 if transformers.__version__ >= '4.19.0':
@@ -37,14 +46,213 @@ if transformers.__version__ == '4.18.0.dev0':
     from torchvision.transforms import Compose, Resize, ToTensor, Normalize
 
 
+def freeze(model):
+    for param in model.parameters():
+        param.requires_grad = False
+
+
 # -------------------------------------------
 # ************ EVALUATION MODELS ************
 # -------------------------------------------
 
-class LanguageModel(nn.Module):
+
+class MaskedLM(nn.Module):
+    """
+    Implements Masked Language Models (*BERT).
+    """
+    def __init__(self, name: str, num_classes: int, device='cpu', zero_shot=False, ckpt=None):
+        super().__init__()
+
+        # Args
+        self.name = name
+        self.device = device
+        self.zero_shot = zero_shot
+
+        # Init
+        tok_name, _Tokenizer, _Model = self._init_transformer()
+
+        # Tokenizer
+        self.tokenizer = _Tokenizer.from_pretrained(tok_name)
+
+        # Transformer (frozen)
+        self.model = _Model.from_pretrained(name)
+        freeze(self.model)
+
+        # Linear Probe
+        hidden_dim = self.model.config.hidden_size
+        self.fc = nn.Linear(hidden_dim, num_classes)
+
+        self.loss_fn = nn.CrossEntropyLoss()
+
+        # Init
+        self._load_wts(ckpt)
+        self.to(device)
+
+    def _init_transformer(self):
+        name = self.name
+        # MASK model
+        if self.zero_shot:
+            if name.startswith('bert-'):
+                _Tokenizer = BertTokenizer
+                _Model = BertForMaskedLM
+            elif 'visualbert' in name:
+                name = 'bert-base-uncased'
+                _Tokenizer = BertTokenizer
+                _Model = VisualBertForPreTraining
+            elif 'roberta' in name:
+                _Tokenizer = RobertaTokenizer
+                _Model = RobertaForMaskedLM
+            elif 'deberta-v2' in name:
+                _Tokenizer = DebertaV2Tokenizer
+                _Model = DebertaV2ForMaskedLM
+            elif 'deberta' in name:
+                _Tokenizer = DebertaTokenizer
+                _Model = DebertaPreTrainedModel
+            else:
+                print(name)
+                raise NotImplemented()
+
+        # CLS model
+        else:
+            _Tokenizer = AutoTokenizer.from_pretrained(self.name)
+            _Model = AutoModel.from_pretrained(self.name)
+
+        return name, _Tokenizer, _Model
+
+    def _load_wts(self, path: str):
+        if path:
+            ckpt = torch.load(path, map_location='cpu')
+            state_dict = ckpt['model_state_dict']
+
+            state_dict_new = OrderedDict()
+
+            for k, v in state_dict.items():
+                k_ = k.replace('module.', '')
+                state_dict_new[k_] = v
+
+            self.load_state_dict(state_dict_new)
+
+            print(f'Model successfully loaded from {path}\n')
+
+    def forward(self, inputs: Dict[str, Tensor], labels: Tensor = None) -> Tensor:
+        # transformer
+        x = self.model(**inputs)[0]     # [B, L, D]
+
+        cls_emb = x[:, 0, :]            # [B, D]
+
+        # classifier
+        logits = self.fc(cls_emb)       # [B, C]
+
+        # eval
+        if labels is None:
+            return logits
+
+        # train
+        else:
+            loss = self.loss_fn(logits, labels)
+            return loss
+
+    @torch.inference_mode()
+    def predict(self, text: str, top_k: int) -> List[str]:
+        # Special Tokens
+        cls = self.tokenizer.cls_token
+        sep = self.tokenizer.sep_token
+        mask = self.tokenizer.mask_token
+
+        # Tokenize input
+        text = f"{cls} {text} {sep}"
+
+        tokens = self.tokenizer.tokenize(text)
+        token_ids = self.tokenizer.convert_tokens_to_ids(tokens)
+
+        tokens_tensor = torch.tensor([token_ids]).to(self.device)
+
+        mask_idx = tokens.index(mask)
+
+        # Predict all tokens
+        outputs = self.model(tokens_tensor)
+        predictions = outputs[0]
+
+        probs = torch.nn.functional.softmax(predictions[0, mask_idx], dim=-1)
+        top_k_weights, top_k_indices = torch.topk(probs, top_k, sorted=True)
+
+        preds_top_k = []
+        for i, pred_idx in enumerate(top_k_indices):
+            pred = self.tokenizer.convert_ids_to_tokens([pred_idx])[0]
+            pred = pred.replace('Ġ', '').replace('ġ', '')
+            preds_top_k.append(pred)
+
+        return preds_top_k
+
+
+class Text2TextLM(nn.Module):
+    """
+    Implements Text-to-Text Language Models (GPT*, T5)
+    """
+    pass
+
+
+class UnifiedQA(nn.Module):
+    """
+    Implements Unified-QA (T5) model.
+    """
+    def __init__(self, name: str, device='cpu'):
+        super().__init__()
+        # Tokenizer
+        self.tokenizer = T5Tokenizer.from_pretrained(name)
+        # Model
+        self.model = T5.from_pretrained(name, low_cpu_mem_usage=True)
+        self.model.eval()
+        # Device
+        if '11b' in name and 'cuda' in device:
+            self.model.parallelize()
+            device = 'cuda:0'
+        else:
+            self.model.to(device)
+        # Args
+        self.device = device
+        self.name = name
+
+    def forward(self, inputs: Dict[str, Tensor], labels: Tensor) -> Tensor:
+        # Batch
+        inputs['labels'] = labels
+
+        out = self.model(**inputs)
+
+        return out
+
+    @torch.inference_mode()
+    def predict(self, text: str) -> str:
+        tokens = self.tokenizer(text, return_tensors="pt")
+        tokens = tokens.input_ids.to(self.device)
+
+        pred = self.model.generate(input_ids=tokens,
+                                   max_length=4)
+
+        pred = self.tokenizer.decode(token_ids=pred[0],
+                                     skip_special_tokens=True)
+        return pred
+
+
+class ViLT(nn.Module):
+    """
+    Implements ViLT for textual probing.
+    """
+
+    def __init__(self, name):
+        super().__init__()
+
+        self.name = name
+
+    def forward(self, x):
+        ...
+
+
+class ZeroShotLM(nn.Module):
     """
     Implements models supported under `pipeline`.
     """
+
     def __init__(self, task: str, name: str, device='cpu'):
         super().__init__()
         device = torch.device(device)
@@ -74,52 +282,6 @@ class LanguageModel(nn.Module):
         pred = pred[0][self.key]
 
         return pred
-
-
-class UnifiedQA(nn.Module):
-    """
-    Implements Unified-QA (T5) model.
-    """
-    def __init__(self, name: str, device='cpu'):
-        super().__init__()
-        # Tokenizer
-        self.tokenizer = T5Tokenizer.from_pretrained(name)
-        # Model
-        self.model = T5.from_pretrained(name, low_cpu_mem_usage=True)
-        self.model.eval()
-        # Device
-        self.model.to(device)
-        self.device = device
-        self.name = name
-
-        # T5-11B
-        if '11b' in name and 'cuda' in device:
-            self.model.parallelize()
-
-    @torch.inference_mode()
-    def forward(self, text: str) -> str:
-        tokens = self.tokenizer(text, return_tensors="pt")
-        tokens = tokens.input_ids.to(self.device)
-
-        pred = self.model.generate(input_ids=tokens,
-                                   max_length=2)
-
-        pred = self.tokenizer.decode(token_ids=pred[0],
-                                     skip_special_tokens=True)
-        return pred
-
-
-class VisualBERT(nn.Module):
-    """
-    Implements VisualBERT for probing.
-    """
-    def __init__(self, name):
-        super().__init__()
-
-        self.name = name
-
-    def forward(self, x):
-        ...
 
 
 if transformers.__version__ == '4.18.0.dev0':
@@ -585,12 +747,28 @@ def _depth_ade20k():
         depth.save(p.replace('.jpg', '_depth.jpeg'))
 
 
-if __name__ == '__main__':
-    # m = LanguageModel(task='fill-mask', name='bert-base-uncased')
+def _prompt():
+    # m = TodoLM(task='fill-mask', name='bert-base-uncased')
     # prompt = "banana is of [MASK] color"
-    # m = LanguageModel(task='text-generation', name='gpt2', device='cuda:1')
+    # m = TodoLM(task='text-generation', name='gpt2', device='cuda:1')
     # prompt = "the color of banana is "
-    m = UnifiedQA(name='allenai/unifiedqa-t5-small', device='cuda:1')
-    prompt = "is banana red in color?"
+    # m = UnifiedQA(name='allenai/unifiedqa-t5-small', device='cuda:1')
+    # prompt = "is banana red in color?"
 
-    print(m(prompt))
+    m = MaskedLM('uclanlp/visualbert-vqa-coco-pre', num_classes=-1)
+
+    print(m.predict("apple is of [MASK] color", top_k=5))
+
+
+if __name__ == '__main__':
+    _B, _L, _C = 4, 16, 3
+    d = 'cpu'
+
+    inp = dict(input_ids=torch.randint(100, [_B, _L]).to(d),
+               attention_mask=torch.ones([_B, _L]).to(d))
+    lbl = torch.randint(3, [_B])
+
+    m = MaskedLM('roberta-base', _C, device=d)
+
+    o = m(inp, lbl)
+    print(o)

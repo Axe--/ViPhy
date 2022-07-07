@@ -1,7 +1,12 @@
+import os
+import sys
 import time
 import json
+
+import pandas as pd
 import torch
 import pickle
+import numpy as np
 from torch.distributions import Categorical
 from typing import List, Dict, Union, Any
 from collections import OrderedDict
@@ -47,6 +52,61 @@ def sort_dict(d: Dict, by: str = None, **kwargs) -> Dict:
     return d
 
 
+# ---------------------------------------------------------------------------
+def setup_logger(parser, log_dir, file_name='train_log.txt'):
+    """
+    Generates log file and writes the executed python flags for the current run,
+    along with the training log (printed to console). \n
+    This is helpful in maintaining experiment logs (with arguments). \n
+    While resuming training, the new output log is simply appended to the previously created train log file.
+
+    :param parser: argument parser object
+    :param log_dir: file path (to create)
+    :param file_name: log file name
+    :return: train log file
+    """
+    log_file_path = os.path.join(log_dir, file_name)
+
+    log_file = open(log_file_path, 'a+')
+
+    # python3 file_name.py
+    log_file.write('python3 ' + sys.argv[0] + '\n')
+
+    # Add all the arguments (key value)
+    args = parser.parse_args()
+
+    for key, value in vars(args).items():
+        # write to train log file
+        log_file.write('--' + key + ' ' + str(value) + '\n')
+
+    log_file.write('\n\n')
+    log_file.flush()
+
+    return log_file
+
+
+def print_log(msg, log_file):
+    """
+    :param str msg: Message to be printed & logged
+    :param file log_file: log file
+    """
+    log_file.write(msg + '\n')
+    log_file.flush()
+
+    print(msg)
+
+
+def csv2list(v, cast=str):
+    assert type(v) == str, 'Converts: comma-separated string --> list of strings'
+    return [cast(s.strip()) for s in v.split(',')]
+
+
+def str2bool(v):
+    v = v.lower()
+    assert v in ['true', 'false', 't', 'f', '1', '0'], 'Option requires: "true" or "false"'
+    return v in ['true', 't', '1']
+
+
 # ------------------------------------------------
 def read_txt(path: str) -> list:
     with open(path) as f:
@@ -76,6 +136,16 @@ def read_pkl(path: str) -> Union[List, Dict]:
     return data
 
 
+def read_csv(path: str, **kwargs) -> Union[List, Dict]:
+    csv = pd.read_csv(path, **kwargs)
+    csv = csv.to_dict(orient='records')
+    return csv
+
+
+def save_csv(data, path: str, **kwargs):
+    pd.DataFrame(data).to_csv(path, **kwargs)
+
+
 class Timer:
     def __init__(self, tag=''):
         self.tag = tag
@@ -84,3 +154,59 @@ class Timer:
     def end(self):
         time_taken = time.time() - self.start
         print('{} completed in {:.2f} secs'.format(self.tag, time_taken))
+
+
+def dataset_split(data, train_ratio=0.2, dev_ratio=0.1, test_ratio=0.7):
+    def _shuffle(lst):
+        np.random.seed(0)
+        np.random.shuffle(lst)
+        return lst
+
+    # Shuffle & Split data
+    _shuffle(data)
+
+    # train set
+    train_split = int(train_ratio * len(data))
+    data_train = data[:train_split]
+
+    # validation set
+    rest = data[train_split:]
+    dev_split = int(dev_ratio * len(data))
+    data_val = rest[:dev_split]
+
+    # test set
+    rest = rest[dev_split:]
+    test_split = int(test_ratio * len(data))
+    data_test = rest[:test_split]
+
+    return data_train, data_val, data_test
+
+
+if __name__ == '__main__':
+    # Type
+    dim = 'size'
+
+    # Read
+    if dim == 'color':
+        inp = read_json('./results/colors.json')
+        inp = [(k, v) for k, v in inp.items()]
+    elif dim == 'spatial':
+        inp = read_csv('./results/spatial.csv')
+    else:
+        inp = read_csv('./results/size.csv')
+
+    # Split
+    train, val, test = dataset_split(inp)
+
+    if dim == 'color':
+        save_json(dict(train), './dataset/color/train.json')
+        save_json(dict(val), './dataset/color/val.json')
+        save_json(dict(test), './dataset/color/test.json')
+
+    elif dim == 'spatial':
+        save_csv(train, './dataset/spatial/train.csv')
+        save_csv(val, './dataset/spatial/val.csv')
+        save_csv(test, './dataset/spatial/test.csv')
+
+    else:
+        ...
