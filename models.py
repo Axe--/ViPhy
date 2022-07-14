@@ -25,15 +25,16 @@ from tqdm import tqdm
 from utils import read_pkl, read_json, save_pkl
 
 import transformers
-from transformers import pipeline
 from transformers import AutoTokenizer, AutoModel
+from transformers import pipeline, BertTokenizerFast
 from transformers import BertTokenizer, BertForMaskedLM
 from transformers import RobertaTokenizer, RobertaForMaskedLM
 from transformers import DebertaTokenizer, DebertaPreTrainedModel
 from transformers import DebertaV2Tokenizer, DebertaV2ForMaskedLM
 from transformers import T5Tokenizer, T5ForConditionalGeneration as T5
 from transformers import GPT2Tokenizer, GPT2LMHeadModel, GPTNeoForCausalLM
-from transformers import VisualBertForPreTraining
+from transformers import VisualBertForPreTraining, ViltModel
+from transformers import CLIPTokenizerFast, CLIPTextModel
 
 
 # DPT
@@ -46,9 +47,14 @@ if transformers.__version__ == '4.18.0.dev0':
     from torchvision.transforms import Compose, Resize, ToTensor, Normalize
 
 
-def freeze(model):
-    for param in model.parameters():
+def freeze(module):
+    for name, param in module.named_parameters():
         param.requires_grad = False
+
+
+def trainable(module):
+    for name, param in module.named_parameters():
+        param.requires_grad = True
 
 
 # -------------------------------------------
@@ -84,12 +90,13 @@ class MaskedLM(nn.Module):
 
         self.loss_fn = nn.CrossEntropyLoss()
 
-        # Init
+        # Load
         self._load_wts(ckpt)
         self.to(device)
 
     def _init_transformer(self):
         name = self.name
+
         # MASK model
         if self.zero_shot:
             if name.startswith('bert-'):
@@ -114,8 +121,21 @@ class MaskedLM(nn.Module):
 
         # CLS model
         else:
-            _Tokenizer = AutoTokenizer.from_pretrained(self.name)
-            _Model = AutoModel.from_pretrained(self.name)
+            name = self.name
+
+            if 'vilt' in name:
+                name = 'bert-base-uncased'
+                _Tokenizer = BertTokenizerFast
+                _Model = ViltModel
+
+            elif 'clip' in name:
+                _Tokenizer = CLIPTokenizerFast
+                _Model = CLIPTextModel
+            else:
+                if 'visualbert' in name:
+                    name = 'bert-base-uncased'
+                _Tokenizer = AutoTokenizer
+                _Model = AutoModel
 
         return name, _Tokenizer, _Model
 
@@ -134,14 +154,31 @@ class MaskedLM(nn.Module):
 
             print(f'Model successfully loaded from {path}\n')
 
-    def forward(self, inputs: Dict[str, Tensor], labels: Tensor = None) -> Tensor:
-        # transformer
-        x = self.model(**inputs)[0]     # [B, L, D]
+    def _prepare_vilt(self, inputs):
+        """ Inserts dummy visual inputs for ViLT. """
+        B = len(inputs['input_ids'])
+        D = self.fc.in_features
+        P = 1
+        inputs['image_embeds'] = torch.zeros([B, P, D]).to(self.device)
+        inputs['pixel_mask'] = torch.zeros([B, P]).to(self.device)
+        return inputs
 
-        cls_emb = x[:, 0, :]            # [B, D]
+    def forward(self, inputs: Dict[str, Tensor], labels: Tensor = None) -> Tensor:
+        # visual inputs
+        if 'vilt' in self.name:
+            inputs = self._prepare_vilt(inputs)
+
+        # transformer
+        if 'clip' in self.name:
+            x = self.model(**inputs)
+            cls_emb = x.pooler_output
+
+        else:
+            x = self.model(**inputs)[0]     # [B, L, D]
+            cls_emb = x[:, 0, :]            # [B, D]
 
         # classifier
-        logits = self.fc(cls_emb)       # [B, C]
+        logits = self.fc(cls_emb)           # [B, C]
 
         # eval
         if labels is None:
@@ -189,37 +226,189 @@ class Text2TextLM(nn.Module):
     """
     Implements Text-to-Text Language Models (GPT*, T5)
     """
-    pass
+    def __init__(self, name: str, device='cpu', zero_shot=False, ckpt=None):
+        super().__init__()
+
+        # Args
+        self.name = name
+        self.device = device
+        self.zero_shot = zero_shot
+
+        # Init
+        tok_name, _Tokenizer, _Model = self._init_transformer()
+
+        # Tokenizer
+        self.tokenizer = _Tokenizer.from_pretrained(tok_name)
+
+        self.tokenizer.pad_token = self.tokenizer.eos_token
+        eos_id = self.tokenizer.eos_token_id
+
+        # Transformer
+        self.model = _Model.from_pretrained(name, pad_token_id=eos_id)
+
+        # Freeze Backbone
+        freeze(self.model)
+
+        # Train LM Head
+        trainable(self.model.lm_head)
+
+        # Load
+        self._load_wts(ckpt)
+        self.to(device)
+
+    def _init_transformer(self):
+        name = self.name
+
+        if 'gpt2' in name:
+            _Tokenizer = GPT2Tokenizer
+            _Model = GPT2LMHeadModel
+        elif 'neo' in name:
+            _Tokenizer = GPT2Tokenizer
+            _Model = GPTNeoForCausalLM
+        elif 'opt' in name:
+            _Tokenizer = ...
+            _Model = ...
+        else:
+            _Tokenizer = ...
+            _Model = ...
+
+        return name, _Tokenizer, _Model
+
+    def _load_wts(self, path: str):
+        if path:
+            ckpt = torch.load(path, map_location='cpu')
+            state_dict = ckpt['model_state_dict']
+
+            state_dict_new = OrderedDict()
+
+            for k, v in state_dict.items():
+                k_ = k.replace('module.', '')
+                state_dict_new[k_] = v
+
+            self.load_state_dict(state_dict_new)
+
+            print(f'Model successfully loaded from {path}\n')
+
+    def _generate_from_prompt(self, inputs: Dict[str, Tensor]) -> List[str]:
+        """
+        Generates prediction from input prompt,
+        by clipping prompt from the output.
+
+        :param inputs: prompt text [B, L]
+        :return: predicted labels [B]
+        """
+        def clip(prompt: str, gen: str) -> str:
+            p_len = len(prompt.split())
+            gen = gen.split()[p_len:]
+            gen = ' '.join(gen)
+            if len(gen) == 0:
+                gen = '*'   # prevent div by zero
+            return gen
+
+        def decode(_ids) -> List[str]:
+            return self.tokenizer.batch_decode(_ids, skip_special_tokens=True)
+
+        out_b = self.model.generate(**inputs, max_new_tokens=4)
+
+        out_b = decode(out_b)
+        inp_b = decode(inputs['input_ids'])
+
+        out = []
+        for i, o in zip(inp_b, out_b):
+            out += [clip(i, o)]
+
+        return out
+
+    def forward(self, inputs: Dict[str, Tensor], labels: Tensor = None) -> Union[Tensor, List[str]]:
+        # pack
+        inputs['labels'] = labels
+
+        # eval
+        if labels is None:
+            out = self._generate_from_prompt(inputs)
+            return out
+
+        # train
+        else:
+            out = self.model(**inputs)     # [B, L, D]
+            return out.loss
 
 
 class UnifiedQA(nn.Module):
     """
     Implements Unified-QA (T5) model.
     """
-    def __init__(self, name: str, device='cpu'):
+    def __init__(self, name: str, device='cpu', zero_shot=False, ckpt=None):
         super().__init__()
-        # Tokenizer
-        self.tokenizer = T5Tokenizer.from_pretrained(name)
-        # Model
-        self.model = T5.from_pretrained(name, low_cpu_mem_usage=True)
-        self.model.eval()
-        # Device
-        if '11b' in name and 'cuda' in device:
-            self.model.parallelize()
-            device = 'cuda:0'
-        else:
-            self.model.to(device)
         # Args
         self.device = device
         self.name = name
 
-    def forward(self, inputs: Dict[str, Tensor], labels: Tensor) -> Tensor:
-        # Batch
-        inputs['labels'] = labels
+        # Tokenizer
+        self.tokenizer = T5Tokenizer.from_pretrained(name)
 
-        out = self.model(**inputs)
+        # Transformer
+        self.model = T5.from_pretrained(name, low_cpu_mem_usage=True)
 
-        return out
+        # Freeze Backbone
+        freeze(self.model)
+
+        # Train LM Head
+        trainable(self.model.lm_head)
+
+        # Load
+        self._load_wts(ckpt)
+
+        # Device
+        if '11b' in name and 'cuda' in device:
+            # TODO: model.half() ?
+            self.model.parallelize()
+            device = 'cuda:0'
+        else:
+            self.model.to(device)
+
+    def _load_wts(self, path: str):
+        if path:
+            ckpt = torch.load(path, map_location='cpu')
+            state_dict = ckpt['model_state_dict']
+
+            state_dict_new = OrderedDict()
+
+            for k, v in state_dict.items():
+                k_ = k.replace('module.', '')
+                state_dict_new[k_] = v
+
+            self.load_state_dict(state_dict_new)
+
+            print(f'Model successfully loaded from {path}\n')
+
+    def _generate_from_prompt(self, inputs: Dict[str, Tensor]) -> List[str]:
+        """
+        Generates prediction from input prompt.
+
+        :param inputs: prompt text [B, L]
+        :return: predicted labels [B]
+        """
+        def decode(_ids) -> List[str]:
+            return self.tokenizer.batch_decode(_ids, skip_special_tokens=True)
+
+        out_b = self.model.generate(**inputs, max_new_tokens=2)
+        out_b = decode(out_b)
+
+        return out_b
+
+    def forward(self, inputs: Dict[str, Tensor], labels: Tensor = None) -> Union[Tensor, List[str]]:
+        # eval
+        if labels is None:
+            out = self._generate_from_prompt(inputs)
+            return out
+
+        # train
+        else:
+            inputs['labels'] = labels
+
+            out = self.model(**inputs)  # [B, L, D]
+            return out.loss
 
     @torch.inference_mode()
     def predict(self, text: str) -> str:
@@ -234,25 +423,10 @@ class UnifiedQA(nn.Module):
         return pred
 
 
-class ViLT(nn.Module):
-    """
-    Implements ViLT for textual probing.
-    """
-
-    def __init__(self, name):
-        super().__init__()
-
-        self.name = name
-
-    def forward(self, x):
-        ...
-
-
 class ZeroShotLM(nn.Module):
     """
     Implements models supported under `pipeline`.
     """
-
     def __init__(self, task: str, name: str, device='cpu'):
         super().__init__()
         device = torch.device(device)
@@ -679,6 +853,14 @@ class POSTagger(nn.Module):
 
 
 def _demo():
+    def _plot(_im: Image, save: str = None):
+        plt.figure(figsize=(14, 14))
+        plt.imshow(_im, cmap='gray')
+        if save:
+            plt.savefig(save, bbox_inches='tight')
+        else:
+            plt.show()
+
     im = None
     txt = "what color is the mirror?"
 
@@ -720,15 +902,6 @@ def _demo():
     # im2txt.precompute_text_emb(objects, save_fp='./data/obj_emb.pkl')
 
 
-def _plot(_im: Image, save: str = None):
-    plt.figure(figsize=(14, 14))
-    plt.imshow(_im, cmap='gray')
-    if save:
-        plt.savefig(save, bbox_inches='tight')
-    else:
-        plt.show()
-
-
 def _depth_ade20k():
     _dir = '/home/axe/Datasets/ADE20K_2021_17_01'
 
@@ -747,6 +920,38 @@ def _depth_ade20k():
         depth.save(p.replace('.jpg', '_depth.jpeg'))
 
 
+def _depth_vg():
+    from color.constants import IGNORE_IMAGES
+
+    def _path2id(path: str):
+        path = path.split('/')[-1]
+        path = path.split('.')[0]
+        return int(path)
+
+    _dir = '/home/axe/Datasets/Visual_Genome'
+
+    paths = glob(osj(_dir, '**', '*.jpg'), recursive=True)
+
+    model = DPT(device='cuda:1')
+
+    for p in tqdm(paths):
+        # Skip corrupt images
+        _id = _path2id(p)
+        if _id in IGNORE_IMAGES:
+            continue
+
+        # Image
+        img = Image.open(p).convert('RGB')
+
+        # Depth
+        depth = model(img)
+
+        # Save
+        p = p.replace('images', 'depth')
+
+        depth.save(p)
+
+
 def _prompt():
     # m = TodoLM(task='fill-mask', name='bert-base-uncased')
     # prompt = "banana is of [MASK] color"
@@ -754,21 +959,30 @@ def _prompt():
     # prompt = "the color of banana is "
     # m = UnifiedQA(name='allenai/unifiedqa-t5-small', device='cuda:1')
     # prompt = "is banana red in color?"
-
-    m = MaskedLM('uclanlp/visualbert-vqa-coco-pre', num_classes=-1)
+    m = ZeroShotLM(task='fill-mask', name='uclanlp/visualbert-vqa-coco-pre')
 
     print(m.predict("apple is of [MASK] color", top_k=5))
 
 
 if __name__ == '__main__':
-    _B, _L, _C = 4, 16, 3
     d = 'cpu'
+    _B, _L, _C = 4, 16, 3
 
     inp = dict(input_ids=torch.randint(100, [_B, _L]).to(d),
                attention_mask=torch.ones([_B, _L]).to(d))
     lbl = torch.randint(3, [_B])
 
-    m = MaskedLM('roberta-base', _C, device=d)
+    m = MaskedLM('openai/clip-vit-base-patch32', _C, device=d)
 
-    o = m(inp, lbl)
-    print(o)
+    # def _to_tensor(data: dict):
+    #     return {k: torch.tensor(v) for k, v in data.items()}
+    #
+    # m = UnifiedQA('allenai/unifiedqa-t5-small', device=d)
+    # inp = m.tokenizer(["color of grass is", "color of tomato is"])
+    # lbl = m.tokenizer(['green', 'red'])
+    #
+    # inp = _to_tensor(inp.data)
+    # lbl = torch.tensor(lbl.input_ids)
+
+    _o = m(inp, lbl)
+    print(_o)

@@ -1,5 +1,5 @@
 """
-Standard Seed-Dev-Test Training.
+Implements Finetuning & Evaluation
 """
 import os
 import torch
@@ -21,37 +21,37 @@ from dataloader import ViPhyDataset
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Visual COMET: Train + Eval')
+    parser = argparse.ArgumentParser(description='ViPhy: Train + Eval')
 
     # Experiment params
-    parser.add_argument('--mode', type=str, help='train or test mode', required=True, choices=['train', 'eval'])
-    parser.add_argument('--expt_dir', type=str, help='root directory to save model & summaries')
-    parser.add_argument('--expt_name', type=str, help='expt_dir/expt_name: organize experiments')
-    parser.add_argument('--run_name', type=str, help='expt_dir/expt_name/run_name: organize training runs')
+    parser.add_argument('--mode',           type=str,   help='train or test mode', required=True, choices=['train', 'eval'])
+    parser.add_argument('--expt_dir',       type=str,   help='root directory to save model & summaries')
+    parser.add_argument('--expt_name',      type=str,   help='expt_dir/expt_name: organize experiments')
+    parser.add_argument('--run_name',       type=str,   help='expt_dir/expt_name/run_name: organize training runs')
 
     # Model params
-    parser.add_argument('--model', type=str, help='Transformer backbone', required=True)
+    parser.add_argument('--model',          type=str,   help='Transformer backbone', required=True)
 
     # Data params
-    parser.add_argument('--data_dir', type=str, help='path to dataset directory', required=True)
+    parser.add_argument('--data_dir',       type=str,   help='path to dataset directory', required=True)
 
     # Training params
-    parser.add_argument('--lr', type=float, help='learning rate', default=1e-5)
-    parser.add_argument('--epochs', type=int, help='number of epochs', default=50)
-    parser.add_argument('--batch_size', type=int, help='batch size', default=8)
-    parser.add_argument('--ckpt_path', type=str, help='checkpoint path for inference')
-    parser.add_argument('--val_size', type=int, help='validation set size for evaluating metrics', default=512)
-    parser.add_argument('--log_interval', type=int, help='interval size for logging summaries', default=1000)
-    parser.add_argument('--save_all', type=s2b, help='if save after every epoch', default='T')
-    parser.add_argument('--save_interval', type=int, help='save model after `n` weight update steps', default=30000)
+    parser.add_argument('--lr',             type=float, help='learning rate', default=1e-5)
+    parser.add_argument('--epochs',         type=int,   help='number of epochs', default=50)
+    parser.add_argument('--batch_size',     type=int,   help='batch size', default=8)
+    parser.add_argument('--ckpt_path',      type=str,   help='checkpoint path for inference')
+    parser.add_argument('--val_size',       type=int,   help='validation set size for evaluating metrics', default=512)
+    parser.add_argument('--log_interval',   type=int,   help='interval size for logging summaries', default=1000)
+    parser.add_argument('--save_all',       type=s2b,   help='if unset, saves only best.pth', default='T')
+    parser.add_argument('--save_interval',  type=int,   help='save model after `n` weight update steps', default=30000)
 
     # GPU params
-    parser.add_argument('--gpu_ids', type=str, help='GPU Device ID', default='0')
-    parser.add_argument('--use_amp', type=s2b, help='Automatic-Mixed Precision (T/F)', default='T')
+    parser.add_argument('--gpu_ids',        type=str,   help='GPU Device ID', default='0')
+    parser.add_argument('--use_amp',        type=s2b,   help='Automatic-Mixed Precision (T/F)', default='T')
 
     # Misc params
-    parser.add_argument('--num_workers', type=int, help='number of worker threads for Dataloader', default=1)
-    parser.add_argument('--preds_file', type=str, help='predictions on `Test`set (json)', default='pred.json')
+    parser.add_argument('--num_workers',    type=int,   help='number of worker threads for Dataloader', default=1)
+    parser.add_argument('--preds_file',     type=str,   help='predictions on `Test`set (json)', default='pred.json')
 
     # Args
     args = parser.parse_args()
@@ -69,6 +69,10 @@ def main():
     num_classes = 11 if 'color' in args.data_dir else \
                   3 if 'spatial' in args.data_dir else 2
 
+    # Model Type
+    _type = ViPhyDataset.get_model_type(args.model)
+    t2t = _type in ['CLM', 'QA']
+
     # Expt dir
     log_dir = osj(args.expt_dir, args.expt_name, args.run_name)
     if not os.path.exists(log_dir):
@@ -85,7 +89,14 @@ def main():
         print('Training Log Directory: {}\n'.format(log_dir))
 
         # Model
-        model = MaskedLM(args.model, num_classes, device, ckpt=args.ckpt_path)
+        if t2t:
+            if _type == 'QA':
+                model = UnifiedQA(args.model, device, ckpt=args.ckpt_path)
+            else:
+                model = Text2TextLM(args.model, device, ckpt=args.ckpt_path)
+        else:
+            model = MaskedLM(args.model, num_classes, device, ckpt=args.ckpt_path)
+
         model.train()
         # model = nn.DataParallel(model, device_ids)
 
@@ -102,13 +113,12 @@ def main():
         train_loader = DataLoader(train_dataset, **loader_params)
         val_loader = DataLoader(val_dataset, **loader_params)
 
-        # Print split sizes
+        # Split sizes
         train_size = train_dataset.__len__()
         val_size = val_dataset.__len__()
 
         log_msg = '\nTrain: {} \nValidation: {}\n\n'.format(train_size, val_size)
 
-        # Validation set size
         val_used_size = min(val_size, args.val_size)
         log_msg += f'** Validation Metrics are computed using {val_used_size} samples. See --val_size\n'
 
@@ -152,12 +162,13 @@ def main():
                 # Interval Log
                 if curr_step % args.log_interval == 0 or curr_step == 1:
                     # Validation set accuracy
-                    metrics = compute_eval_metrics(model, val_loader, device, val_used_size)
+                    metrics = compute_eval_metrics(model, val_loader, device, val_used_size, t2t)
 
-                    # Reset the mode to training
+                    # Reset
                     model.train()
+
                     log_msg = 'Validation Loss: {:.4f} || Accuracy: {:.4f}'.format(
-                        metrics['loss'], metrics['accuracy'])
+                                    metrics['loss'], metrics['accuracy'])
 
                     print_log(log_msg, log_file)
 
@@ -192,12 +203,17 @@ def main():
 
                 curr_step += 1
 
-            # Validation accuracy on the entire set
-            metrics = compute_eval_metrics(model, val_loader, device, val_size)
+            # Validation set metrics
+            metrics = compute_eval_metrics(model, val_loader, device, val_size, t2t)
 
-            log_msg = '-' * 50 + '\n\n'
-            log_msg += f'After {epoch} epoch:\n'
-            log_msg += 'Validation Loss: {:.4f} || Accuracy: {:.4f}\n'.format(metrics['loss'], metrics['accuracy'])
+            # Reset
+            model.train()
+
+            log_msg = '-' * 50 + '\n\n' + f'{epoch} epoch:\n'
+            log_msg += 'Validation Loss: {:.4f} || Accuracy: {:.4f}\n'.format(
+                            metrics['loss'], metrics['accuracy'])
+
+            print_log(log_msg, log_file)
 
             # Save best
             if metrics['accuracy'] > best_acc:
@@ -222,9 +238,6 @@ def main():
 
                 print_log(log_msg, log_file)
 
-                # Reset
-                model.train()
-
         writer.close()
         log_file.close()
 
@@ -234,7 +247,14 @@ def main():
             args.ckpt_path = glob(osj(log_dir, 'best.pth'))[0]
 
         # Model
-        model = MaskedLM(args.model, num_classes, device, ckpt=args.ckpt_path)
+        if t2t:
+            if _type == 'QA':
+                model = UnifiedQA(args.model, device, ckpt=args.ckpt_path)
+            else:
+                model = Text2TextLM(args.model, device, ckpt=args.ckpt_path)
+        else:
+            model = MaskedLM(args.model, num_classes, device, ckpt=args.ckpt_path)
+
         model.eval()
 
         # Dataset
@@ -247,14 +267,14 @@ def main():
         print('Total Samples: {}'.format(data_len))
 
         # Inference
-        metrics = compute_eval_metrics(model, loader, device, data_len, use_tqdm=True)
+        metrics = compute_eval_metrics(model, loader, device, data_len, t2t, use_tqdm=True)
 
         for metric_name, score in metrics.items():
             print(f'{metric_name}: {score:.4f}')
 
 
 @torch.inference_mode()
-def compute_eval_metrics(model, loader, device, size, use_tqdm=False) -> Dict[str, Any]:
+def compute_eval_metrics(model, loader, device, size, t2t, use_tqdm=False) -> Dict[str, Any]:
     """
     Computes evaluation metrics on validation/test set.
 
@@ -262,16 +282,15 @@ def compute_eval_metrics(model, loader, device, size, use_tqdm=False) -> Dict[st
     :param loader: validation/test set Dataloader
     :param device: model device (cuda/cpu)
     :param size: no. of samples for eval
+    :param t2t: indicates text-to-text model
     :param use_tqdm: show progress bar
     :return: metrics (loss, accuracy)
     """
-    def unpack(_labels: str) -> torch.Tensor:
-        """
-        e.g. '1,2,3' --> [1,2,3]
-        """
-        _labels = [int(l) for l in _labels.split(',')]
-        _labels = torch.tensor(_labels)
-
+    def unpack(_labels: str) -> List[Any]:
+        # e.g. '1,2,3' --> [1,2,3]
+        _labels = _labels.split(',')
+        _labels = [int(l) if l.isdigit() else l
+                   for l in _labels]
         return _labels
 
     batch_size = loader.batch_size
@@ -286,26 +305,31 @@ def compute_eval_metrics(model, loader, device, size, use_tqdm=False) -> Dict[st
     d_acc = []
 
     for batch in loader:
-        # batch
+        # Load
         labels_b = batch.pop('labels')
 
         batch['inputs'] = {k: v.to(device) for k, v in batch['inputs'].items()}
 
         # Inference
-        logits_b = model(**batch).cpu()
+        logits_b = model(**batch)
 
         for logits, labels in zip(logits_b, labels_b):
             # Labels
             labels = unpack(labels)
 
             # Loss
-            for label in labels:
-                loss = F.cross_entropy(logits, label).item()
+            if t2t:
+                d_loss += [-1]
+                pred = logits
+            else:
+                labels = torch.tensor(labels).to(device)
+                for label in labels:
+                    loss = F.cross_entropy(logits, label).item()
+                    d_loss += [loss]
 
-                d_loss += [loss]
+                pred = logits.argmax()
 
             # *Acc: prediction ∈ ground-truth
-            pred = logits.argmax()
             correct = (1 if pred in labels else 0)
 
             d_acc += [correct]
