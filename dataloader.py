@@ -14,6 +14,8 @@ COLOR_LABELS = {'red': 0, 'orange': 1, 'yellow': 2, 'brown': 3, 'green': 4,
 
 SPATIAL_LABELS = {'above': 0, 'below': 1, 'same level': 2}
 
+SIZE_LABELS = {'bigger': 0, 'smaller': 1}
+
 
 class ViPhyDataset(Dataset):
     """
@@ -55,7 +57,12 @@ class ViPhyDataset(Dataset):
             self.max_len = 32
 
         else:
-            ...
+            path = osj(data_dir, f'{split}.csv')
+            inp = read_csv(path)
+
+            self.data = self._size_prompts(inp, _type)
+            self.label2idx = SIZE_LABELS
+            self.max_len = 32
 
     @staticmethod
     def _get_dim(data_dir):
@@ -180,11 +187,56 @@ class ViPhyDataset(Dataset):
 
         return data
 
-    def _size_prompts(self, spatial_rels: List[Dict[str, Any]], model_type: str) -> List[Dict]:
+    def _size_prompts(self, size_rels: List[Dict[str, Any]], model_type: str) -> List[Dict]:
         """
         Given size relations, generates textual prompts.
         """
-        relation_set = {'>': 'above', '<': 'below', '=': 'same size???'}
+        sign2text = {'>': 'bigger', '<': 'smaller'}
+
+        # Masked LM
+        if model_type == 'MLM':
+            if self.zero_shot:
+                mask = self.tokenizer.mask_token
+                template = f"the {'{}'} is {mask} than {'{}'}"
+            else:
+                template = f"the size of {'{}'} in comparison to {'{}'}"
+
+        # Text-to-Text
+        elif model_type == 'CLM':
+            template = "the size of {} in comparison to {} is"
+
+        # Question-Answer
+        else:
+            template = "what is the size of {} in comparison to {}? \n"
+            # relation choices
+            idx = 'a'
+            for _, choice in sign2text.items():
+                template += f'({idx}) {choice} '
+
+                idx = self._increment_char(idx)
+
+        data = []
+        for rel in size_rels:
+            # Model I/O
+            prompt = template.format(rel['o1'], rel['o2'])
+
+            labels = rel['typical']
+
+            # skip if both `>,<`
+            if ',' in labels:
+                continue
+
+            for sign, text in sign2text.items():
+                labels = labels.replace(sign, text)
+
+            labels = labels.split()
+
+            sample = dict(o1=rel['o1'], o2=rel['o2'],
+                          prompt=prompt, labels=labels)
+
+            data.append(sample)
+
+        return data
 
     @staticmethod
     def _increment_char(c: str):
@@ -358,12 +410,10 @@ class ViPhyDataset(Dataset):
 
 
 if __name__ == '__main__':
-    from transformers import CLIPTokenizerFast
-    _tok = CLIPTokenizerFast.from_pretrained('openai/clip-vit-base-patch32')
-    # _tok = AutoTokenizer.from_pretrained('bert-base-uncased')
+    _tok = AutoTokenizer.from_pretrained('allenai/unifiedqa-t5-base')
     # _tok.pad_token = _tok.eos_token
 
-    ds = ViPhyDataset('./dataset/color', _tok, split='train')
+    ds = ViPhyDataset('./dataset/size', _tok, split='train')
     dl = DataLoader(ds, batch_size=8)
 
     b = next(iter(dl))

@@ -43,7 +43,7 @@ def main():
     parser.add_argument('--val_size',       type=int,   help='validation set size for evaluating metrics', default=512)
     parser.add_argument('--log_interval',   type=int,   help='interval size for logging summaries', default=1000)
     parser.add_argument('--save_all',       type=s2b,   help='if unset, saves only best.pth', default='T')
-    parser.add_argument('--save_interval',  type=int,   help='save model after `n` weight update steps', default=30000)
+    parser.add_argument('--save_interval',  type=int,   help='save model after `n` weight update steps', default=2e5)
 
     # GPU params
     parser.add_argument('--gpu_ids',        type=str,   help='GPU Device ID', default='0')

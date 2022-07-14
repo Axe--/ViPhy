@@ -209,4 +209,6 @@ if __name__ == '__main__':
         save_csv(test, './dataset/spatial/test.csv')
 
     else:
-        ...
+        save_csv(train, './dataset/size/train.csv')
+        save_csv(val, './dataset/size/val.csv')
+        save_csv(test, './dataset/size/test.csv')

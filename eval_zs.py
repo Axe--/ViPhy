@@ -1,7 +1,6 @@
 """
-Evaluate Models on VisCS dataset.
+Zero-shot Evaluation on ViPhy datasets.
 """
-
 import argparse
 import numpy as np
 import pandas as pd
@@ -13,7 +12,7 @@ from collections import Counter
 from sklearn.metrics import f1_score
 from utils import read_json
 from color.constants import COLOR_SET
-from models import (ZeroShotLM, MaskedLM, UnifiedQA, ViLT)
+from models import (ZeroShotLM, MaskedLM, UnifiedQA)
 
 
 def _eval_colors(dataset, model, top_k):
@@ -204,9 +203,9 @@ if __name__ == '__main__':
 
     # Args
     args = edict()
-    args.task = 'QA'            # 'QA'
-    args.model = 'allenai/unifiedqa-t5-base'    # 'allenai/unifiedqa-t5-large'
-    args.eval = 'spatial'
+    args.task = 'fill-mask'             # 'QA'
+    args.model = 'bert-base-uncased'    # 'allenai/unifiedqa-t5-large'
+    args.eval = 'color'
     args.top_k = None
     args.gpu = 1
 
@@ -217,17 +216,11 @@ if __name__ == '__main__':
     if 'qa-t5' in args.model:
         model = UnifiedQA(name=args.model, device=device)
 
-    elif 'gpt-neo' in args.model:
-        ...
-
-    elif 'ofa' in args.model:
-        ...
-
     else:
         if args.task == 'fill-mask':
             model = MaskedLM(name=args.model, device=device)
-        # else:
-        #     model = LanguageModel(task=args.task, name=args.model, device=device)
+        else:
+            model = ZeroShotLM(task=args.task, name=args.model, device=device)
 
     # Read --> Dataset --> Evaluate
     if args.eval == 'color':
