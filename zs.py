@@ -186,6 +186,15 @@ def _spatial_prompts(spatial_rels: List[Dict[str, Any]],
     return dataset
 
 
+def _eval_size():
+    pass
+
+
+def _size_prompts():
+    # TODO: Skip samples with label: ">,<"
+    pass
+
+
 def _increment_char(c: str):
     return chr(ord(c) + 1)
 

@@ -73,16 +73,19 @@ def main():
     _type = ViPhyDataset.get_model_type(args.model)
     t2t = _type in ['CLM', 'QA']
 
+    # AMP
+    args.amp = False if 't5-large' in args.model else True
+
     # Expt dir
     log_dir = osj(args.expt_dir, args.expt_name, args.run_name)
     if not os.path.exists(log_dir):
         os.makedirs(log_dir)
 
+    # Logging file
+    log_file = setup_logger(parser, log_dir)
+
     # Train
     if args.mode == 'train':
-        # Logging
-        log_file = setup_logger(parser, log_dir)
-
         # Summaries
         writer = SummaryWriter(log_dir)
 
@@ -239,7 +242,6 @@ def main():
                 print_log(log_msg, log_file)
 
         writer.close()
-        log_file.close()
 
     elif args.mode == 'eval':
         # Checkpoint
@@ -270,7 +272,7 @@ def main():
         metrics = compute_eval_metrics(model, loader, device, data_len, t2t, use_tqdm=True)
 
         for metric_name, score in metrics.items():
-            print(f'{metric_name}: {score:.4f}')
+            print_log(f'{metric_name}: {score:.4f}', log_file)
 
 
 @torch.inference_mode()
