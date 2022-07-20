@@ -34,7 +34,7 @@ from transformers import DebertaV2Tokenizer, DebertaV2ForMaskedLM
 from transformers import T5Tokenizer, T5ForConditionalGeneration as T5
 from transformers import GPT2Tokenizer, GPT2LMHeadModel, GPTNeoForCausalLM
 from transformers import VisualBertForPreTraining, ViltModel
-from transformers import CLIPTokenizerFast, CLIPTextModel
+from transformers import CLIPTokenizerFast, CLIPTextModel, FlavaTextModel
 
 
 # DPT
@@ -131,6 +131,11 @@ class MaskedLM(nn.Module):
             elif 'clip' in name:
                 _Tokenizer = CLIPTokenizerFast
                 _Model = CLIPTextModel
+
+            elif 'flava' in name:
+                _Tokenizer = BertTokenizer
+                _Model = FlavaTextModel
+
             else:
                 if 'visualbert' in name:
                     name = 'bert-base-uncased'

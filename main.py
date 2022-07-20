@@ -10,14 +10,14 @@ from time import time
 from tqdm import tqdm
 import torch.nn.functional as F
 from os.path import join as osj
-from models import MaskedLM, Text2TextLM, UnifiedQA
 from tensorboardX import SummaryWriter
 from torch.utils.data import DataLoader
 from torch.cuda.amp import GradScaler, autocast
 from typing import List, Dict, Union, Any
-from utils import print_log, csv2list, setup_logger
 from utils import str2bool as s2b
+from utils import print_log, csv2list, setup_logger
 from dataloader import ViPhyDataset
+from models import MaskedLM, Text2TextLM, UnifiedQA
 
 
 def main():
@@ -36,18 +36,18 @@ def main():
     parser.add_argument('--data_dir',       type=str,   help='path to dataset directory', required=True)
 
     # Training params
-    parser.add_argument('--lr',             type=float, help='learning rate', default=1e-5)
+    parser.add_argument('--lr',             type=float, help='learning rate', default=1e-4)
     parser.add_argument('--epochs',         type=int,   help='number of epochs', default=50)
     parser.add_argument('--batch_size',     type=int,   help='batch size', default=8)
     parser.add_argument('--ckpt_path',      type=str,   help='checkpoint path for inference')
     parser.add_argument('--val_size',       type=int,   help='validation set size for evaluating metrics', default=512)
     parser.add_argument('--log_interval',   type=int,   help='interval size for logging summaries', default=1000)
-    parser.add_argument('--save_all',       type=s2b,   help='if unset, saves only best.pth', default='T')
+    parser.add_argument('--save_all',       type=s2b,   help='if unset, saves only best.pth', default='F')
     parser.add_argument('--save_interval',  type=int,   help='save model after `n` weight update steps', default=2e5)
 
     # GPU params
-    parser.add_argument('--gpu_ids',        type=str,   help='GPU Device ID', default='0')
-    parser.add_argument('--use_amp',        type=s2b,   help='Automatic-Mixed Precision (T/F)', default='T')
+    parser.add_argument('--gpus',           type=str,   help='GPU Device ID', default='0')
+    parser.add_argument('--amp',            type=s2b,   help='Automatic-Mixed Precision (T/F)', default='T')
 
     # Misc params
     parser.add_argument('--num_workers',    type=int,   help='number of worker threads for Dataloader', default=1)
@@ -57,7 +57,7 @@ def main():
     args = parser.parse_args()
 
     # GPU device
-    device_ids = csv2list(args.gpu_ids, cast=int)
+    device_ids = csv2list(args.gpus, cast=int)
     device = torch.device('cuda:{}'.format(device_ids[0]))
 
     print('GPUs: {}'.format(device_ids))
@@ -126,7 +126,7 @@ def main():
         optimizer = torch.optim.Adam(model.parameters(), lr)
         optimizer.zero_grad()
 
-        scaler = GradScaler(enabled=args.use_amp)
+        scaler = GradScaler(enabled=args.amp)
 
         # Init params
         start_epoch = 1
@@ -145,7 +145,7 @@ def main():
                 batch['inputs'] = {k: v.to(device) for k, v in batch['inputs'].items()}
                 batch['labels'] = batch['labels'].to(device)
 
-                with autocast(args.use_amp):
+                with autocast(args.amp):
                     # Forward Pass
                     loss = model(**batch)
 

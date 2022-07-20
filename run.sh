@@ -1,30 +1,31 @@
 #!/bin/bash
 
-# Color: *BERT
-#DIM=color
-#RUN=bert_base
-#MODEL=bert-base-uncased
-#GPU=0
+run() {
+  python3 main.py --mode "$1" --expt_dir "$2" --expt_name "$3" --run "$4" --model "$5" --data "$6" --gpu "$7"
+}
 
-# Spatial: *BERT
-DIM=spatial
+
+LOG=log
+MODE=train
+
 GPU=0
+DIM=spatial
+DATA=./dataset/$DIM
 
-RUN=bert_base
-MODEL=bert-base-uncased
 
-#RUN=bert_large
-#MODEL=bert-large-uncased
-#
-#RUN=roberta_base
-#MODEL=roberta-base
-#
-#RUN=roberta_large
-#MODEL=roberta-large
+RUN=bert_base; MODEL=bert-base-uncased; run $MODE $LOG $DIM $RUN $MODEL $DATA $GPU &
+RUN=bert_large; MODEL=bert-large-uncased; run $MODE $LOG $DIM $RUN $MODEL $DATA $GPU &
+RUN=roberta_base; MODEL=roberta-base; run $MODE $LOG $DIM $RUN $MODEL $DATA $GPU &
+RUN=roberta_large; MODEL=roberta-large; run $MODE $LOG $DIM $RUN $MODEL $DATA $GPU &
+RUN=deberta_base; MODEL=microsoft/deberta-base; run $MODE $LOG $DIM $RUN $MODEL $DATA $GPU &
 
-python3 main.py --mode train --expt_dir log --expt_name $DIM --run_name $RUN \
---model $MODEL --data ./dataset/$DIM --batch 8 --gpu $GPU --num_worker 1 --save_all F
+RUN=clip; MODEL=openai/clip-vit-base-patch32; run $MODE $LOG $DIM $RUN $MODEL $DATA $GPU &
+RUN=flava; MODEL=facebook/flava-full; run $MODE $LOG $DIM $RUN $MODEL $DATA $GPU &
+RUN=vilt; MODEL=dandelin/vilt-b32-mlm; run $MODE $LOG $DIM $RUN $MODEL $DATA $GPU &
+RUN=visbert; MODEL=uclanlp/visualbert-vqa-coco-pre; run $MODE $LOG $DIM $RUN $MODEL $DATA $GPU &
+RUN=uniqa_base; MODEL=allenai/unifiedqa-t5-base; run $MODE $LOG $DIM $RUN $MODEL $DATA $GPU &
 
-python3 main.py --mode eval --expt_dir log --expt_name $DIM --run_name $RUN \
---model $MODEL --data ./dataset/$DIM --batch 8 --gpu $GPU
 
+
+#microsoft/deberta-v2-xxlarge
+#allenai/unifiedqa-t5-large (amp=False)

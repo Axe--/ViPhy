@@ -1,1585 +1,1460 @@
 ,o1,o2,>,=,<,scene,freq,typical
-0,pot,oven,65,35,16,kitchen,116,">,="
-1,table lamp-shade,night table-drawer,588,0,0,bedroom,588,>
-2,door-handle,can,72,0,44,kitchen,116,">,<"
-3,door-handle,pendant lamp-shade,82,49,578,kitchen,709,<
-4,table lamp,flowerpot,207,49,49,living_room,305,>
-5,table lamp-shade,flowers,127,47,61,living_room,235,">,=,<"
-6,outlet,box,53,19,44,kitchen,116,">,<"
-7,cabinet-drawer,armchair-arm,61,31,24,living_room,116,">,=,<"
-8,pillow,floor lamp,0,24,91,bedroom,115,<
-9,arm-inside arm,table lamp,0,16,404,living_room,420,<
-10,floor lamp,floor lamp-column,36,157,0,living_room,193,=
-11,pendant lamp-light source,ceiling recessed light,46,20,523,kitchen,589,<
-12,armchair,table lamp-shade,0,50,521,living_room,571,<
-13,double door,window-pane,0,73,37,living_room,110,"=,<"
-14,armchair-leg,vase,0,0,236,living_room,236,<
-15,chair,back-rail,60,223,35,kitchen,318,=
-16,button panel-dial,window,0,28,306,kitchen,334,<
-17,sofa-back pillow,book,104,11,0,living_room,115,>
-18,chair-stretcher,back-rail,0,0,183,kitchen,183,<
-19,sofa-back pillow,table lamp-base,151,134,79,living_room,364,">,=,<"
-20,armchair-seat cushion,armchair,0,273,189,living_room,462,"=,<"
-21,cushion,double door,0,63,215,living_room,278,<
-22,cabinet-door,chair-seat,210,35,0,kitchen,245,>
-23,door-knob,towel,30,19,212,bathroom,261,<
-24,range-button panel,cabinet-door,188,67,585,kitchen,840,<
-25,range-button panel,oven-door,87,17,0,kitchen,104,>
-26,toilet-lid,ceiling,0,0,105,bathroom,105,<
-27,oven,door-knob,110,85,230,kitchen,425,">,=,<"
-28,range-oven,stove-burner,0,13,179,kitchen,192,<
-29,cushion,candle,39,40,37,living_room,116,">,=,<"
-30,sconce-bulb,wall,37,99,0,bathroom,136,=
-31,shelves,armchair,91,54,0,living_room,145,">,="
-32,floor lamp,armchair,182,66,0,living_room,248,>
-33,light troffer,cabinet-door,121,11,0,kitchen,132,>
-34,back-stile,door-knob,16,0,131,kitchen,147,<
-35,ceiling recessed light-light source,armchair-leg,219,0,0,living_room,219,>
-36,bed-headboard,wall,38,1348,665,bedroom,2051,"=,<"
-37,door-knob,coffee maker,250,0,88,kitchen,338,>
-38,wall,ceiling,62,787,488,bathroom,1337,"=,<"
-39,microwave,outlet,202,56,16,kitchen,274,>
-40,sconce,sofa-arm,137,0,0,living_room,137,>
-41,pillow,wardrobe-door,16,35,156,bedroom,207,<
-42,stove,door-pane,0,0,163,kitchen,163,<
-43,wall,drawer-knob,609,31,12,bathroom,652,>
-44,pot,dishwasher,108,0,0,kitchen,108,>
-45,bowl,table lamp-shade,12,0,153,living_room,165,<
-46,armchair-leg,carpet,30,74,55,living_room,159,"=,<"
-47,sconce,door-handle,68,0,60,bathroom,128,">,<"
-48,curtain,armchair-seat cushion,307,0,0,living_room,307,>
-49,flowers,books,22,45,122,kitchen,189,<
-50,window-pane,vase,219,22,0,living_room,241,>
-51,bed-leg,ceiling,0,0,206,bedroom,206,<
-52,door-pane,outlet,315,0,0,kitchen,315,>
-53,cabinets-drawer,door-muntin,0,0,108,kitchen,108,<
-54,cabinet-door,food processor,81,0,31,kitchen,112,>
-55,wall,wardrobe-drawer,136,16,0,bedroom,152,>
-56,cabinet-door,pendant lamp-bulb,24,32,68,kitchen,124,"=,<"
-57,beam,cabinet-door,92,10,0,kitchen,102,>
-58,armchair-back pillow,ceiling recessed light-light source,0,0,173,living_room,173,<
-59,plate,armchair,105,27,17,living_room,149,>
-60,button panel-screen,door-knob,92,0,219,kitchen,311,<
-61,sofa-arm,arm-outside arm,286,264,19,living_room,569,">,="
-62,wall,night table-door,103,12,0,bedroom,115,>
-63,cabinet-drawer,fruit,52,16,72,kitchen,140,">,<"
-64,cabinet-door,pendant lamp-cord,0,121,188,kitchen,309,"=,<"
-65,dishwasher,door-pane,14,10,130,kitchen,154,<
-66,ceiling recessed light-aperture,chair-leg,115,0,0,kitchen,115,>
-67,cabinet-door,light troffer,0,11,121,kitchen,132,<
-68,plate,pot,116,28,83,kitchen,227,">,<"
-69,coffee table-top,sofa-seat cushion,33,133,77,living_room,243,"=,<"
-70,side table,table lamp,0,61,845,living_room,906,<
-71,flowers,cabinet-drawer,75,14,14,bathroom,103,>
-72,side table,ceiling recessed light-highlight,0,0,130,living_room,130,<
-73,work surface,extractor hood,0,0,359,kitchen,359,<
-74,table lamp-light source,flowers,65,15,24,living_room,104,>
-75,wall spotlight,cabinet,76,0,27,kitchen,103,>
-76,arm-inside arm,side table,105,269,123,living_room,497,">,=,<"
-77,plate,ceiling,0,0,207,kitchen,207,<
-78,dishwasher-button panel,cabinet,0,69,83,kitchen,152,"=,<"
-79,sink,mirror,0,0,626,bathroom,626,<
-80,books,table lamp,167,107,221,living_room,495,">,=,<"
-81,pot,range-oven,123,0,0,kitchen,123,>
-82,cabinet-door,mirror,10,33,304,bathroom,347,<
-83,door-handle,dishwasher-door,90,41,10,kitchen,141,">,="
-84,dishcloth,cabinet,62,167,294,kitchen,523,"=,<"
-85,door,pendant lamp,0,39,138,kitchen,177,<
-86,floor,sofa-back pillow,14,213,17,kitchen,244,=
-87,shelf,cushion,168,12,0,living_room,180,>
-88,armchair-earmuffs,picture,19,35,110,living_room,164,<
-89,ceiling recessed light-aperture,armchair-arm,130,0,0,living_room,130,>
-90,door-hinge,chair,95,0,15,kitchen,110,>
-91,sofa-back pillow,coffee table-top,187,17,0,living_room,204,>
-92,candle holder,floor,25,88,14,bathroom,127,=
-93,cabinet-drawer,ceiling recessed light,0,0,181,bathroom,181,<
-94,sink-faucet,shower screen,0,39,64,bathroom,103,"=,<"
-95,armchair-arm,ceiling recessed light-light source,0,0,487,living_room,487,<
-96,railing,cushion,202,37,0,living_room,239,>
-97,drawer-knob,kettle,0,0,117,kitchen,117,<
-98,armchair-leg,table lamp-base,0,0,103,living_room,103,<
-99,window,ceiling recessed light,10,23,76,bathroom,109,<
-100,ceiling,range-stove,164,0,0,kitchen,164,>
-101,bed,bed-headboard,0,477,17,bedroom,494,=
-102,work surface,chest of drawers,136,74,0,kitchen,210,">,="
-103,oven-door,cabinet-front,0,48,92,kitchen,140,"=,<"
-104,shelves-shelf,flowers,108,11,31,living_room,150,>
-105,ceiling recessed light,plant pot,117,0,0,kitchen,117,>
-106,pot,microwave,26,18,110,kitchen,154,<
-107,ceiling,door-muntin,227,0,0,kitchen,227,>
-108,cabinets-door,plate,67,0,77,kitchen,144,">,<"
-109,sofa-seat cushion,books,46,48,385,living_room,479,<
-110,table lamp-highlight,floor,226,0,0,living_room,226,>
-111,ceiling recessed light,sconce-backplate,111,0,0,living_room,111,>
-112,bed-footboard,drawer-handle,85,103,54,bedroom,242,">,=,<"
-113,shelves-shelf,fireplace,76,61,0,living_room,137,">,="
-114,chest of drawers-drawer,cabinet-side,0,17,179,kitchen,196,<
-115,floor,cabinet,11,189,287,bathroom,487,"=,<"
-116,side table,blind,0,0,165,living_room,165,<
-117,table,sofa,43,190,61,living_room,294,=
-118,window,oven,161,64,0,kitchen,225,>
-119,picture-frame,plant,63,21,32,living_room,116,">,<"
-120,bowl,cushion,13,117,341,kitchen,471,<
-121,cabinet-door,stool-leg,327,28,0,kitchen,355,>
-122,speaker,chair,68,36,25,living_room,129,">,="
-123,arm-inside arm,window-muntin,0,0,112,living_room,112,<
-124,door-pane,jar,56,0,52,kitchen,108,">,<"
-125,extractor hood,work surface,359,0,0,kitchen,359,>
-126,ceiling-beam,cabinet-door,142,0,0,kitchen,142,>
-127,picture,ceiling spotlight-highlight,0,10,182,living_room,192,<
-128,cushion,blanket,94,164,67,living_room,325,">,=,<"
-129,arm-outside arm,side table,12,149,130,living_room,291,"=,<"
-130,range-button panel,cabinet-drawer,158,77,15,kitchen,250,">,="
-131,toilet,countertop,0,90,67,bathroom,157,"=,<"
-132,armchair-arm,sofa-leg,123,17,0,living_room,140,>
-133,flowerpot,sofa-back pillow,105,92,195,living_room,392,">,=,<"
-134,plate,drawer-knob,323,0,25,kitchen,348,>
-135,armchair-arm,side table,96,238,169,living_room,503,"=,<"
-136,jar,plate,73,24,70,kitchen,167,">,<"
-137,bowl,cabinet-drawer,338,24,49,kitchen,411,>
-138,night table,telephone,16,72,69,bedroom,157,"=,<"
-139,fireplace,armchair,82,266,0,living_room,348,=
-140,door-knob,floor,143,32,14,bathroom,189,>
-141,sash-muntin,picture,102,11,17,kitchen,130,>
-142,window,blind,56,18,37,bathroom,111,">,<"
-143,range-stove,range-oven,219,22,0,kitchen,241,>
-144,floor lamp-column,sofa-arm,89,11,0,living_room,100,>
-145,refrigerator,pendant lamp-shade,0,58,100,kitchen,158,"=,<"
-146,arm-arm support,wall,0,0,206,living_room,206,<
-147,cabinet,fluorescent tube,49,0,77,kitchen,126,">,<"
-148,armchair-arm,coffee table-leg,228,44,0,living_room,272,>
-149,cabinet-side,button panel-dial,235,13,10,kitchen,258,>
-150,sash-rail,sash-muntin,77,13,110,kitchen,200,">,<"
-151,mirror,cabinet-drawer,393,0,0,bathroom,393,>
-152,cabinet-drawer,mug,14,0,127,kitchen,141,<
-153,sofa-back pillow,ceiling spotlight-light source,0,0,106,living_room,106,<
-154,wall,work surface,2609,253,53,kitchen,2915,>
-155,drawer-knob,sconce,0,0,135,bathroom,135,<
-156,cabinet,cabinet-skirt,566,32,30,kitchen,628,>
-157,picture,console table,106,0,0,living_room,106,>
-158,window,pillow,33,211,0,living_room,244,=
-159,books,cushion,1290,180,414,living_room,1884,>
-160,chair-back,cushion,93,130,26,living_room,249,">,="
-161,arm-inside arm,floor,205,293,35,living_room,533,">,="
-162,carpet,plant,0,26,325,living_room,351,<
-163,cabinet-drawer,bottle,12,44,59,bathroom,115,"=,<"
-164,countertop,bathtub,71,83,0,bathroom,154,">,="
-165,floor,armchair,23,478,14,kitchen,515,=
-166,table-leg,window-pane,0,0,111,living_room,111,<
-167,sconce-highlight,sconce,24,53,27,bathroom,104,">,=,<"
-168,table lamp-column,table lamp-shade,16,84,20,kitchen,120,=
-169,knife set,wall,0,100,214,kitchen,314,"=,<"
-170,chandelier-shade,picture,37,72,66,kitchen,175,">,=,<"
-171,coffee table,book,17,95,34,living_room,146,=
-172,towel,ceiling,0,0,420,bathroom,420,<
-173,pillow,door-handle,38,23,108,bedroom,169,<
-174,cabinet-front,pendant lamp-shade,27,51,29,kitchen,107,">,=,<"
-175,button panel-screen,cabinet-drawer,113,18,0,kitchen,131,>
-176,cabinet-door,sink-faucet,36,10,251,bathroom,297,<
-177,range-button panel,door-knob,146,13,315,kitchen,474,">,<"
-178,floor lamp-light source,window,0,115,54,living_room,169,"=,<"
-179,arm-outside arm,cabinet,0,47,167,living_room,214,<
-180,pendant lamp-canopy,ceiling,22,81,32,kitchen,135,=
-181,chair-leg,door-knob,12,0,429,kitchen,441,<
-182,sofa-back pillow,armchair,58,350,43,living_room,451,=
-183,chandelier-light source,sofa-seat cushion,189,0,0,living_room,189,>
-184,range-oven,microwave,0,0,115,kitchen,115,<
-185,sofa-seat base,chair,0,37,190,living_room,227,<
-186,work surface,plate,89,49,207,kitchen,345,">,<"
-187,box,night table-drawer,82,10,13,bedroom,105,>
-188,pendant lamp,chest of drawers-drawer,226,0,0,kitchen,226,>
-189,pendant lamp-canopy,pendant lamp-shade,284,0,0,kitchen,284,>
-190,ceiling recessed light-highlight,wall,21,61,39,bathroom,121,"=,<"
-191,window-pane,ceiling recessed light-aperture,0,14,224,living_room,238,<
-192,stool,books,0,11,102,kitchen,113,<
-193,night table,sconce-highlight,0,0,102,bedroom,102,<
-194,ceiling recessed light,button panel-dial,600,0,0,kitchen,600,>
-195,stove,cabinet,250,194,513,kitchen,957,">,=,<"
-196,cabinet-door,sconce-light source,10,0,126,bathroom,136,<
-197,wall,floor lamp-light source,145,221,12,living_room,378,">,="
-198,cabinet-side,cabinet-door,520,905,491,kitchen,1916,">,=,<"
-199,basket,button panel-dial,86,0,23,kitchen,109,>
-200,curtain,armchair-arm,682,0,0,living_room,682,>
-201,plate,figurine,44,15,43,kitchen,102,">,<"
-202,kitchen island-drawer,drawer-knob,43,51,35,kitchen,129,">,=,<"
-203,table lamp-light source,sofa,207,14,0,living_room,221,>
-204,cabinet,food,63,35,42,kitchen,140,">,=,<"
-205,chair,oven-door,50,35,20,kitchen,105,">,="
-206,stool-stretcher,wall,0,0,116,kitchen,116,<
-207,floor lamp-highlight,sofa,91,20,0,living_room,111,>
-208,chair,sofa,194,39,23,kitchen,256,>
-209,door-pane,double door-door,0,54,70,kitchen,124,"=,<"
-210,cabinet-door,figurine,112,27,95,kitchen,234,">,<"
-211,blind,side table,165,0,0,living_room,165,>
-212,outlet,bowl,124,20,74,kitchen,218,">,<"
-213,armchair-back pillow,curtain,0,16,174,living_room,190,<
-214,vase,cabinet-door,78,96,13,bathroom,187,">,="
-215,sofa-seat cushion,vase,18,123,412,living_room,553,<
-216,door-knob,dishwasher-button panel,81,14,28,kitchen,123,>
-217,pendant lamp,button panel-dial,239,0,0,kitchen,239,>
-218,books,sculpture,108,24,61,living_room,193,">,<"
-219,floor,floor lamp-shade,0,0,201,living_room,201,<
-220,chest of drawers,door-knob,12,79,234,kitchen,325,<
-221,flowers,shelves-shelf,31,11,108,living_room,150,<
-222,drawer-handle,chair-leg,232,39,17,kitchen,288,>
-223,ceiling-beam,door-handle,124,0,0,kitchen,124,>
-224,towel,curtain,0,142,198,bathroom,340,"=,<"
-225,chair,back-spindle,112,323,39,kitchen,474,=
-226,arm-outside arm,books,13,25,253,living_room,291,<
-227,arm-arm panel,sofa-leg,137,11,0,living_room,148,>
-228,table lamp-base,chest of drawers-drawer,70,16,29,bedroom,115,>
-229,ceiling recessed light,towel,180,0,0,bathroom,180,>
-230,sofa,wall,0,20,118,kitchen,138,<
-231,window-pane,plant,18,132,14,kitchen,164,=
-232,ceiling spotlight-highlight,cabinet-door,74,42,0,kitchen,116,">,="
-233,bathtub-faucet,towel,51,29,84,bathroom,164,">,<"
-234,arm-inside arm,television,0,24,86,living_room,110,<
-235,books,floor lamp-shade,77,22,75,living_room,174,">,<"
-236,door-knob,microwave-door,152,34,222,kitchen,408,">,<"
-237,towel,plant,31,39,122,bathroom,192,<
-238,table lamp-shade,ottoman,116,0,0,living_room,116,>
-239,cabinets,sink,63,37,35,kitchen,135,">,=,<"
-240,door-knob,armchair-seat cushion,104,0,0,living_room,104,>
-241,drawer-handle,basket,33,0,126,kitchen,159,<
-242,cushion,sculpture,19,41,129,living_room,189,<
-243,refrigerator-door,outlet,60,120,38,kitchen,218,">,="
-244,armchair-arm,candle holder,25,66,162,living_room,253,<
-245,pendant lamp-canopy,pendant lamp-cord,113,53,0,kitchen,166,">,="
-246,baseboard,door-handle,0,0,142,kitchen,142,<
-247,cabinet,door-muntin,300,406,409,kitchen,1115,">,=,<"
-248,floor,door-knob,14,32,143,bathroom,189,<
-249,microwave-door,work surface,105,0,0,kitchen,105,>
-250,coffee table-apron,coffee table-leg,60,112,0,living_room,172,">,="
-251,cabinet,towel,112,165,297,bathroom,574,"=,<"
-252,door-knob,light switch,84,0,18,bathroom,102,>
-253,drawer-handle,kitchen island,0,70,39,kitchen,109,"=,<"
-254,spice rack,cabinet,52,0,68,kitchen,120,">,<"
-255,sofa-back pillow,double door-door,0,23,78,living_room,101,<
-256,sash-pane,sink-faucet,124,0,0,kitchen,124,>
-257,cabinets-door,jar,58,12,43,kitchen,113,">,<"
-258,pot,plant,53,49,16,bathroom,118,">,="
-259,chair,coffee table-leg,141,0,0,living_room,141,>
-260,dresser,dresser-drawer,178,402,18,bedroom,598,">,="
-261,countertop,toilet-lid,77,36,0,bathroom,113,">,="
-262,oven-door,wall,0,61,487,kitchen,548,<
-263,refrigerator,sink-faucet,35,115,0,kitchen,150,=
-264,table,armchair,44,205,40,living_room,289,=
-265,bed-leg,cushion,0,0,401,bedroom,401,<
-266,sink-tap,cabinet-drawer,100,10,0,bathroom,110,>
-267,vase,floor lamp,40,44,94,living_room,178,">,=,<"
-268,chair,picture,60,227,52,bathroom,339,=
-269,bowl,refrigerator,29,66,33,kitchen,128,">,=,<"
-270,bed-headboard,drawer-handle,579,55,13,bedroom,647,>
-271,button panel-dial,microwave,0,18,196,kitchen,214,<
-272,outlet,range-stove,133,0,13,kitchen,146,>
-273,night table-drawer,floor,272,257,14,bedroom,543,">,="
-274,armchair,side table,206,552,48,living_room,806,=
-275,armchair-arm,books,69,41,429,living_room,539,<
-276,door-knob,cabinets-drawer,167,14,86,kitchen,267,">,<"
-277,armchair-arm,window,0,0,1082,living_room,1082,<
-278,sconce-shade,pillow,119,0,0,bedroom,119,>
-279,table,ceiling recessed light-light source,0,0,146,kitchen,146,<
-280,mirror,sofa,148,0,0,living_room,148,>
-281,ceiling fan,table lamp,111,0,0,living_room,111,>
-282,sink-faucet,outlet,36,11,136,bathroom,183,<
-283,fruit,cabinet,55,43,164,kitchen,262,<
-284,table,door-knob,16,20,95,kitchen,131,<
-285,book,armchair,21,36,72,living_room,129,"=,<"
-286,window,sconce-shade,38,42,58,bathroom,138,">,=,<"
-287,door,table lamp-light source,16,134,0,living_room,150,=
-288,sofa-back pillow,television,0,61,109,living_room,170,"=,<"
-289,glass,plate,103,49,45,kitchen,197,">,=,<"
-290,picture,shelves,11,25,106,kitchen,142,<
-291,chair,flowerpot,14,34,72,kitchen,120,"=,<"
-292,ceiling recessed light,oven-button panel,101,0,0,kitchen,101,>
-293,picture,fireplace,604,262,46,living_room,912,">,="
-294,shelf,cabinet,62,54,27,bathroom,143,">,="
-295,sofa-seat cushion,coffee table-top,77,133,33,living_room,243,">,="
-296,sofa-arm,table lamp,0,35,529,living_room,564,<
-297,range,door-knob,127,73,385,kitchen,585,<
-298,cabinet,picture,393,23,114,bathroom,530,>
-299,sofa,table lamp-light source,0,14,207,living_room,221,<
-300,window-muntin,door-muntin,61,35,27,living_room,123,">,=,<"
-301,countertop,drawer-handle,112,0,0,bathroom,112,>
-302,sink,curtain,0,40,193,bathroom,233,<
-303,pendant lamp-bulb,wall,28,82,13,kitchen,123,=
-304,armchair-seat base,floor,0,105,25,living_room,130,=
-305,ceiling recessed light-light source,oven,410,0,0,kitchen,410,>
-306,pendant lamp,pendant lamp-tube,0,176,10,kitchen,186,=
-307,cushion,window-pane,0,57,1352,living_room,1409,<
-308,range-oven,oven-door,0,137,0,kitchen,137,=
-309,window,chest of drawers,131,18,0,kitchen,149,>
-310,vase,armchair-seat cushion,128,23,0,living_room,151,>
-311,sink-faucet,dishwasher,143,10,0,kitchen,153,>
-312,drawer-handle,table lamp-base,65,24,14,kitchen,103,>
-313,countertop,door,11,38,91,bathroom,140,<
-314,cushion,chandelier-light source,0,0,270,living_room,270,<
-315,window,picture,31,64,57,bathroom,152,">,=,<"
-316,table lamp-shade,side table,748,13,0,living_room,761,>
-317,bathtub,cabinet,31,176,81,bathroom,288,"=,<"
-318,sink-bowl,door-pane,0,0,100,kitchen,100,<
-319,ceiling recessed light-highlight,table lamp-column,134,0,0,living_room,134,>
-320,armchair-seat cushion,fireplace,0,20,90,living_room,110,<
-321,window-pane,window-sash,32,19,66,living_room,117,">,<"
-322,window,pendant lamp-cord,0,13,137,kitchen,150,<
-323,floor,stove,0,0,147,kitchen,147,<
-324,wall,night table-top,104,0,0,bedroom,104,>
-325,sconce-shade,drawer-knob,259,0,0,bathroom,259,>
-326,sconce-bulb,cabinet-door,92,12,0,bathroom,104,>
-327,ceiling spotlight,sofa-seat cushion,160,0,0,living_room,160,>
-328,pillow,armchair-arm,124,42,0,bedroom,166,>
-329,sofa-leg,armchair-leg,39,19,49,living_room,107,">,<"
-330,floor lamp-shade,sofa-back pillow,229,0,0,living_room,229,>
-331,floor,floor lamp-column,0,0,117,living_room,117,<
-332,coffee table-top,curtain,0,0,135,living_room,135,<
-333,shelves-shelf,side table,137,0,0,living_room,137,>
-334,cabinet-door,door,253,41,99,bathroom,393,>
-335,ceiling spotlight,sofa,139,0,0,living_room,139,>
-336,arm-arm panel,sofa-arm,26,250,77,living_room,353,=
-337,cabinet,coffee table-leg,147,0,0,living_room,147,>
-338,glass,towel,59,21,41,bathroom,121,">,<"
-339,cabinet-door,can,80,11,44,kitchen,135,">,<"
-340,toilet,cabinet-door,36,92,53,bathroom,181,"=,<"
-341,table lamp-column,book,97,11,14,living_room,122,>
-342,sash-muntin,drawer-knob,125,0,0,kitchen,125,>
-343,door-window,cabinet-drawer,70,30,93,kitchen,193,">,<"
-344,bathtub-faucet,bathtub,77,100,0,bathroom,177,">,="
-345,cushion,ceiling spotlight-light source,0,0,251,living_room,251,<
-346,window,curtain rod,0,32,106,living_room,138,<
-347,window,books,62,21,38,kitchen,121,">,<"
-348,railing,plant,56,34,23,living_room,113,">,=,<"
-349,armchair-arm,sash-pane,0,0,116,living_room,116,<
-350,stove-burner,ceiling recessed light,0,0,183,kitchen,183,<
-351,book,wall,14,22,124,kitchen,160,<
-352,wall,refrigerator-door,349,455,20,kitchen,824,">,="
-353,door-pane,drawer-knob,1372,0,28,kitchen,1400,>
-354,sofa-seat base,cabinet,0,26,154,living_room,180,<
-355,books,bookcase-door,199,93,135,living_room,427,">,=,<"
-356,arm-inside arm,sofa-back,0,91,79,living_room,170,"=,<"
-357,cabinets-door,wall,92,205,181,kitchen,478,"=,<"
-358,chandelier-shade,candle holder,128,0,0,living_room,128,>
-359,range-button panel,wall,0,78,380,kitchen,458,<
-360,door-hinge,cabinet,261,268,316,kitchen,845,">,=,<"
-361,wall,back-spindle,186,21,0,kitchen,207,>
-362,picture,table lamp-highlight,403,164,208,living_room,775,">,=,<"
-363,flowers,table lamp-light source,24,15,65,living_room,104,<
-364,range-stove,range,0,245,0,kitchen,245,=
-365,drawer-handle,mirror,0,0,157,bathroom,157,<
-366,curtain,pillow,10,234,0,living_room,244,=
-367,picture,coffee table-leg,488,0,0,living_room,488,>
-368,bathtub,bathtub-faucet,0,100,77,bathroom,177,"=,<"
-369,armchair,ceiling fan,0,0,127,living_room,127,<
-370,armchair-leg,armchair-apron,17,69,81,living_room,167,"=,<"
-371,window-muntin,wall,32,42,83,kitchen,157,">,=,<"
-372,window,dresser,105,37,0,bedroom,142,>
-373,armchair-arm,cabinet-door,17,52,192,living_room,261,<
-374,cushion,shelves,0,122,252,living_room,374,"=,<"
-375,bed-leg,pillow,0,0,398,bedroom,398,<
-376,armchair-back pillow,armchair,12,302,16,living_room,330,=
-377,stove-burner,range-stove,0,169,32,kitchen,201,=
-378,armchair,stool,50,61,0,living_room,111,">,="
-379,cabinet-drawer,chair-back,56,46,22,kitchen,124,">,="
-380,chest of drawers-drawer,door-pane,0,0,240,kitchen,240,<
-381,cabinet,armchair-back,42,50,14,living_room,106,">,="
-382,food,door-knob,95,0,169,kitchen,264,">,<"
-383,toilet-lid,cabinet,20,110,78,bathroom,208,"=,<"
-384,cushion,armchair-seat base,305,40,0,living_room,345,>
-385,armchair-arm,arm-inside arm,171,653,154,living_room,978,=
-386,telephone,bed-headboard,0,15,93,bedroom,108,<
-387,sofa-skirt,sofa,0,24,79,living_room,103,<
-388,armchair-back pillow,plant,11,39,97,living_room,147,<
-389,picture,bookcase,13,126,16,living_room,155,=
-390,books,window-pane,49,41,202,living_room,292,<
-391,floor,arm-outside arm,52,237,35,living_room,324,=
-392,arm-inside arm,sofa-back pillow,26,337,692,living_room,1055,"=,<"
-393,window,pendant lamp-tube,0,14,109,kitchen,123,<
-394,coffee maker,microwave,0,32,76,kitchen,108,<
-395,mirror,sink,626,0,0,bathroom,626,>
-396,armchair-earmuffs,cushion,70,47,0,living_room,117,">,="
-397,chest of drawers,work surface,0,74,136,kitchen,210,"=,<"
-398,door,table lamp-base,140,40,0,living_room,180,>
-399,light switch,cabinet-door,24,0,216,bathroom,240,<
-400,chair-back,cabinet,20,127,238,kitchen,385,"=,<"
-401,armchair,sofa-seat cushion,220,237,24,living_room,481,">,="
-402,shower screen,wall,32,465,32,bathroom,529,=
-403,sofa-seat cushion,ceiling recessed light-aperture,0,0,195,living_room,195,<
-404,books,ceiling recessed light,0,0,143,kitchen,143,<
-405,button panel-dial,plant,10,16,132,kitchen,158,<
-406,toaster,ceiling recessed light,0,0,121,kitchen,121,<
-407,chest of drawers-skirt,cabinet,0,0,139,kitchen,139,<
-408,ceiling recessed light,night table-drawer,121,0,0,bedroom,121,>
-409,cabinet-door,sash-stile,121,149,194,kitchen,464,">,=,<"
-410,sash-pane,sash-stile,21,24,139,bathroom,184,<
-411,paper towels,cabinet,135,22,179,kitchen,336,">,<"
-412,sash-pane,work surface,123,0,0,kitchen,123,>
-413,candle holder,table lamp-column,126,38,122,living_room,286,">,<"
-414,picture,pendant lamp-shade,33,22,130,kitchen,185,<
-415,table,cushion,292,291,157,living_room,740,">,=,<"
-416,armchair-back pillow,armchair-seat base,139,0,0,living_room,139,>
-417,flowerpot,floor,37,101,17,bathroom,155,=
-418,work surface,tray,22,57,69,kitchen,148,"=,<"
-419,door-knob,upper sash-pane,0,0,148,kitchen,148,<
-420,chair-back,back-stile,21,242,0,kitchen,263,=
-421,armchair-back pillow,arm-inside arm,181,89,0,living_room,270,">,="
-422,wall,ball,89,12,0,living_room,101,>
-423,kitchen island,floor,57,80,0,kitchen,137,">,="
-424,candle holder,table lamp-shade,102,40,175,living_room,317,">,<"
-425,window-pane,door-muntin,153,13,74,kitchen,240,">,<"
-426,cabinet-top,door-hinge,150,0,11,kitchen,161,>
-427,book,ceiling recessed light,0,0,115,kitchen,115,<
-428,drawer-knob,sconce-shade,0,0,259,bathroom,259,<
-429,armchair-back,sofa-back pillow,21,125,40,living_room,186,=
-430,floor lamp-shade,door,0,93,10,living_room,103,=
-431,door-handle,microwave-dial,61,0,44,kitchen,105,">,<"
-432,door-knob,chest of drawers,234,79,12,kitchen,325,>
-433,flowers,sofa,176,122,20,living_room,318,">,="
-434,armchair,figurine,26,62,158,living_room,246,<
-435,cabinet-door,clock,74,73,121,kitchen,268,">,=,<"
-436,toilet-lid,sink,14,88,156,bathroom,258,"=,<"
-437,arm-arm panel,sofa,0,105,82,living_room,187,"=,<"
-438,box,sofa-back pillow,29,19,55,living_room,103,">,<"
-439,chandelier-light source,coffee table,101,0,0,living_room,101,>
-440,sofa-leg,table lamp,0,0,169,living_room,169,<
-441,stool-leg,stool-stretcher,284,184,10,kitchen,478,">,="
-442,flowers,sofa-arm,190,49,11,living_room,250,>
-443,upper sash-pane,chair-leg,153,0,0,kitchen,153,>
-444,sconce-backplate,sconce-highlight,15,19,66,bathroom,100,<
-445,chair-back,window,0,10,98,kitchen,108,<
-446,cushion,chandelier-bulb,0,0,102,living_room,102,<
-447,floor,side table,64,372,307,living_room,743,"=,<"
-448,chandelier-shade,armchair-arm,137,0,0,living_room,137,>
-449,door,sofa-seat base,128,0,0,living_room,128,>
-450,cabinet-drawer,dishcloth,26,32,68,kitchen,126,">,=,<"
-451,mirror,sconce-shade,0,100,58,bathroom,158,"=,<"
-452,plant,pendant lamp-shade,35,13,117,kitchen,165,<
-453,pendant lamp-light source,cabinet,504,339,124,kitchen,967,">,="
-454,sofa-back,picture,0,11,226,living_room,237,<
-455,drawer-knob,night table-leg,114,0,0,bedroom,114,>
-456,television,armchair-arm,102,21,0,living_room,123,>
-457,figurine,curtain,33,64,19,kitchen,116,">,="
-458,range-oven,chair,20,49,52,kitchen,121,"=,<"
-459,work surface,rug,123,0,0,kitchen,123,>
-460,table lamp-shade,cabinet,70,10,60,kitchen,140,">,<"
-461,table lamp-light source,floor,237,0,0,living_room,237,>
-462,sash-pane,window-muntin,40,71,83,living_room,194,">,=,<"
-463,shelves-door,books,27,0,99,living_room,126,<
-464,arm-inside arm,shelves-shelf,0,0,196,living_room,196,<
-465,music system,picture,0,14,111,living_room,125,<
-466,books,plant,209,105,52,kitchen,366,">,="
-467,arm-inside arm,table lamp-shade,0,0,331,living_room,331,<
-468,toilet paper,towel,29,29,144,bathroom,202,<
-469,face-hand,door-handle,118,15,0,kitchen,133,>
-470,oven-button panel,cabinet-door,76,50,230,kitchen,356,<
-471,armchair-back,side table,71,69,15,living_room,155,">,="
-472,cabinet,chair-apron,104,21,0,kitchen,125,>
-473,sink,picture,0,0,146,bathroom,146,<
-474,chandelier-light source,chandelier-shade,44,41,36,bathroom,121,">,=,<"
-475,cabinet-side,floor,149,11,0,kitchen,160,>
-476,window,vase,91,16,44,bathroom,151,">,<"
-477,outlet,range-button panel,72,39,16,kitchen,127,">,="
-478,cabinet-drawer,flowers,14,14,75,bathroom,103,<
-479,paper towels,door-knob,81,0,120,kitchen,201,">,<"
-480,armchair-leg,table lamp,0,0,215,living_room,215,<
-481,ceiling fan-blade,night table,127,0,0,bedroom,127,>
-482,toilet-cistern,bathtub,45,81,0,bathroom,126,">,="
-483,toilet-bowl,toilet-lid,0,52,49,bathroom,101,"=,<"
-484,side table,table lamp-highlight,0,22,318,living_room,340,<
-485,cabinet-door,extractor hood-body,63,74,74,kitchen,211,">,=,<"
-486,books,figurine,365,113,44,kitchen,522,>
-487,ceiling recessed light,cabinet-drawer,181,0,0,bathroom,181,>
-488,microwave,door-knob,386,82,268,kitchen,736,">,<"
-489,chair-seat,back-spindle,0,17,90,kitchen,107,<
-490,ceiling spotlight-highlight,door-handle,101,0,0,kitchen,101,>
-491,cabinet,flowerpot,298,16,20,bathroom,334,>
-492,sink-faucet,toilet paper,54,23,23,bathroom,100,">,=,<"
-493,coffee table-top,coffee table,0,117,0,living_room,117,=
-494,window,blanket,168,11,0,living_room,179,>
-495,coffee table-top,books,0,12,135,living_room,147,<
-496,ceiling recessed light,pitcher,120,0,0,kitchen,120,>
-497,plant,carpet,325,26,0,living_room,351,>
-498,door-pane,pot,200,11,40,kitchen,251,>
-499,sink-faucet,window,0,28,194,bathroom,222,<
-500,bowl,flowers,32,10,89,kitchen,131,<
-501,pillow,cabinet-door,17,19,72,bedroom,108,<
-502,cabinet,upper sash-pane,28,38,65,kitchen,131,">,=,<"
-503,books,bookcase-shelf,354,18,413,living_room,785,">,<"
-504,mirror,wall,160,1354,102,bathroom,1616,=
-505,lower sash-pane,door-pane,0,16,87,kitchen,103,<
-506,ceiling spotlight-shade,wall,67,71,16,kitchen,154,">,="
-507,night table-drawer,clock,0,0,184,bedroom,184,<
-508,button panel-dial,cabinet,451,578,1402,kitchen,2431,<
-509,armchair-arm,armchair-back pillow,13,170,357,living_room,540,"=,<"
-510,chair-back,ceiling recessed light,0,0,182,kitchen,182,<
-511,cushion,sofa,65,30,244,kitchen,339,<
-512,window-rail,cabinet-door,64,24,17,kitchen,105,>
-513,button panel-dial,dishwasher,87,70,11,kitchen,168,">,="
-514,door-pane,armchair-seat cushion,204,0,0,living_room,204,>
-515,arm-inside arm,door-knob,13,0,142,living_room,155,<
-516,table lamp-shade,picture,436,271,11,kitchen,718,">,="
-517,table lamp-light source,table lamp,59,408,21,living_room,488,=
-518,floor,coffee table-leg,74,174,0,living_room,248,=
-519,sink,ceiling,0,0,344,bathroom,344,<
-520,armchair-arm,ceiling,0,0,618,living_room,618,<
-521,ceiling recessed light-aperture,window-pane,224,14,0,living_room,238,>
-522,basket,cabinet-front,63,36,39,kitchen,138,">,=,<"
-523,cabinet-door,napkin,103,0,31,kitchen,134,>
-524,armchair-seat cushion,ceiling recessed light,0,0,321,living_room,321,<
-525,pillow,blind,0,16,188,bedroom,204,<
-526,table lamp-column,ceiling recessed light-highlight,0,0,134,living_room,134,<
-527,pendant lamp-chain,wall,80,46,0,kitchen,126,">,="
-528,cabinet-door,dishwasher,682,263,36,kitchen,981,>
-529,armchair-arm,armchair-seat,55,46,10,living_room,111,">,="
-530,door-handle,bowl,212,27,257,kitchen,496,">,<"
-531,table lamp-highlight,chest of drawers-drawer,67,17,17,bedroom,101,>
-532,stool-leg,door-handle,0,0,197,kitchen,197,<
-533,jar,wall,17,65,119,bathroom,201,"=,<"
-534,fireplace,carpet,153,12,0,living_room,165,>
-535,coffee table-leg,door,0,0,118,living_room,118,<
-536,ceiling fan-blade,plant,158,0,0,living_room,158,>
-537,back-rail,door-handle,18,0,122,kitchen,140,<
-538,drawer-handle,door-muntin,0,0,260,kitchen,260,<
-539,cushion,arm-arm support,119,28,0,living_room,147,>
-540,wardrobe-door,bed-headboard,69,67,0,bedroom,136,">,="
-541,wall,sink,1444,465,82,bathroom,1991,>
-542,floor lamp-shade,books,75,22,77,living_room,174,">,<"
-543,chair-back,chair-stretcher,193,0,0,kitchen,193,>
-544,floor,arm-inside arm,35,293,205,living_room,533,"=,<"
-545,cabinet,napkin,93,31,18,kitchen,142,>
-546,table lamp-highlight,bed,123,188,12,bedroom,323,">,="
-547,night table-drawer,dresser-drawer,42,62,246,bedroom,350,<
-548,pendant lamp-light source,door-handle,345,15,42,kitchen,402,>
-549,cabinet-front,cabinet-drawer,449,11,29,bathroom,489,>
-550,sofa-arm,bowl,54,29,32,living_room,115,">,=,<"
-551,kitchen island-drawer,wall,0,0,124,kitchen,124,<
-552,ceiling recessed light-light source,ceiling fan-blade,38,11,53,kitchen,102,">,<"
-553,cabinet-drawer,door-pane,28,13,1376,kitchen,1417,<
-554,ceiling fan-blade,curtain,120,19,0,living_room,139,>
-555,vase,curtain,31,178,43,bathroom,252,=
-556,door-knob,pot,608,26,21,bathroom,655,>
-557,armchair-arm,floor lamp,0,19,158,living_room,177,<
-558,sofa,chair-leg,93,43,0,living_room,136,">,="
-559,books,side table,372,71,66,living_room,509,>
-560,cabinet-shelf,cabinet,170,95,151,kitchen,416,">,=,<"
-561,armchair,armchair-back,16,321,26,living_room,363,=
-562,shower screen,towel,88,106,0,bathroom,194,">,="
-563,wall,door-window,289,63,26,kitchen,378,>
-564,armchair-seat base,picture,0,0,371,living_room,371,<
-565,basket,window,50,16,34,bathroom,100,">,<"
-566,table,candle holder,21,34,90,living_room,145,<
-567,refrigerator-door,cabinet,269,488,539,kitchen,1296,">,=,<"
-568,sash-pane,window-pane,132,19,32,living_room,183,>
-569,cushion,flowerpot,309,186,275,living_room,770,">,=,<"
-570,bed-headboard,blind,0,29,71,bedroom,100,<
-571,coffee table,chandelier-shade,0,0,122,living_room,122,<
-572,drawer-knob,sash-rail,0,0,110,kitchen,110,<
-573,sash-stile,books,117,0,10,kitchen,127,>
-574,pendant lamp-cord,pendant lamp-canopy,0,53,113,kitchen,166,"=,<"
-575,cabinet,faucet,26,22,63,bathroom,111,<
-576,range-stove,wall,0,56,547,kitchen,603,<
-577,fireplace,flowers,20,82,68,living_room,170,"=,<"
-578,range-button panel,button panel-dial,50,380,0,kitchen,430,=
-579,side table-leg,cushion,0,21,140,living_room,161,<
-580,ceiling recessed light-light source,wall,128,142,113,bathroom,383,">,=,<"
-581,fireplace,plant,67,180,152,living_room,399,"=,<"
-582,arm-inside arm,curtain,0,0,544,living_room,544,<
-583,oven-door,outlet,16,14,125,kitchen,155,<
-584,wall,range-oven,610,28,0,kitchen,638,>
-585,cabinet-door,sash-muntin,36,31,119,kitchen,186,<
-586,cabinet-skirt,door-handle,39,0,454,kitchen,493,<
-587,oven,chair,122,91,27,kitchen,240,">,="
-588,bathtub-tap,wall,0,21,115,bathroom,136,<
-589,flowerpot,armchair-arm,116,59,60,living_room,235,">,=,<"
-590,door-handle,wardrobe,0,88,33,bedroom,121,=
-591,coffee maker,ceiling recessed light,0,0,262,kitchen,262,<
-592,oven,plate,22,16,62,kitchen,100,<
-593,work surface,ceiling spotlight,0,0,105,kitchen,105,<
-594,kitchen island-door,ceiling recessed light,0,0,133,kitchen,133,<
-595,bulb-light source,bulb,67,80,65,bathroom,212,">,=,<"
-596,table,table lamp-shade,0,20,196,living_room,216,<
-597,floor lamp-shade,coffee table,139,0,0,living_room,139,>
-598,flowerpot,shelves-shelf,39,0,75,living_room,114,">,<"
-599,sconce,window,55,51,162,bathroom,268,<
-600,door-handle,window,103,348,80,bathroom,531,=
-601,armchair-back,arm-inside arm,188,108,15,living_room,311,">,="
-602,utensils canister,door-handle,51,14,56,kitchen,121,">,<"
-603,ceiling,floor lamp-light source,122,0,0,living_room,122,>
-604,towel,toilet-lid,256,34,16,bathroom,306,>
-605,television,sofa-back pillow,109,61,0,living_room,170,">,="
-606,pot,window-pane,13,18,88,kitchen,119,<
-607,bowl,side table,85,52,60,living_room,197,">,=,<"
-608,wall,floor,1973,87,0,bathroom,2060,>
-609,button panel-buttons,cabinet,29,32,97,kitchen,158,<
-610,pot,pendant lamp-cord,0,0,103,kitchen,103,<
-611,sash-stile,door-knob,91,24,0,kitchen,115,>
-612,plate,floor,213,15,0,kitchen,228,>
-613,table lamp-shade,table lamp-highlight,259,64,159,living_room,482,">,<"
-614,armchair-back pillow,chair,15,69,70,living_room,154,"=,<"
-615,armchair-back,ceiling recessed light,0,0,212,living_room,212,<
-616,kettle,drawer-knob,117,0,0,kitchen,117,>
-617,cabinet-door,sconce-bulb,0,12,92,bathroom,104,<
-618,wall,armchair-arm,1703,99,11,living_room,1813,>
-619,door-handle,chair-stretcher,173,0,0,kitchen,173,>
-620,sconce-light source,countertop,107,0,0,bathroom,107,>
-621,plant,column,0,53,75,living_room,128,"=,<"
-622,cabinet-door,cabinet-front,458,1367,551,kitchen,2376,=
-623,ceiling recessed light,stool,238,0,0,kitchen,238,>
-624,sink,shelf,16,0,118,bathroom,134,<
-625,cabinet-front,cabinet-side,81,175,90,kitchen,346,">,=,<"
-626,table lamp-highlight,table lamp,172,211,118,living_room,501,">,=,<"
-627,cabinet-door,paper towels,227,18,118,kitchen,363,">,<"
-628,chandelier-light source,sconce-shade,73,0,28,bathroom,101,>
-629,door-window,outlet,43,10,66,kitchen,119,">,<"
-630,armchair,outlet,45,76,20,living_room,141,">,="
-631,sconce-light source,sconce-highlight,37,50,56,bathroom,143,">,=,<"
-632,curtain,figurine,19,64,33,kitchen,116,"=,<"
-633,wall,pendant lamp-cord,0,221,243,kitchen,464,"=,<"
-634,floor,cabinet-top,0,0,200,kitchen,200,<
-635,button panel-dial,range-oven,354,71,0,kitchen,425,>
-636,light switch,door-knob,18,0,84,bathroom,102,<
-637,cabinet,microwave-screen,61,14,56,kitchen,131,">,<"
-638,ceiling recessed light,cabinets,143,36,0,kitchen,179,>
-639,cabinets-door,plant,99,15,115,kitchen,229,">,<"
-640,pillow,vase,82,115,29,living_room,226,">,="
-641,tray,drawer-knob,118,0,0,kitchen,118,>
-642,sofa-leg,sofa-arm,0,28,471,living_room,499,<
-643,sofa-arm,door-pane,0,15,313,living_room,328,<
-644,books,book,485,11,19,kitchen,515,>
-645,can,cabinet,87,44,115,kitchen,246,">,<"
-646,chest of drawers,cabinet,10,298,474,kitchen,782,"=,<"
-647,cabinet-skirt,button panel-dial,24,0,145,kitchen,169,<
-648,wall,bathtub-tap,115,21,0,bathroom,136,>
-649,cabinet,floor,287,189,11,bathroom,487,">,="
-650,armchair-seat cushion,floor,64,134,28,living_room,226,">,="
-651,coffee table-leg,flowerpot,0,24,118,living_room,142,<
-652,cabinet-door,work surface,2402,198,921,kitchen,3521,>
-653,table lamp-light source,plant,120,54,80,living_room,254,">,=,<"
-654,bag,cabinet-door,60,15,40,kitchen,115,">,<"
-655,console table,wall,0,28,110,living_room,138,<
-656,window,door-muntin,35,108,27,kitchen,170,=
-657,books,shelves-door,99,0,27,living_room,126,>
-658,sofa-back pillow,ceiling fan-blade,0,0,122,living_room,122,<
-659,cabinet,armchair-seat cushion,132,39,0,living_room,171,>
-660,sofa-seat cushion,armchair-back pillow,0,42,142,living_room,184,<
-661,countertop,bottle,11,39,84,bathroom,134,"=,<"
-662,dishwasher,cabinet-door,36,263,682,kitchen,981,<
-663,cushion,door-door frame,0,11,235,living_room,246,<
-664,rug,floor,0,84,38,bathroom,122,"=,<"
-665,mirror,coffee table,109,0,0,living_room,109,>
-666,carpet,fireplace,0,12,153,living_room,165,<
-667,picture,sconce-backplate,26,33,108,living_room,167,<
-668,cabinet-door,floor,188,122,20,bathroom,330,">,="
-669,floor lamp-arm,cushion,134,0,0,living_room,134,>
-670,chair,armchair-back pillow,70,69,15,living_room,154,">,="
-671,door-handle,microwave-door,110,106,159,kitchen,375,">,=,<"
-672,door-door frame,door-handle,22,101,0,bathroom,123,=
-673,armchair-back,floor,110,51,0,living_room,161,">,="
-674,chair,sofa-back pillow,286,10,36,kitchen,332,>
-675,door-knob,range-button panel,315,13,146,kitchen,474,">,<"
-676,chest of drawers-drawer,ceiling recessed light,0,0,566,kitchen,566,<
-677,cabinet,countertop,47,148,162,bathroom,357,"=,<"
-678,chair-stretcher,chest of drawers-drawer,0,0,144,kitchen,144,<
-679,vase,cushion,15,386,377,kitchen,778,"=,<"
-680,door-handle,oven,344,209,111,kitchen,664,">,="
-681,chair-leg,sofa-seat cushion,102,72,121,living_room,295,">,=,<"
-682,chair,figurine,10,59,45,kitchen,114,"=,<"
-683,chest of drawers-drawer,cushion,100,121,148,bedroom,369,">,=,<"
-684,sconce,bed,128,45,0,bedroom,173,>
-685,sink,wall,82,465,1444,bathroom,1991,<
-686,ceiling recessed light-highlight,work surface,182,0,0,kitchen,182,>
-687,arm-inside arm,chair-leg,70,49,17,living_room,136,">,="
-688,books,ceiling fan,0,0,137,living_room,137,<
-689,coffee maker,floor,144,0,0,kitchen,144,>
-690,cabinet-top,sash-pane,100,0,0,kitchen,100,>
-691,sofa-leg,sofa,0,13,301,living_room,314,<
-692,vase,door-knob,37,23,240,bathroom,300,<
-693,cabinet,oven-button panel,148,65,68,kitchen,281,">,=,<"
-694,flowerpot,dresser-drawer,85,0,20,bedroom,105,>
-695,sofa-arm,window-muntin,0,0,120,living_room,120,<
-696,sofa-leg,vase,0,0,149,living_room,149,<
-697,plate,cabinets,63,28,40,kitchen,131,">,=,<"
-698,wall,floor lamp-tube,86,60,0,living_room,146,">,="
-699,cabinet,box,33,31,49,bathroom,113,">,=,<"
-700,armchair-seat cushion,curtain,0,0,307,living_room,307,<
-701,sofa-seat cushion,door-pane,0,18,332,living_room,350,<
-702,bed-leg,table lamp-shade,0,0,218,bedroom,218,<
-703,ceiling recessed light-light source,armchair-seat cushion,227,0,0,living_room,227,>
-704,sconce-light source,sconce,15,100,56,bathroom,171,"=,<"
-705,chair-leg,work surface,0,0,174,kitchen,174,<
-706,window-pane,pot,88,18,13,kitchen,119,>
-707,oven-door,range-button panel,0,17,87,kitchen,104,<
-708,range-oven,cabinet-door,41,257,686,kitchen,984,<
-709,range-stove,outlet,13,0,133,kitchen,146,<
-710,flowerpot,door-pane,51,10,64,kitchen,125,">,<"
-711,napkin,cabinet,18,31,93,kitchen,142,<
-712,cabinet-door,door-muntin,502,572,349,kitchen,1423,">,=,<"
-713,curtain,sofa-arm,709,10,0,living_room,719,>
-714,range-stove,cabinet-front,23,19,71,kitchen,113,<
-715,rug,wall,0,14,358,bathroom,372,<
-716,door-muntin,shelves-shelf,40,29,90,kitchen,159,">,<"
-717,window,ceiling recessed light-aperture,0,13,336,kitchen,349,<
-718,armchair-seat base,cushion,0,40,305,living_room,345,<
-719,bookcase-shelf,door-muntin,58,18,41,living_room,117,">,<"
-720,chair,sofa-seat cushion,11,162,21,kitchen,194,=
-721,pillow,table lamp-shade,21,240,835,bedroom,1096,<
-722,button panel-dial,drawer-knob,407,82,221,kitchen,710,">,<"
-723,outlet,refrigerator,0,200,49,kitchen,249,=
-724,pendant lamp,window,14,141,0,bathroom,155,=
-725,cabinets-drawer,drawer-knob,105,78,94,kitchen,277,">,=,<"
-726,cabinet-drawer,countertop,0,52,255,bathroom,307,<
-727,bed-leg,drawer-knob,0,16,278,bedroom,294,<
-728,sconce-shade,sconce,23,119,56,bathroom,198,"=,<"
-729,cabinet,plate,528,255,447,kitchen,1230,">,=,<"
-730,bowl,pot,89,64,144,kitchen,297,">,=,<"
-731,blind,sofa-back pillow,169,0,0,living_room,169,>
-732,refrigerator-door,door-handle,188,523,282,kitchen,993,"=,<"
-733,books,ceiling fan-blade,0,0,327,living_room,327,<
-734,door-knob,glass,290,19,30,bathroom,339,>
-735,wall,hotplate,123,0,0,kitchen,123,>
-736,plant,table lamp-light source,80,54,120,living_room,254,">,=,<"
-737,extractor hood,range-stove,105,0,0,kitchen,105,>
-738,sofa-seat cushion,table lamp-shade,0,0,591,living_room,591,<
-739,night table-drawer,night table-leg,130,0,0,bedroom,130,>
-740,outlet,pendant lamp-tube,0,0,122,kitchen,122,<
-741,door-muntin,window-muntin,27,35,61,living_room,123,">,=,<"
-742,chest of drawers,ceiling,0,0,121,kitchen,121,<
-743,pipe,wall,0,32,97,bathroom,129,<
-744,arm-inside arm,vase,36,82,212,living_room,330,<
-745,chandelier-shade,table lamp-column,151,0,0,living_room,151,>
-746,shelves,box,49,48,13,kitchen,110,">,="
-747,sofa,armchair,65,459,38,living_room,562,=
-748,sash-rail,cabinet-front,54,0,46,kitchen,100,">,<"
-749,pitcher,work surface,109,18,0,kitchen,127,>
-750,sash-muntin,sash-pane,350,208,336,kitchen,894,">,=,<"
-751,armchair-seat cushion,cabinet,0,39,132,living_room,171,<
-752,sconce-shade,window,58,42,38,bathroom,138,">,=,<"
-753,stove-burner,bottle,0,10,134,kitchen,144,<
-754,basket,cabinet-top,11,10,90,kitchen,111,<
-755,sofa-back pillow,sofa-skirt,175,0,0,living_room,175,>
-756,ceiling,oven,261,0,0,kitchen,261,>
-757,floor lamp,side table,161,17,0,living_room,178,>
-758,blind,cabinet-door,17,109,26,bathroom,152,=
-759,armchair-arm,floor lamp-column,0,0,100,living_room,100,<
-760,chair,door-muntin,16,12,182,kitchen,210,<
-761,door-knob,fruits,79,0,29,kitchen,108,>
-762,chair,armchair-arm,310,131,32,living_room,473,>
-763,cabinet,range-button panel,430,185,163,kitchen,778,">,=,<"
-764,work surface,basket,40,38,184,kitchen,262,<
-765,tray,cushion,12,29,162,living_room,203,<
-766,extractor hood,door-knob,402,18,58,kitchen,478,>
-767,arm-outside arm,ceiling recessed light,0,0,396,living_room,396,<
-768,picture,candle holder,19,247,288,bathroom,554,"=,<"
-769,fireplace,arm-outside arm,85,22,0,living_room,107,>
-770,chest of drawers-drawer,door-window,25,28,59,kitchen,112,">,=,<"
-771,sofa-arm,door-muntin,0,0,101,living_room,101,<
-772,button panel-dial,ceiling recessed light,0,0,600,kitchen,600,<
-773,sash-stile,cabinet-drawer,148,0,0,kitchen,148,>
-774,button panel-dial,range-button panel,0,380,50,kitchen,430,=
-775,mirror,cabinet,359,63,13,bathroom,435,>
-776,door-knob,refrigerator,134,327,131,kitchen,592,">,=,<"
-777,chandelier,ceiling recessed light,15,51,43,kitchen,109,"=,<"
-778,cabinet,bathtub-faucet,27,37,47,bathroom,111,">,=,<"
-779,sofa-arm,television,0,21,126,living_room,147,<
-780,bed,table lamp,12,611,13,living_room,636,=
-781,work surface,vase,14,56,176,kitchen,246,<
-782,pendant lamp-tube,outlet,122,0,0,kitchen,122,>
-783,wall,door-handle,507,84,13,bathroom,604,>
-784,curtain,table lamp-shade,15,316,12,kitchen,343,=
-785,ceiling,picture,127,13,41,bathroom,181,>
-786,cabinet-door,chair-back,385,112,46,kitchen,543,>
-787,window,chair-back,98,10,0,kitchen,108,>
-788,plate,door-handle,193,32,192,kitchen,417,">,<"
-789,ceiling recessed light-light source,arm-inside arm,386,0,0,living_room,386,>
-790,door-knob,extractor hood,58,18,402,kitchen,478,<
-791,plate,chair-leg,96,12,0,kitchen,108,>
-792,door-pane,clock,90,23,37,kitchen,150,>
-793,sink-faucet,cabinets-door,53,0,85,kitchen,138,">,<"
-794,chandelier-light source,armchair,295,0,0,living_room,295,>
-795,coffee maker,drawer-handle,134,0,0,kitchen,134,>
-796,armchair-arm,armchair-seat base,366,92,18,living_room,476,>
-797,dresser,pillow,32,118,15,bedroom,165,=
-798,bowl,bottle,17,48,143,bathroom,208,<
-799,cabinet-skirt,cabinet,30,32,566,kitchen,628,<
-800,stove-dial,door-pane,0,0,107,kitchen,107,<
-801,floor,sofa-arm,35,334,261,living_room,630,"=,<"
-802,door-pane,pillow,154,42,23,bedroom,219,>
-803,wall,button panel-screen,153,56,15,kitchen,224,>
-804,coffee table,table lamp-light source,0,0,164,living_room,164,<
-805,cabinet-drawer,button panel-dial,250,227,550,kitchen,1027,">,=,<"
-806,door-pane,sash-pane,47,56,37,kitchen,140,">,=,<"
-807,door-hinge,cabinet-side,58,55,50,kitchen,163,">,=,<"
-808,door-pane,table lamp,10,70,28,kitchen,108,=
-809,armchair-arm,sofa-seat base,97,51,17,living_room,165,">,="
-810,pendant lamp,pendant lamp-canopy,11,211,68,kitchen,290,=
-811,door-knob,cushion,29,48,47,kitchen,124,">,=,<"
-812,sconce,cushion,446,0,0,living_room,446,>
-813,stool-leg,ceiling recessed light-light source,0,0,108,kitchen,108,<
-814,lower sash-pane,wall,11,45,44,bathroom,100,"=,<"
-815,cabinets-door,food,83,0,44,kitchen,127,">,<"
-816,stove,work surface,30,182,38,kitchen,250,=
-817,dishwasher,cabinet-front,0,38,69,kitchen,107,"=,<"
-818,cushion,candle holder,227,294,605,living_room,1126,">,=,<"
-819,sofa-back pillow,books,115,49,305,living_room,469,<
-820,night table,cushion,73,577,988,bedroom,1638,"=,<"
-821,ceiling spotlight-highlight,ceiling spotlight-shade,109,47,31,kitchen,187,">,="
-822,kettle,cabinet-drawer,147,13,0,kitchen,160,>
-823,door-pane,extractor hood,53,81,40,kitchen,174,">,=,<"
-824,cabinets-door,ceiling,0,12,140,kitchen,152,<
-825,drawer-knob,pendant lamp,0,0,202,kitchen,202,<
-826,coffee table,table,0,24,108,living_room,132,<
-827,basket,towel,34,16,75,bathroom,125,">,<"
-828,stool-leg,wall,0,0,141,kitchen,141,<
-829,sink,faucet,13,32,70,bathroom,115,"=,<"
-830,sofa-back pillow,vase,134,141,325,living_room,600,">,=,<"
-831,wall,sofa,118,20,0,kitchen,138,>
-832,sofa,sofa-seat base,299,68,0,living_room,367,>
-833,cabinet-door,button panel-buttons,153,24,47,kitchen,224,>
-834,figurine,table lamp-shade,72,31,106,living_room,209,">,<"
-835,cushion,sash-muntin,0,0,110,living_room,110,<
-836,door-handle,sash-stile,41,51,141,kitchen,233,<
-837,armchair-arm,sofa-seat cushion,306,222,145,living_room,673,">,=,<"
-838,ceiling recessed light,cabinet-side,348,46,12,kitchen,406,>
-839,door-handle,chair-back,164,25,19,kitchen,208,>
-840,kitchen island,door-knob,22,43,81,kitchen,146,"=,<"
-841,sink-faucet,towel,171,104,233,bathroom,508,">,=,<"
-842,pendant lamp-cord,wall,243,221,0,kitchen,464,">,="
-843,work surface,refrigerator,10,245,143,kitchen,398,"=,<"
-844,sink-faucet,chair,11,69,24,bathroom,104,=
-845,side table,table lamp-base,43,222,166,living_room,431,"=,<"
-846,chest of drawers-skirt,cabinet-door,0,0,203,kitchen,203,<
-847,shower screen,ceiling,0,40,76,bathroom,116,"=,<"
-848,cabinets-drawer,jar,28,0,82,kitchen,110,<
-849,work surface,pendant lamp-cord,0,0,143,kitchen,143,<
-850,sink-faucet,stove-burner,101,29,0,kitchen,130,>
-851,button panel-screen,cabinet,118,51,220,kitchen,389,">,<"
-852,back-spindle,back-stile,20,310,20,kitchen,350,=
-853,door-handle,telephone,45,20,41,kitchen,106,">,<"
-854,sofa-seat cushion,table lamp-base,28,54,273,living_room,355,<
-855,cabinet-front,floor,204,18,0,kitchen,222,>
-856,figurine,sofa,129,58,37,living_room,224,">,="
-857,oven,work surface,116,111,76,kitchen,303,">,=,<"
-858,cabinet-drawer,cabinet-skirt,238,0,29,kitchen,267,>
-859,night table-drawer,picture-frame,0,0,173,bedroom,173,<
-860,work surface,picture,0,13,296,kitchen,309,<
-861,coffee maker,bottle,22,72,31,kitchen,125,"=,<"
-862,coffee table-leg,plant,0,0,236,living_room,236,<
-863,door-knob,vase,240,23,37,bathroom,300,>
-864,door-knob,cabinet-skirt,330,0,12,kitchen,342,>
-865,torchiere lamp-shade,cushion,128,0,0,living_room,128,>
-866,vase,sofa-back pillow,325,141,134,living_room,600,">,=,<"
-867,shelves-door,door-pane,22,26,76,living_room,124,<
-868,button panel-dial,range-stove,136,0,253,kitchen,389,">,<"
-869,ceiling recessed light,countertop,111,0,0,bathroom,111,>
-870,back-stile,chair-seat,106,37,0,kitchen,143,>
-871,cabinet,switch,124,11,16,bathroom,151,>
-872,window,pot,21,78,30,bathroom,129,=
-873,sofa-leg,carpet,21,54,46,living_room,121,"=,<"
-874,ceiling,countertop,196,0,0,bathroom,196,>
-875,cabinets-drawer,vase,18,0,83,kitchen,101,<
-876,extractor hood,ceiling recessed light-light source,19,83,231,kitchen,333,<
-877,cabinet,back-rail,213,77,15,kitchen,305,>
-878,cabinet,tray,321,72,13,bathroom,406,>
-879,window,armchair-back pillow,250,28,0,living_room,278,>
-880,floor,sofa-back,0,57,69,living_room,126,"=,<"
-881,pendant lamp-canopy,floor,104,0,0,kitchen,104,>
-882,cabinet,door-knob,96,120,32,bathroom,248,">,="
-883,upper sash-rail,curtain,14,45,45,living_room,104,"=,<"
-884,door-muntin,sink-faucet,102,0,12,kitchen,114,>
-885,ceiling,sink,344,0,0,bathroom,344,>
-886,door-handle,bottle,305,67,57,bathroom,429,>
-887,plant,coffee table,486,39,0,living_room,525,>
-888,candle holder,armchair-arm,162,66,25,living_room,253,>
-889,ceiling recessed light-light source,range-oven,138,0,0,kitchen,138,>
-890,outlet,mirror,0,17,130,bathroom,147,<
-891,pendant lamp,flowerpot,106,0,0,kitchen,106,>
-892,cabinets-door,work surface,109,15,79,kitchen,203,">,<"
-893,picture,double door-door,22,167,37,living_room,226,=
-894,arm-arm panel,sofa-seat base,88,46,0,living_room,134,">,="
-895,cushion,arm-outside arm,744,121,0,living_room,865,>
-896,coffee table-leg,sofa-arm,0,42,345,living_room,387,<
-897,cabinet,arm-arm panel,103,28,0,living_room,131,>
-898,ceiling recessed light-highlight,table lamp-shade,140,0,0,living_room,140,>
-899,sash-muntin,cushion,110,0,0,living_room,110,>
-900,work surface,faucet,0,64,129,kitchen,193,"=,<"
-901,work surface,pendant lamp-shade,0,0,397,kitchen,397,<
-902,door-muntin,button panel-dial,244,0,0,kitchen,244,>
-903,figurine,carpet,162,12,0,living_room,174,>
-904,books,arm-arm panel,171,18,15,living_room,204,>
-905,sconce-highlight,curtain,47,104,10,living_room,161,">,="
-906,wall,coffee maker,385,188,13,kitchen,586,">,="
-907,ceiling recessed light-light source,refrigerator-door,235,11,0,kitchen,246,>
-908,candle holder,picture,288,247,19,bathroom,554,">,="
-909,bottle,refrigerator,30,112,29,kitchen,171,=
-910,sofa-leg,arm-arm panel,0,11,137,living_room,148,<
-911,pendant lamp-light source,floor,158,0,0,kitchen,158,>
-912,door-window,button panel-dial,36,0,189,kitchen,225,<
-913,sofa-seat base,door-pane,0,0,108,living_room,108,<
-914,cabinet-door,semi-flush mount light-shade,0,20,122,kitchen,142,<
-915,armchair-leg,arm-inside arm,13,29,427,living_room,469,<
-916,curtain,bathtub,184,23,0,bathroom,207,>
-917,cabinet,button panel-dial,1402,578,451,kitchen,2431,>
-918,cabinet,coffee maker,554,64,400,kitchen,1018,">,<"
-919,cushion,sofa-seat cushion,2410,484,76,living_room,2970,>
-920,book,drawer-handle,89,0,11,kitchen,100,>
-921,refrigerator,bottle,29,112,30,kitchen,171,=
-922,button panel-buttons,cabinet-door,47,24,153,kitchen,224,<
-923,table lamp,blind,0,42,118,living_room,160,<
-924,sofa,sofa-skirt,79,24,0,living_room,103,>
-925,door-handle,sink,36,14,138,bathroom,188,<
-926,wardrobe,drawer-knob,110,16,0,bedroom,126,>
-927,ceiling recessed light-highlight,chair,104,0,0,kitchen,104,>
-928,double door-door,window-pane,0,116,54,living_room,170,"=,<"
-929,extractor hood,bowl,90,13,0,kitchen,103,>
-930,table lamp-base,cushion,315,299,245,living_room,859,">,=,<"
-931,kitchen island-drawer,ceiling recessed light,0,0,187,kitchen,187,<
-932,bathtub,sink,24,174,134,bathroom,332,"=,<"
-933,ceiling,table lamp-light source,326,0,0,living_room,326,>
-934,sofa-seat base,table lamp,0,0,214,living_room,214,<
-935,flowers,ceiling recessed light-light source,0,0,146,kitchen,146,<
-936,armchair-arm,door,0,14,238,living_room,252,<
-937,sofa-leg,armchair,0,12,92,living_room,104,<
-938,board,cabinet,91,56,88,kitchen,235,">,=,<"
-939,wall,drawer,118,0,0,kitchen,118,>
-940,sink-faucet,bowl,51,46,57,kitchen,154,">,=,<"
-941,ceiling,towel,420,0,0,bathroom,420,>
-942,bed-leg,table lamp-base,0,0,134,bedroom,134,<
-943,picture,refrigerator,27,93,0,kitchen,120,=
-944,microwave-button panel,wall,29,55,52,kitchen,136,">,=,<"
-945,toilet-lid,door,0,29,82,bathroom,111,<
-946,outlet,range,118,103,25,kitchen,246,">,="
-947,television,cabinet-door,45,11,49,kitchen,105,">,<"
-948,flowers,table lamp-shade,61,47,127,living_room,235,">,=,<"
-949,microwave,coffee maker,76,32,0,kitchen,108,>
-950,ceiling fan,curtain,145,16,0,living_room,161,>
-951,floor,bathtub,0,123,257,bathroom,380,"=,<"
-952,candle holder,shelves-shelf,46,19,70,living_room,135,">,<"
-953,floor lamp,books,81,42,75,living_room,198,">,=,<"
-954,ceiling recessed light-aperture,coffee table,146,0,0,living_room,146,>
-955,ceiling recessed light-light source,door-muntin,231,0,42,kitchen,273,>
-956,kitchen island-door,door-pane,42,55,43,kitchen,140,">,=,<"
-957,flowerpot,arm-outside arm,88,38,11,living_room,137,">,="
-958,arm-inside arm,carpet,169,73,0,living_room,242,">,="
-959,pendant lamp-light source,pendant lamp,0,75,392,kitchen,467,<
-960,table lamp-column,chair-leg,126,0,0,living_room,126,>
-961,cabinets-drawer,glass,0,20,144,kitchen,164,<
-962,side table,floor lamp-column,0,13,106,living_room,119,<
-963,pendant lamp-shade,window-pane,73,23,26,living_room,122,>
-964,arm-inside arm,door,0,11,234,living_room,245,<
-965,cabinet-side,chair,135,15,0,kitchen,150,>
-966,sconce,curtain,39,47,20,bathroom,106,">,="
-967,window-pane,back-rail,118,12,0,kitchen,130,>
-968,floor lamp,floor lamp-light source,0,132,0,living_room,132,=
-969,armchair-seat cushion,picture,0,10,571,living_room,581,<
-970,sink,outlet,32,20,165,bathroom,217,<
-971,bed-headboard,cushion,516,417,0,bedroom,933,">,="
-972,arm-inside arm,mirror,0,0,105,living_room,105,<
-973,napkin,cabinet-door,31,0,103,kitchen,134,<
-974,plant pot,armchair,64,63,33,living_room,160,">,=,<"
-975,door-muntin,basket,53,0,51,kitchen,104,">,<"
-976,door-handle,flowers,92,25,20,bathroom,137,>
-977,range-stove,cabinet,247,229,584,kitchen,1060,">,=,<"
-978,dresser-drawer,drawer-handle,1060,499,803,bedroom,2362,">,=,<"
-979,dresser,drawer-handle,167,179,13,bedroom,359,">,="
-980,bottle,kettle,47,52,16,kitchen,115,">,="
-981,clock,cabinet-door,121,73,74,kitchen,268,">,=,<"
-982,door-handle,sofa-seat cushion,131,12,10,living_room,153,>
-983,carpet,table lamp-highlight,0,0,124,living_room,124,<
-984,bottle,refrigerator-door,32,59,39,kitchen,130,">,=,<"
-985,sconce-light source,sconce-shade,52,132,78,bathroom,262,"=,<"
-986,toilet-lid,wall,12,116,749,bathroom,877,<
-987,sofa-arm,coffee table,214,185,16,living_room,415,">,="
-988,ceiling fan-blade,bed,131,0,0,bedroom,131,>
-989,table lamp-light source,side table,301,0,0,living_room,301,>
-990,door-handle,mug-handle,73,10,86,kitchen,169,">,<"
-991,range,door-pane,0,0,162,kitchen,162,<
-992,floor,armchair-seat base,25,105,0,living_room,130,=
-993,door-pane,sofa-back pillow,291,50,22,living_room,363,>
-994,mirror,soap dispenser,117,15,0,bathroom,132,>
-995,outlet,window,0,53,50,bathroom,103,"=,<"
-996,table lamp-highlight,vase,112,23,54,living_room,189,">,<"
-997,pineapple,picture,82,17,15,living_room,114,>
-998,wall,night table,18,337,29,living_room,384,=
-999,curtain,shelves-shelf,53,62,0,living_room,115,">,="
-1000,button panel-dial,drawer-handle,780,36,79,kitchen,895,>
-1001,wall,teapot,100,66,17,kitchen,183,">,="
-1002,picture,blanket,248,11,10,living_room,269,>
-1003,plate,cabinet-front,28,27,45,kitchen,100,">,=,<"
-1004,cabinet-door,back-rail,321,75,27,kitchen,423,>
-1005,floor lamp-shade,vase,106,18,40,living_room,164,>
-1006,chest of drawers-drawer,plate,17,0,103,kitchen,120,<
-1007,sash-stile,door-handle,141,51,41,kitchen,233,>
-1008,extractor hood-vent,door-handle,138,0,0,kitchen,138,>
-1009,door-knob,range-drawer,190,0,0,kitchen,190,>
-1010,armchair-seat base,armchair-back pillow,0,0,139,living_room,139,<
-1011,sofa,armchair-leg,137,16,0,living_room,153,>
-1012,candle holder,chair,16,11,93,kitchen,120,<
-1013,arm-inside arm,armchair,23,431,153,living_room,607,=
-1014,coffee table-leg,wall,0,0,782,living_room,782,<
-1015,floor,armchair-back,0,51,110,living_room,161,"=,<"
-1016,floor lamp-shade,floor,201,0,0,living_room,201,>
-1017,ceiling recessed light,cabinet,139,1044,153,bathroom,1336,=
-1018,picture-frame,pillow,309,11,0,bedroom,320,>
-1019,floor,picture,0,55,165,bathroom,220,<
-1020,arm-inside arm,sofa-leg,324,18,0,living_room,342,>
-1021,night table,box,25,52,49,bedroom,126,"=,<"
-1022,sofa-arm,floor,261,334,35,living_room,630,">,="
-1023,plant,armchair,552,248,44,living_room,844,">,="
-1024,cabinet-front,range,73,35,12,kitchen,120,">,="
-1025,table lamp-column,television,0,56,57,living_room,113,"=,<"
-1026,bottle,box,61,30,31,bathroom,122,">,=,<"
-1027,armchair,window-pane,0,14,279,living_room,293,<
-1028,table lamp-shade,figurine,106,31,72,living_room,209,">,<"
-1029,pendant lamp,vase,84,25,0,kitchen,109,>
-1030,sink-bowl,door-knob,40,0,103,kitchen,143,<
-1031,cabinet-front,cabinet-skirt,180,0,0,kitchen,180,>
-1032,coffee table,arm-inside arm,12,140,146,living_room,298,"=,<"
-1033,curtain,armchair-seat base,185,0,0,living_room,185,>
-1034,vase,floor lamp-highlight,18,16,85,living_room,119,<
-1035,cabinets,door-pane,44,37,53,kitchen,134,">,=,<"
-1036,food processor,cabinet-door,31,0,81,kitchen,112,<
-1037,ceiling recessed light-light source,coffee maker,147,0,0,kitchen,147,>
-1038,floor lamp,floor lamp-shade,0,297,0,living_room,297,=
-1039,door-knob,work surface,1190,52,617,kitchen,1859,">,<"
-1040,armchair-back pillow,vase,19,28,58,living_room,105,"=,<"
-1041,chest of drawers-drawer,bed-leg,155,0,0,bedroom,155,>
-1042,night table-drawer,pillow,0,56,864,bedroom,920,<
-1043,cabinets-door,cabinet,187,142,165,kitchen,494,">,=,<"
-1044,coffee table,ceiling,0,0,588,living_room,588,<
-1045,cabinet-front,door-hinge,178,183,129,kitchen,490,">,=,<"
-1046,door-pane,drawer-handle,603,0,0,kitchen,603,>
-1047,cabinet-door,sash-rail,181,60,206,kitchen,447,">,<"
-1048,shelves-door,ceiling recessed light,0,0,120,living_room,120,<
-1049,cabinet-front,drawer-handle,295,93,0,kitchen,388,>
-1050,bed-footboard,cushion,17,89,107,bedroom,213,"=,<"
-1051,side table,plate,17,24,142,living_room,183,<
-1052,sculpture,picture,37,48,154,living_room,239,<
-1053,flowerpot,sofa-seat base,81,26,12,living_room,119,>
-1054,coffee maker,window,0,23,137,kitchen,160,<
-1055,sideboard-door,drawer-handle,130,0,0,kitchen,130,>
-1056,ceiling,door-handle,117,17,0,bathroom,134,>
-1057,wall,stool-stretcher,116,0,0,kitchen,116,>
-1058,bed-headboard,door-handle,33,33,49,bedroom,115,">,=,<"
-1059,sink-faucet,bathtub-faucet,73,16,13,bathroom,102,>
-1060,door-handle,face-hand,0,15,118,kitchen,133,<
-1061,range-oven,outlet,10,0,130,kitchen,140,<
-1062,sofa-arm,chair,27,202,368,living_room,597,"=,<"
-1063,armchair-arm,table lamp-highlight,0,0,225,living_room,225,<
-1064,armchair-seat base,ceiling,0,0,170,living_room,170,<
-1065,night table-leg,drawer-handle,0,0,143,bedroom,143,<
-1066,vase,floor,116,141,21,bathroom,278,">,="
-1067,microwave-dial,cabinet,46,0,66,kitchen,112,">,<"
-1068,table lamp,coffee table-leg,174,0,0,living_room,174,>
-1069,cabinet,microwave-button panel,146,44,118,kitchen,308,">,<"
-1070,ceiling recessed light-aperture,drawer-knob,139,0,0,kitchen,139,>
-1071,sofa-back pillow,plant,53,183,439,living_room,675,<
-1072,flowerpot,table lamp-shade,49,14,214,living_room,277,<
-1073,back-rail,window,0,0,104,kitchen,104,<
-1074,drawer-knob,refrigerator,0,65,157,kitchen,222,<
-1075,sconce,towel,271,0,0,bathroom,271,>
-1076,sink-tap,sink-faucet,20,78,40,bathroom,138,"=,<"
-1077,night table,door-handle,22,19,120,bedroom,161,<
-1078,sofa-arm,picture-frame,0,0,138,living_room,138,<
-1079,picture,bathtub,106,0,0,bathroom,106,>
-1080,armchair-arm,ceiling fan-blade,0,0,132,living_room,132,<
-1081,sofa,box,66,83,44,living_room,193,">,=,<"
-1082,chair,plate,27,47,146,kitchen,220,<
-1083,ceiling recessed light,refrigerator-door,386,11,0,kitchen,397,>
-1084,sofa-back pillow,cushion,715,16,134,kitchen,865,>
-1085,side table,floor lamp,0,17,161,living_room,178,<
-1086,pillow,sconce-highlight,0,17,90,bedroom,107,<
-1087,wall,side table,20,180,0,bathroom,200,=
-1088,glass,floor,77,39,0,bathroom,116,">,="
-1089,drawer-knob,coffee maker,0,0,157,kitchen,157,<
-1090,armchair-back pillow,armchair-arm,357,170,13,living_room,540,">,="
-1091,door-knob,button panel-screen,219,0,92,kitchen,311,>
-1092,button panel-dial,chest of drawers-drawer,362,85,14,kitchen,461,>
-1093,pendant lamp-canopy,door-handle,205,0,0,kitchen,205,>
-1094,cabinet,door-hinge,316,268,261,kitchen,845,">,=,<"
-1095,sofa-seat cushion,plant,0,64,630,living_room,694,<
-1096,pendant lamp-shade,plant,117,13,35,kitchen,165,>
-1097,cabinet-drawer,vase,24,17,99,bathroom,140,<
-1098,pendant lamp-light source,plant,80,10,17,kitchen,107,>
-1099,armchair-arm,table lamp,0,14,434,living_room,448,<
-1100,table lamp-highlight,bed-headboard,177,220,85,bedroom,482,">,="
-1101,cabinet-drawer,chest of drawers,48,117,26,kitchen,191,=
-1102,books,clock,16,14,90,living_room,120,<
-1103,shelves,vase,68,10,29,kitchen,107,>
-1104,blanket,sofa-back pillow,0,66,53,living_room,119,"=,<"
-1105,vase,fireplace,177,103,81,living_room,361,">,=,<"
-1106,cabinet,cutting board,46,28,29,kitchen,103,">,=,<"
-1107,back-stile,cabinet,0,96,186,kitchen,282,"=,<"
-1108,armchair-seat base,ceiling recessed light,0,0,180,living_room,180,<
-1109,drawer-handle,sash-pane,0,0,114,kitchen,114,<
-1110,stove,window,0,0,164,kitchen,164,<
-1111,carpet,chandelier-light source,0,0,104,living_room,104,<
-1112,cabinets,ceiling,0,29,102,kitchen,131,<
-1113,microwave,drawer-knob,233,0,0,kitchen,233,>
-1114,cabinet-top,door-handle,851,0,0,kitchen,851,>
-1115,stool-stretcher,ceiling recessed light,0,0,101,kitchen,101,<
-1116,cushion,sconce-shade,0,0,195,living_room,195,<
-1117,coffee table,table lamp-column,0,15,334,living_room,349,<
-1118,coffee table,curtain,0,0,565,living_room,565,<
-1119,table lamp,bed-footboard,133,38,0,bedroom,171,>
-1120,picture,speaker,174,29,68,living_room,271,>
-1121,cabinet,hotplate,125,48,52,kitchen,225,">,=,<"
-1122,arm-inside arm,table lamp-light source,0,0,154,living_room,154,<
-1123,sink,door,17,78,181,bathroom,276,"=,<"
-1124,mirror,books,113,49,17,living_room,179,">,="
-1125,table lamp-base,armchair-leg,103,0,0,living_room,103,>
-1126,armchair-seat cushion,table lamp-column,0,0,123,living_room,123,<
-1127,shower screen,cabinet,87,30,0,bathroom,117,>
-1128,figurine,cushion,467,96,112,living_room,675,>
-1129,cabinet-door,drawer,160,16,0,kitchen,176,>
-1130,door-hinge,button panel-dial,236,0,38,kitchen,274,>
-1131,outlet,cabinet-drawer,101,17,10,bathroom,128,>
-1132,cabinets,jar,46,26,44,kitchen,116,">,=,<"
-1133,night table,picture-frame,0,0,227,bedroom,227,<
-1134,chair-stretcher,chair-seat,0,0,136,kitchen,136,<
-1135,table lamp-column,window-pane,0,56,206,living_room,262,<
-1136,ceiling,floor lamp-column,179,0,0,living_room,179,>
-1137,cushion,books,414,180,1290,living_room,1884,<
-1138,jar,door-pane,52,0,56,kitchen,108,">,<"
-1139,cabinet,wall,56,463,1121,bathroom,1640,<
-1140,torchiere lamp,cushion,137,10,0,living_room,147,>
-1141,night table,vase,15,37,201,bedroom,253,<
-1142,sofa-arm,flowerpot,87,83,141,living_room,311,">,=,<"
-1143,floor,curtain,0,10,258,bathroom,268,<
-1144,switch,door-knob,83,0,120,kitchen,203,">,<"
-1145,refrigerator,pendant lamp,0,25,146,kitchen,171,<
-1146,table lamp,ceiling recessed light-highlight,0,0,151,living_room,151,<
-1147,drawer-knob,kitchen island-door,93,23,0,kitchen,116,>
-1148,coffee table-leg,table lamp-column,0,0,146,living_room,146,<
-1149,ceiling recessed light,chandelier,43,51,15,kitchen,109,">,="
-1150,armchair,table lamp-light source,0,0,221,living_room,221,<
-1151,ceiling,range-button panel,117,0,0,kitchen,117,>
-1152,shelf,sink,118,0,16,bathroom,134,>
-1153,fruit,door-knob,64,0,106,kitchen,170,">,<"
-1154,table lamp-base,clock,24,55,37,living_room,116,">,=,<"
-1155,plant,bowl,242,30,32,kitchen,304,>
-1156,dresser-drawer,door-knob,34,0,75,bedroom,109,">,<"
-1157,vase,armchair-leg,236,0,0,living_room,236,>
-1158,night table-drawer,window,0,0,434,bedroom,434,<
-1159,armchair,shelves-shelf,0,18,133,living_room,151,<
-1160,floor,drawer-knob,32,43,109,bathroom,184,<
-1161,picture,sink,146,0,0,bathroom,146,>
-1162,vase,table lamp-column,159,75,162,living_room,396,">,<"
-1163,picture-frame,picture,195,13,98,bathroom,306,">,<"
-1164,wall,sofa-skirt,175,0,0,living_room,175,>
-1165,night table-drawer,ceiling fan-blade,0,0,140,bedroom,140,<
-1166,window-pane,ceiling-beam,0,0,156,living_room,156,<
-1167,door-handle,plate,192,32,193,kitchen,417,">,<"
-1168,chair,armchair-seat cushion,141,37,0,living_room,178,>
-1169,sofa-seat cushion,box,40,27,64,living_room,131,">,=,<"
-1170,sofa,armchair-seat cushion,63,55,0,living_room,118,">,="
-1171,dresser,window,0,37,105,bedroom,142,<
-1172,towel,soap dish,48,15,39,bathroom,102,">,<"
-1173,wall,cistern-tank lid,49,53,0,bathroom,102,">,="
-1174,ceiling recessed light-highlight,sofa-back pillow,234,0,0,living_room,234,>
-1175,carpet,sofa-leg,46,54,21,living_room,121,">,="
-1176,door-window,ceiling,0,0,104,kitchen,104,<
-1177,coffee table-top,sofa-back pillow,0,17,187,living_room,204,<
-1178,shelves,picture,106,25,11,kitchen,142,>
-1179,cushion,armchair-seat cushion,397,128,28,living_room,553,>
-1180,floor lamp,vase,94,44,40,living_room,178,">,=,<"
-1181,drawer-knob,chest of drawers-drawer,11,178,11,bathroom,200,=
-1182,ceiling,floor lamp-shade,282,0,0,living_room,282,>
-1183,table lamp-shade,ceiling recessed light-highlight,0,0,140,living_room,140,<
-1184,refrigerator,wall,19,822,326,kitchen,1167,=
-1185,pendant lamp-canopy,window,137,10,0,kitchen,147,>
-1186,coffee table-leg,ceiling recessed light-light source,0,0,204,living_room,204,<
-1187,table lamp-light source,vase,107,21,42,living_room,170,>
-1188,chair,curtain,0,97,18,bathroom,115,=
-1189,upper sash-pane,window,12,62,48,kitchen,122,"=,<"
-1190,back-spindle,cabinet,0,140,266,kitchen,406,"=,<"
-1191,toilet-lid,toilet-cistern,0,46,183,bathroom,229,<
-1192,drawer-knob,sash-muntin,0,0,125,kitchen,125,<
-1193,cabinets,work surface,116,78,49,kitchen,243,">,=,<"
-1194,blind,armchair,118,0,0,living_room,118,>
-1195,door-muntin,cabinet,409,406,300,kitchen,1115,">,=,<"
-1196,door-handle,stove-burner,383,47,237,kitchen,667,">,<"
-1197,window,sconce-highlight,68,14,39,bathroom,121,">,<"
-1198,coffee table,table lamp-base,0,25,166,living_room,191,<
-1199,sofa-seat base,vase,0,20,130,living_room,150,<
-1200,floor lamp-column,picture,46,52,262,living_room,360,<
-1201,door-handle,bed-headboard,49,33,33,bedroom,115,">,=,<"
-1202,sofa-skirt,cushion,0,10,214,living_room,224,<
-1203,plant,arm-outside arm,218,15,0,living_room,233,>
-1204,drawer-handle,pillow,107,149,921,bedroom,1177,<
-1205,soap dish,towel,39,15,48,bathroom,102,">,<"
-1206,cabinet-skirt,cabinet-side,0,0,119,kitchen,119,<
-1207,ceiling recessed light-light source,refrigerator,353,36,0,kitchen,389,>
-1208,sconce,door,36,65,0,bathroom,101,">,="
-1209,door-window,work surface,49,0,101,kitchen,150,">,<"
-1210,sink-faucet,work surface,266,187,35,kitchen,488,">,="
-1211,kettle,ceiling recessed light-light source,0,0,155,kitchen,155,<
-1212,sink-faucet,coffee maker,0,69,32,kitchen,101,"=,<"
-1213,window-pane,ceiling fan-blade,0,0,162,living_room,162,<
-1214,picture-frame,vase,73,12,23,living_room,108,>
-1215,armchair-arm,armchair-back,22,196,363,living_room,581,"=,<"
-1216,wardrobe-door,table lamp-shade,38,62,0,bedroom,100,">,="
-1217,sink,door-muntin,12,0,95,kitchen,107,<
-1218,grille,cabinet,75,19,14,kitchen,108,>
-1219,railing,sofa-back pillow,89,21,0,living_room,110,>
-1220,button panel-dial,coffee maker,0,32,90,kitchen,122,<
-1221,night table-leg,night table-drawer,0,0,130,bedroom,130,<
-1222,chair-back,sofa-seat cushion,89,31,0,living_room,120,>
-1223,drawer-knob,cabinet-drawer,295,246,347,bathroom,888,">,=,<"
-1224,wall,shelf,116,281,25,bathroom,422,=
-1225,table lamp-shade,flowerpot,214,14,49,living_room,277,>
-1226,cabinet,plant pot,113,30,67,kitchen,210,">,<"
-1227,stove,drawer-knob,129,11,21,kitchen,161,>
-1228,ceiling fan,cushion,326,0,0,living_room,326,>
-1229,plant,plant pot,77,15,11,kitchen,103,>
-1230,coffee table,ceiling recessed light-aperture,0,0,146,living_room,146,<
-1231,mug-handle,door-handle,86,10,73,kitchen,169,">,<"
-1232,floor lamp-column,wall,0,265,12,kitchen,277,=
-1233,drawer-knob,bottle,50,41,17,bathroom,108,">,="
-1234,range,dishwasher,29,77,0,kitchen,106,=
-1235,door-hinge,floor,124,0,0,kitchen,124,>
-1236,double door-door,door-pane,70,54,0,kitchen,124,">,="
-1237,chandelier-light source,sofa-arm,147,0,0,living_room,147,>
-1238,bowl,button panel-dial,149,0,48,kitchen,197,>
-1239,floor lamp-highlight,floor lamp-shade,59,25,107,living_room,191,">,<"
-1240,pendant lamp-cord,ceiling recessed light-aperture,64,89,16,kitchen,169,">,="
-1241,side table,chandelier-shade,0,0,115,living_room,115,<
-1242,mirror,glass,101,0,0,bathroom,101,>
-1243,microwave,door,0,95,21,kitchen,116,=
-1244,table,books,38,54,12,kitchen,104,">,="
-1245,wall,sofa-arm,24,148,0,kitchen,172,=
-1246,cabinet-front,drawer-knob,300,103,23,kitchen,426,>
-1247,outlet,pendant lamp-light source,0,0,161,kitchen,161,<
-1248,ceiling recessed light-light source,pendant lamp,142,370,154,kitchen,666,">,=,<"
-1249,side table,coffee table,244,185,34,living_room,463,">,="
-1250,blanket,picture,10,11,248,living_room,269,<
-1251,ceiling recessed light-highlight,cabinet-door,23,211,124,bathroom,358,"=,<"
-1252,ceiling spotlight,door-handle,179,0,0,kitchen,179,>
-1253,work surface,sink-faucet,35,187,266,kitchen,488,"=,<"
-1254,door-knob,dishwasher,305,85,36,kitchen,426,>
-1255,sash-pane,air vent,0,0,120,bedroom,120,<
-1256,cabinet,pot,839,11,33,bathroom,883,>
-1257,mirror,armchair-arm,113,0,0,living_room,113,>
-1258,microwave-door,cabinet-drawer,187,0,0,kitchen,187,>
-1259,table,plant,21,50,45,kitchen,116,"=,<"
-1260,bed-headboard,table lamp-highlight,85,220,177,bedroom,482,"=,<"
-1261,armchair-leg,curtain,0,0,370,living_room,370,<
-1262,stove-burner,door-handle,237,47,383,kitchen,667,">,<"
-1263,cabinet-top,door-knob,1498,0,10,kitchen,1508,>
-1264,sofa-leg,ceiling recessed light-light source,0,0,192,living_room,192,<
-1265,door-pane,books,71,13,183,kitchen,267,<
-1266,sink,oven,43,52,83,kitchen,178,">,=,<"
-1267,cabinet-skirt,cabinet-front,0,0,180,kitchen,180,<
-1268,stove-burner,chair,40,25,86,kitchen,151,">,<"
-1269,floor,bottle,13,13,210,bathroom,236,<
-1270,drawer-knob,pendant lamp-light source,0,0,117,kitchen,117,<
-1271,armchair,plant,44,248,552,living_room,844,"=,<"
-1272,work surface,button panel-dial,370,107,184,kitchen,661,">,<"
-1273,sconce,sink-faucet,207,0,0,bathroom,207,>
-1274,door-knob,ceiling recessed light,74,0,61,bathroom,135,">,<"
-1275,dishwasher,door-handle,45,140,313,kitchen,498,"=,<"
-1276,curtain,armchair,775,87,0,living_room,862,>
-1277,cabinet,canister,117,21,105,kitchen,243,">,<"
-1278,plate,shelves-shelf,147,13,65,living_room,225,">,<"
-1279,teapot,cabinet,136,40,131,kitchen,307,">,<"
-1280,book,books,19,11,485,kitchen,515,<
-1281,candle holder,sofa,126,137,51,living_room,314,">,="
-1282,night table,flowerpot,23,26,55,bedroom,104,">,=,<"
-1283,range-stove,cabinet-drawer,201,66,0,kitchen,267,>
-1284,button panel-dial,extractor hood,0,0,280,kitchen,280,<
-1285,work surface,mug,14,35,97,kitchen,146,<
-1286,extractor hood-body,cabinet-door,74,74,63,kitchen,211,">,=,<"
-1287,door,button panel-dial,96,50,0,kitchen,146,">,="
-1288,table,coffee table,108,24,0,living_room,132,>
-1289,sofa-seat cushion,armchair-leg,265,60,20,living_room,345,>
-1290,door-knob,sink-faucet,27,18,160,bathroom,205,<
-1291,ceiling,armchair-seat cushion,271,0,0,living_room,271,>
-1292,work surface,door-window,101,0,49,kitchen,150,">,<"
-1293,window,coffee maker,137,23,0,kitchen,160,>
-1294,armchair-back,armchair-leg,375,0,0,living_room,375,>
-1295,curtain,cabinet-drawer,138,0,0,bathroom,138,>
-1296,outlet,towel,80,25,49,bathroom,154,">,<"
-1297,sconce-shade,towel,148,0,0,bathroom,148,>
-1298,remote control,cushion,0,13,105,living_room,118,<
-1299,microwave,pendant lamp-shade,0,22,104,kitchen,126,<
-1300,sink-faucet,sink,373,228,30,bathroom,631,">,="
-1301,figurine,sofa-back pillow,66,22,22,living_room,110,">,=,<"
-1302,wall,back-rail,196,15,0,kitchen,211,>
-1303,armchair-back pillow,wall,0,98,454,living_room,552,<
-1304,armchair-back pillow,floor,96,53,0,living_room,149,">,="
-1305,stool-leg,cabinet,0,24,287,kitchen,311,<
-1306,sink,refrigerator,0,124,79,kitchen,203,"=,<"
-1307,sofa-seat cushion,pendant lamp,0,0,119,living_room,119,<
-1308,arm-arm panel,side table,22,97,33,living_room,152,=
-1309,door-handle,extractor hood-vent,0,0,138,kitchen,138,<
-1310,pendant lamp,cabinet,11,669,0,bathroom,680,=
-1311,pillow,table lamp-highlight,82,319,611,bedroom,1012,"=,<"
-1312,microwave,bottle,132,31,28,kitchen,191,>
-1313,cabinet-drawer,sash-pane,0,0,230,kitchen,230,<
-1314,music system,cushion,81,20,29,living_room,130,>
-1315,cabinet-front,stove-dial,116,15,0,kitchen,131,>
-1316,wall,torchiere lamp,25,174,0,living_room,199,=
-1317,dresser-drawer,door,0,13,89,bedroom,102,<
-1318,box,shelves-shelf,34,0,75,living_room,109,">,<"
-1319,range-button panel,window,0,0,114,kitchen,114,<
-1320,curtain rod,picture,107,13,0,living_room,120,>
-1321,door,night table-drawer,114,0,0,bedroom,114,>
-1322,ceiling recessed light-light source,cabinet,78,676,130,bathroom,884,=
-1323,cabinet-front,range-oven,68,40,0,kitchen,108,">,="
-1324,sink-faucet,range-stove,80,42,0,kitchen,122,">,="
-1325,drawer-handle,microwave,0,0,278,kitchen,278,<
-1326,ceiling recessed light,arm-inside arm,669,0,0,living_room,669,>
-1327,sofa-seat base,table lamp-column,0,0,144,living_room,144,<
-1328,ceiling,kettle,115,0,0,kitchen,115,>
-1329,armchair-leg,armchair-back pillow,0,0,199,living_room,199,<
-1330,vase,sofa-seat base,130,20,0,living_room,150,>
-1331,sofa-leg,coffee table,0,43,90,living_room,133,"=,<"
-1332,microwave,floor,269,0,0,kitchen,269,>
-1333,drawer-knob,ceiling,0,0,163,bathroom,163,<
-1334,refrigerator,outlet,49,200,0,kitchen,249,=
-1335,bowl,sink,133,38,43,kitchen,214,>
-1336,plant,stove,116,10,0,kitchen,126,>
-1337,pendant lamp-shade,pendant lamp-cord,0,18,334,kitchen,352,<
-1338,pitcher,cabinet-door,207,43,183,kitchen,433,">,<"
-1339,refrigerator-door,cabinet-side,0,63,53,kitchen,116,"=,<"
-1340,glass,picture,53,29,69,kitchen,151,">,<"
-1341,cushion,shelf,0,12,168,living_room,180,<
-1342,window,plant pot,60,42,12,kitchen,114,">,="
-1343,toilet-cistern,sink,61,109,26,bathroom,196,">,="
-1344,chest of drawers-drawer,pillow,50,85,172,bedroom,307,"=,<"
-1345,sofa-seat cushion,curtain,0,0,955,living_room,955,<
-1346,sofa-seat cushion,armchair-back,11,61,138,living_room,210,"=,<"
-1347,arm-inside arm,fireplace,0,72,108,living_room,180,"=,<"
-1348,armchair-back,armchair-back pillow,12,70,21,living_room,103,=
-1349,drawer,door-handle,0,0,126,kitchen,126,<
-1350,table lamp-highlight,cabinet,11,56,45,bathroom,112,"=,<"
-1351,door-pane,plant,130,24,107,kitchen,261,">,<"
-1352,wall,door,130,833,52,bathroom,1015,=
-1353,cabinet-drawer,door-hinge,87,0,221,kitchen,308,<
-1354,plate,mug-handle,24,13,129,kitchen,166,<
-1355,door-handle,picture,90,98,56,bathroom,244,">,=,<"
-1356,toilet,ceiling,0,0,164,bathroom,164,<
-1357,cabinet-door,picture,386,11,68,bathroom,465,>
-1358,refrigerator-door,cabinet-front,13,57,68,kitchen,138,"=,<"
-1359,picture,jar,117,13,21,kitchen,151,>
-1360,mirror,sconce,10,132,129,bathroom,271,"=,<"
-1361,armchair-seat cushion,books,25,14,170,living_room,209,<
-1362,chandelier-bulb,cushion,102,0,0,living_room,102,>
-1363,arm-inside arm,chandelier-shade,0,0,119,living_room,119,<
-1364,range,ceiling recessed light,0,0,360,kitchen,360,<
-1365,cushion,sconce-light source,0,0,273,living_room,273,<
-1366,sofa-arm,armchair-back pillow,0,47,74,living_room,121,"=,<"
-1367,table lamp-highlight,sofa-seat base,105,0,0,living_room,105,>
-1368,coffee maker,pot,24,65,27,kitchen,116,">,=,<"
-1369,cabinet-side,ceiling,0,30,187,kitchen,217,<
-1370,pendant lamp-tube,ceiling recessed light-light source,109,51,28,kitchen,188,">,="
-1371,bowl,oven,39,34,52,kitchen,125,">,=,<"
-1372,table lamp-base,wall,11,155,37,kitchen,203,=
-1373,button panel-dial,door,0,50,96,kitchen,146,"=,<"
-1374,window,window-muntin,79,37,40,kitchen,156,">,=,<"
-1375,ceiling recessed light-light source,sofa-leg,192,0,0,living_room,192,>
-1376,window-pane,armchair,279,14,0,living_room,293,>
-1377,bowl,plate,122,47,136,kitchen,305,">,<"
-1378,window-sash,cabinet-door,10,164,91,bathroom,265,"=,<"
-1379,window,sofa-back pillow,18,142,0,kitchen,160,=
-1380,drawer-handle,sink-faucet,25,35,113,bathroom,173,<
-1381,oven-door,bottle,10,10,85,kitchen,105,<
-1382,curtain,cabinet,145,46,80,bathroom,271,">,<"
-1383,microwave,range-stove,110,0,0,kitchen,110,>
-1384,ceiling,drawer-handle,122,0,0,bathroom,122,>
-1385,dresser-drawer,floor,221,84,0,bedroom,305,>
-1386,range,drawer-handle,147,90,0,kitchen,237,">,="
-1387,cabinet-door,chest of drawers-drawer,1784,12,121,bathroom,1917,>
-1388,vase,table lamp-shade,116,72,240,living_room,428,">,<"
-1389,sofa-leg,table lamp-shade,0,0,130,living_room,130,<
-1390,ceiling recessed light-light source,work surface,1007,0,0,kitchen,1007,>
-1391,sconce-arm,wall,11,72,17,bathroom,100,=
-1392,door-pane,cabinet,1023,985,649,kitchen,2657,">,=,<"
-1393,plate,chest of drawers-drawer,103,0,17,kitchen,120,>
-1394,door-ice maker,door-knob,44,0,117,kitchen,161,<
-1395,arm-inside arm,floor lamp-shade,0,0,106,living_room,106,<
-1396,television,table lamp,34,119,20,living_room,173,=
-1397,sink,sconce,0,0,272,bathroom,272,<
-1398,table lamp,pillow,681,1011,35,bedroom,1727,">,="
-1399,pot,extractor hood,10,0,112,kitchen,122,<
-1400,cabinet-front,microwave,57,30,43,kitchen,130,">,=,<"
-1401,cabinet-door,refrigerator,573,452,171,kitchen,1196,">,="
-1402,wall,sculpture,136,11,0,bathroom,147,>
-1403,ceiling recessed light-highlight,cabinet,30,242,64,bathroom,336,=
-1404,drawer-handle,window,0,10,95,bathroom,105,<
-1405,sink-faucet,range,48,90,0,kitchen,138,">,="
-1406,arm-inside arm,armchair-arm,154,653,171,living_room,978,=
-1407,floor lamp-column,books,37,11,55,living_room,103,">,<"
-1408,sconce-highlight,night table,102,0,0,bedroom,102,>
-1409,night table-drawer,table lamp-column,0,0,552,bedroom,552,<
-1410,flowerpot,night table,55,26,23,bedroom,104,">,=,<"
-1411,candle holder,floor lamp-shade,51,10,76,living_room,137,">,<"
-1412,chair,pendant lamp-canopy,0,0,212,kitchen,212,<
-1413,stool-leg,ceiling recessed light,0,0,136,kitchen,136,<
-1414,coffee table,table lamp-shade,0,0,396,living_room,396,<
-1415,chair,ceiling recessed light-aperture,0,0,326,kitchen,326,<
-1416,toilet-cistern,curtain,0,22,85,bathroom,107,<
-1417,cushion,floor,12,748,83,kitchen,843,=
-1418,ceiling,floor lamp-highlight,179,0,0,living_room,179,>
-1419,pendant lamp,cabinet-door,824,506,26,kitchen,1356,">,="
-1420,cushion,music system,29,20,81,living_room,130,<
-1421,sofa-leg,sofa-back pillow,0,0,528,living_room,528,<
-1422,stove-burner,drawer-handle,249,0,11,kitchen,260,>
-1423,book,bookcase-shelf,62,0,79,living_room,141,">,<"
-1424,arm-inside arm,arm-arm panel,129,258,23,living_room,410,">,="
-1425,chest of drawers-drawer,button panel-dial,14,85,362,kitchen,461,<
-1426,ceiling recessed light-light source,table,146,0,0,kitchen,146,>
-1427,bathtub,towel,32,147,240,bathroom,419,"=,<"
-1428,flowerpot,chair,72,34,14,kitchen,120,">,="
-1429,armchair-arm,box,61,32,78,living_room,171,">,<"
-1430,wall,chandelier-light source,13,47,83,bathroom,143,"=,<"
-1431,books,fireplace,114,105,79,living_room,298,">,=,<"
-1432,cabinet,pitcher,154,109,210,kitchen,473,">,=,<"
-1433,back-stile,door-handle,15,14,115,kitchen,144,<
-1434,cabinet-door,board,93,33,40,kitchen,166,">,<"
-1435,chair-back,armchair-arm,84,25,10,living_room,119,>
-1436,table lamp,fireplace,46,231,12,living_room,289,=
-1437,dishcloth,door-handle,37,28,67,kitchen,132,">,=,<"
-1438,flowers,door-pane,27,15,62,kitchen,104,">,<"
-1439,floor lamp-shade,plant,81,44,43,living_room,168,">,=,<"
-1440,door-knob,book,98,0,43,kitchen,141,">,<"
-1441,cabinet-door,window-upper sash,10,65,47,kitchen,122,"=,<"
-1442,wall,coffee table-apron,158,0,0,living_room,158,>
-1443,floor,sink-faucet,0,19,414,bathroom,433,<
-1444,cabinet,bathtub,81,176,31,bathroom,288,">,="
-1445,chair,pendant lamp-light source,0,0,310,kitchen,310,<
-1446,table lamp-shade,armchair,521,50,0,living_room,571,>
-1447,button panel-dial,oven,16,78,17,kitchen,111,=
-1448,shelves-shelf,books,11,37,266,kitchen,314,<
-1449,refrigerator-door,sink-faucet,41,76,22,kitchen,139,">,="
-1450,coffee maker,drawer-knob,157,0,0,kitchen,157,>
-1451,cabinet-door,mug-handle,91,15,64,kitchen,170,">,<"
-1452,door,pendant lamp-shade,0,88,83,kitchen,171,"=,<"
-1453,chair-back,chair,23,351,25,kitchen,399,=
-1454,arm-outside arm,ceiling fan-blade,0,0,104,living_room,104,<
-1455,door-pane,refrigerator-door,116,81,32,kitchen,229,">,="
-1456,picture,arm-outside arm,593,0,0,living_room,593,>
-1457,drawer-handle,back-spindle,95,29,0,kitchen,124,>
-1458,wall,pipe,97,32,0,bathroom,129,>
-1459,figurine,sofa-seat cushion,88,25,0,living_room,113,>
-1460,outlet,cabinet,96,13,25,bathroom,134,>
-1461,window-pane,coffee table-apron,118,0,0,living_room,118,>
-1462,armchair,sofa-seat base,74,42,0,living_room,116,">,="
-1463,table lamp-base,candle holder,38,33,70,living_room,141,">,=,<"
-1464,side table,sofa-leg,153,13,0,living_room,166,>
-1465,sink,bowl,43,38,133,kitchen,214,<
-1466,chair-stretcher,cabinet,0,0,216,kitchen,216,<
-1467,kitchen island,drawer-handle,39,70,0,kitchen,109,">,="
-1468,floor lamp-light source,sofa-back pillow,128,0,0,living_room,128,>
-1469,toaster,wall,0,65,209,kitchen,274,<
-1470,window-pane,cushion,1352,57,0,living_room,1409,>
-1471,mirror,bathtub,243,0,0,bathroom,243,>
-1472,fruit,cabinet-drawer,72,16,52,kitchen,140,">,<"
-1473,towel,cabinet-drawer,318,72,30,bathroom,420,>
-1474,door frame,cushion,197,12,0,living_room,209,>
-1475,table lamp,arm-outside arm,218,0,0,living_room,218,>
-1476,pendant lamp,ceiling recessed light-aperture,42,204,33,kitchen,279,=
-1477,cabinet-top,picture,67,11,34,kitchen,112,">,<"
-1478,cabinet-top,ceiling recessed light-highlight,74,12,48,kitchen,134,">,<"
-1479,sofa-back pillow,window-pane,0,50,727,living_room,777,<
-1480,arm-arm panel,curtain,0,0,190,living_room,190,<
-1481,window,wall,109,886,48,bathroom,1043,=
-1482,side table,book,66,48,47,living_room,161,">,=,<"
-1483,pendant lamp-shade,door,83,88,0,kitchen,171,">,="
-1484,carpet,armchair,0,168,290,living_room,458,"=,<"
-1485,plant,dishwasher,136,0,0,kitchen,136,>
-1486,work surface,box,17,37,84,kitchen,138,"=,<"
-1487,carpet,arm-outside arm,0,97,46,living_room,143,"=,<"
-1488,sofa-back pillow,side table,413,277,14,living_room,704,">,="
-1489,arm-arm panel,picture,0,0,313,living_room,313,<
-1490,vase,work surface,176,56,14,kitchen,246,>
-1491,shelves,sofa-seat cushion,164,0,0,living_room,164,>
-1492,pendant lamp-shade,sink-faucet,195,0,0,kitchen,195,>
-1493,sofa-back pillow,armchair-arm,399,178,30,living_room,607,">,="
-1494,chandelier-light source,table lamp-shade,205,0,0,living_room,205,>
-1495,wall,torchiere lamp-column,22,82,0,living_room,104,=
-1496,ceiling,cabinet-side,187,30,0,kitchen,217,>
-1497,books,bed-headboard,34,18,50,bedroom,102,">,<"
-1498,mirror,drawer-handle,157,0,0,bathroom,157,>
-1499,flowerpot,cabinet,20,16,298,bathroom,334,<
-1500,door-pane,oven-door,128,0,24,kitchen,152,>
-1501,ceiling recessed light-light source,cabinet-drawer,105,0,0,bathroom,105,>
-1502,bottle,oven,90,51,31,kitchen,172,">,="
-1503,chandelier-shade,chandelier-light source,36,41,44,bathroom,121,">,=,<"
-1504,door-handle,sconce,60,0,68,bathroom,128,">,<"
-1505,glass,cabinet-front,28,34,43,kitchen,105,">,=,<"
-1506,armchair-apron,picture,0,0,127,living_room,127,<
-1507,flowerpot,carpet,99,21,0,living_room,120,>
-1508,table lamp,armchair-seat cushion,187,0,0,living_room,187,>
-1509,sofa-back pillow,coffee table-leg,471,0,0,living_room,471,>
-1510,window,cabinet-top,20,73,177,kitchen,270,<
-1511,sofa-seat cushion,sofa-leg,562,39,0,living_room,601,>
-1512,range,sink-faucet,0,90,48,kitchen,138,"=,<"
-1513,pendant lamp-shade,bowl,88,0,26,kitchen,114,>
-1514,drawer-handle,book,11,0,89,kitchen,100,<
-1515,sofa-back,sofa-seat cushion,180,94,15,living_room,289,">,="
-1516,armchair-arm,armchair,25,828,229,living_room,1082,=
-1517,pillow,drawer-knob,704,83,60,bedroom,847,>
-1518,range-drawer,door-handle,0,0,121,kitchen,121,<
-1519,coffee table-top,arm-inside arm,0,59,71,living_room,130,"=,<"
-1520,ceiling recessed light,stool-leg,136,0,0,kitchen,136,>
-1521,microwave,cabinet,735,331,737,kitchen,1803,">,<"
-1522,ceiling recessed light-light source,coffee table-leg,204,0,0,living_room,204,>
-1523,cabinet-front,chest of drawers-drawer,174,38,0,kitchen,212,>
-1524,side table,shelves-shelf,0,0,137,living_room,137,<
-1525,shelves-shelf,sofa-back pillow,229,17,16,living_room,262,>
-1526,dresser-drawer,flowers,0,0,193,bedroom,193,<
-1527,door-handle,pendant lamp-canopy,0,0,205,kitchen,205,<
-1528,board,cabinet-door,40,33,93,kitchen,166,">,<"
-1529,extractor hood,chair,206,0,0,kitchen,206,>
-1530,fireplace,vase,81,103,177,living_room,361,">,=,<"
-1531,box,side table,75,54,51,living_room,180,">,=,<"
-1532,ceiling,chest of drawers,121,0,0,kitchen,121,>
-1533,cabinet-door,cabinet,45,369,97,bathroom,511,=
-1534,bed-footboard,table lamp-shade,0,13,88,bedroom,101,<
-1535,wall,floor lamp-arm,104,92,0,living_room,196,">,="
-1536,back-spindle,drawer-handle,0,29,95,kitchen,124,<
-1537,chest of drawers,drawer-knob,65,147,21,kitchen,233,">,="
-1538,toilet,toilet paper,0,92,65,bathroom,157,"=,<"
-1539,bowl,door-knob,255,15,335,kitchen,605,">,<"
-1540,sofa-back pillow,door,0,97,23,kitchen,120,=
-1541,pitcher,plant,46,15,64,kitchen,125,">,<"
-1542,door-muntin,door-pane,1306,778,1185,kitchen,3269,">,=,<"
-1543,pitcher,door-handle,97,13,75,kitchen,185,">,<"
-1544,range,ceiling,0,0,238,kitchen,238,<
-1545,microwave-door,cabinet,233,76,256,kitchen,565,">,<"
-1546,table lamp,armchair-seat base,104,0,0,living_room,104,>
-1547,chest of drawers-drawer,cabinet-skirt,96,13,0,kitchen,109,>
-1548,cabinet-door,pitcher-handle,53,0,60,kitchen,113,">,<"
-1549,sconce-light source,pendant lamp-light source,0,0,118,living_room,118,<
-1550,cabinet-front,plant,34,22,59,kitchen,115,">,<"
-1551,clock,bed-headboard,0,33,130,bedroom,163,<
-1552,table lamp-column,door,0,178,128,living_room,306,"=,<"
-1553,fireplace,door,0,158,43,living_room,201,=
-1554,armchair-back,vase,22,38,66,living_room,126,"=,<"
-1555,pendant lamp-chain,cabinet-door,130,31,0,kitchen,161,>
-1556,wall,stove-burner,617,33,0,kitchen,650,>
-1557,floor,shelves-shelf,0,0,107,living_room,107,<
-1558,kitchen island,work surface,0,65,49,kitchen,114,"=,<"
-1559,semi-flush mount light-shade,cabinet-door,122,20,0,kitchen,142,>
-1560,bed,curtain,0,256,18,living_room,274,=
-1561,floor lamp-highlight,curtain,22,80,82,living_room,184,"=,<"
-1562,door-pane,window,108,292,82,kitchen,482,=
-1563,fireplace,table lamp-base,56,56,0,living_room,112,">,="
-1564,pendant lamp-light source,chair,310,0,0,kitchen,310,>
-1565,soap,sink,50,45,13,bathroom,108,">,="
-1566,arm-outside arm,flowers,0,12,97,living_room,109,<
-1567,plant,cabinet-front,59,22,34,kitchen,115,">,<"
-1568,curtain,armchair-leg,370,0,0,living_room,370,>
-1569,oven-button panel,ceiling recessed light,0,0,101,kitchen,101,<
-1570,sconce-shade,sconce-highlight,39,57,42,bathroom,138,">,=,<"
-1571,chest of drawers-drawer,sash-pane,0,0,106,kitchen,106,<
-1572,armchair,table lamp-base,45,190,69,living_room,304,=
-1573,armchair-seat cushion,arm-inside arm,36,213,165,living_room,414,"=,<"
-1574,ceiling,bottle,112,0,0,bathroom,112,>
-1575,table lamp,candle holder,182,85,116,living_room,383,">,=,<"
-1576,outlet,chair-leg,109,0,0,kitchen,109,>
-1577,wall,wardrobe-door,44,52,11,living_room,107,">,="
-1578,cabinets,pot,45,14,52,kitchen,111,">,<"
-1579,armchair-back pillow,cushion,127,210,39,living_room,376,">,="
-1580,ottoman,arm-inside arm,12,61,66,living_room,139,"=,<"
-1581,sink,range-stove,33,53,54,kitchen,140,">,=,<"
-1582,chair-leg,table,0,19,127,kitchen,146,<
-1583,coffee table,sofa-seat cushion,22,376,167,living_room,565,"=,<"
+0,switch,door-knob,83,0,120,kitchen,203,">,<"
+1,mirror,sofa-back pillow,172,0,0,living_room,172,>
+2,ceiling fan,ceiling fan-blade,55,61,0,living_room,116,">,="
+3,cabinet,television,52,10,64,kitchen,126,">,<"
+4,night table-drawer,floor,272,257,14,bedroom,543,">,="
+5,ceiling spotlight-highlight,cabinet-door,74,42,0,kitchen,116,">,="
+6,television,side table,159,15,0,living_room,174,>
+7,pendant lamp-canopy,door-knob,251,0,0,kitchen,251,>
+8,ceiling recessed light,armchair-seat cushion,321,0,0,living_room,321,>
+9,armchair-back pillow,table lamp,0,30,111,living_room,141,<
+10,window-pane,sofa,282,35,0,living_room,317,>
+11,ceiling recessed light,sofa-skirt,113,0,0,living_room,113,>
+12,armchair-back,wall,0,116,389,living_room,505,<
+13,shelves-shelf,books,11,37,266,kitchen,314,<
+14,floor,door-handle,15,41,130,bathroom,186,<
+15,cabinet-side,bottle,82,23,15,kitchen,120,>
+16,chair,ceiling spotlight,0,0,136,kitchen,136,<
+17,chandelier-light source,books,135,0,0,living_room,135,>
+18,arm-inside arm,television,0,24,86,living_room,110,<
+19,table lamp-column,arm-arm panel,107,0,0,living_room,107,>
+20,carpet,floor lamp-shade,0,0,109,living_room,109,<
+21,sink-faucet,toilet,174,64,12,bathroom,250,>
+22,bag,cabinet,45,18,37,kitchen,100,">,<"
+23,drawer-knob,plate,25,0,323,kitchen,348,<
+24,door-handle,chair-stretcher,173,0,0,kitchen,173,>
+25,door-pane,door-hinge,236,73,223,kitchen,532,">,<"
+26,floor lamp-shade,sofa-arm,159,0,0,living_room,159,>
+27,figurine,cabinet-door,95,27,112,kitchen,234,">,<"
+28,cushion,mirror,0,24,497,living_room,521,<
+29,upper sash-pane,cabinet-door,91,73,29,kitchen,193,">,="
+30,sconce-light source,cabinet,125,12,0,bathroom,137,>
+31,sofa-back pillow,candle holder,57,117,169,living_room,343,"=,<"
+32,wall,sconce-shade,50,277,58,bathroom,385,=
+33,figurine,door-knob,119,17,69,kitchen,205,">,<"
+34,sofa-seat base,cushion,0,56,816,living_room,872,<
+35,arm-inside arm,sofa,0,420,151,living_room,571,=
+36,flush mount light-shade,cabinet,133,32,0,kitchen,165,>
+37,chandelier-shade,door-pane,224,13,13,kitchen,250,>
+38,microwave,sink-faucet,128,35,0,kitchen,163,>
+39,shelves,sofa-arm,88,18,0,living_room,106,>
+40,window,towel,291,70,0,bathroom,361,>
+41,towel,wall,118,1051,1212,bathroom,2381,"=,<"
+42,box,shelves-shelf,34,0,75,living_room,109,">,<"
+43,bathtub,floor,257,123,0,bathroom,380,">,="
+44,basket,cabinets-door,69,0,54,kitchen,123,">,<"
+45,back-rail,cabinet,15,77,213,kitchen,305,<
+46,floor,pendant lamp-light source,0,0,158,kitchen,158,<
+47,armchair-back,armchair,26,321,16,living_room,363,=
+48,range,refrigerator,0,105,23,kitchen,128,=
+49,chest of drawers-leg,chest of drawers-drawer,0,0,103,bedroom,103,<
+50,cabinet,sofa-leg,154,0,0,living_room,154,>
+51,soap dispenser,cabinet-door,85,0,103,bathroom,188,">,<"
+52,glass,cabinet-door,38,143,450,bathroom,631,<
+53,armchair-seat cushion,door,0,0,122,living_room,122,<
+54,door-handle,sash-stile,41,51,141,kitchen,233,<
+55,range-oven,ceiling recessed light-light source,0,0,138,kitchen,138,<
+56,ceiling recessed light-light source,pendant lamp-canopy,105,18,229,kitchen,352,">,<"
+57,armchair-seat base,window,0,0,267,living_room,267,<
+58,bag,cabinet-door,60,15,40,kitchen,115,">,<"
+59,night table-top,wall,0,0,104,bedroom,104,<
+60,books,cushion,1290,180,414,living_room,1884,>
+61,pillow,ceiling fan-blade,0,0,158,bedroom,158,<
+62,oven,pendant lamp,0,0,155,kitchen,155,<
+63,window-muntin,sofa-seat cushion,116,0,0,living_room,116,>
+64,cushion,window-sash,0,0,130,living_room,130,<
+65,book,door-knob,43,0,98,kitchen,141,">,<"
+66,cabinet,stool-leg,287,24,0,kitchen,311,>
+67,wall,casserole,88,52,14,kitchen,154,">,="
+68,sofa-skirt,wall,0,0,175,living_room,175,<
+69,cushion,ceiling spotlight-highlight,0,0,173,living_room,173,<
+70,sink,drawer-knob,201,15,11,bathroom,227,>
+71,picture,ceiling,41,13,127,bathroom,181,<
+72,window,kettle,110,0,0,kitchen,110,>
+73,button panel-dial,door-muntin,0,0,244,kitchen,244,<
+74,flowerpot,coffee table,116,68,0,living_room,184,">,="
+75,box,dresser-drawer,104,0,17,bedroom,121,>
+76,ceiling,kettle,115,0,0,kitchen,115,>
+77,curtain,floor lamp-highlight,82,80,22,living_room,184,">,="
+78,wall,button panel-dial,1227,156,18,kitchen,1401,>
+79,wall,pillow,16,1337,67,bathroom,1420,=
+80,ceiling spotlight,books,383,0,0,living_room,383,>
+81,range,door-knob,127,73,385,kitchen,585,<
+82,ceiling spotlight,work surface,105,0,0,kitchen,105,>
+83,arm-inside arm,shelves-shelf,0,0,196,living_room,196,<
+84,button panel-dial,pendant lamp-tube,0,0,102,kitchen,102,<
+85,oven,plate,22,16,62,kitchen,100,<
+86,sink-faucet,toilet-cistern,74,46,25,bathroom,145,">,="
+87,sofa-leg,window-pane,0,0,237,living_room,237,<
+88,blanket,sofa-back pillow,0,66,53,living_room,119,"=,<"
+89,drawer-handle,cabinet-skirt,172,10,31,kitchen,213,>
+90,cushion,night table,988,577,73,bedroom,1638,">,="
+91,armchair-seat base,wall,0,0,467,living_room,467,<
+92,ceiling recessed light,ceiling,19,90,68,bathroom,177,"=,<"
+93,plant,armchair-seat cushion,188,16,0,living_room,204,>
+94,night table,cabinet,16,67,68,bedroom,151,"=,<"
+95,ceiling recessed light,coffee table-leg,299,0,0,living_room,299,>
+96,blind,books,82,26,14,living_room,122,>
+97,hotplate,cabinet-door,40,20,137,kitchen,197,<
+98,coffee table,window-pane,0,0,232,living_room,232,<
+99,night table-drawer,night table-top,0,0,106,bedroom,106,<
+100,books,sofa-back pillow,305,49,115,living_room,469,>
+101,books,shelves,30,17,103,kitchen,150,<
+102,curtain,upper sash-pane,42,68,0,kitchen,110,">,="
+103,ceiling recessed light,sofa-leg,300,0,0,living_room,300,>
+104,back-rail,cabinet-door,27,75,321,kitchen,423,<
+105,armchair-arm,cabinet,13,125,270,living_room,408,"=,<"
+106,stove-burner,ceiling recessed light,0,0,183,kitchen,183,<
+107,door-knob,cabinet-top,10,0,1498,kitchen,1508,<
+108,curtain,ceiling fan,0,16,145,living_room,161,<
+109,clock,door-handle,90,13,15,kitchen,118,>
+110,armchair-arm,armchair-seat base,366,92,18,living_room,476,>
+111,cabinet-door,sink-faucet,36,10,251,bathroom,297,<
+112,books,night table,57,45,21,bedroom,123,">,="
+113,cabinet-door,ceiling,35,277,194,bathroom,506,"=,<"
+114,cabinet-drawer,mug,14,0,127,kitchen,141,<
+115,wall,toaster,209,65,0,kitchen,274,>
+116,books,armchair,322,129,82,living_room,533,>
+117,books,coffee table-leg,225,0,0,living_room,225,>
+118,double door,vase,63,59,0,living_room,122,">,="
+119,sconce-highlight,night table,102,0,0,bedroom,102,>
+120,pendant lamp-cord,chair,184,0,0,kitchen,184,>
+121,books,speaker,121,26,48,living_room,195,>
+122,chair-seat,back-rail,0,13,90,kitchen,103,<
+123,cabinet,stool,10,100,0,bathroom,110,=
+124,door-hinge,cabinet-skirt,122,0,0,kitchen,122,>
+125,vase,floor lamp-column,41,19,46,living_room,106,">,<"
+126,blanket,picture,10,11,248,living_room,269,<
+127,sconce-shade,drawer-knob,259,0,0,bathroom,259,>
+128,plant,refrigerator,76,77,14,kitchen,167,">,="
+129,cushion,night table-drawer,826,94,31,bedroom,951,>
+130,sofa-back pillow,carpet,288,19,0,living_room,307,>
+131,arm-inside arm,floor,205,293,35,living_room,533,">,="
+132,door-knob,flowerpot,202,10,146,kitchen,358,">,<"
+133,coffee table,television,0,0,160,living_room,160,<
+134,light switch,outlet,63,66,24,kitchen,153,">,="
+135,remote control,cushion,0,13,105,living_room,118,<
+136,door-pane,sink-bowl,100,0,0,kitchen,100,>
+137,armchair,television,0,58,124,living_room,182,"=,<"
+138,sofa-back pillow,ceiling spotlight-shade,0,0,100,living_room,100,<
+139,microwave-door,button panel-dial,137,0,0,kitchen,137,>
+140,cabinet-door,sash-muntin,36,31,119,kitchen,186,<
+141,back-stile,chair-apron,129,0,0,kitchen,129,>
+142,ceiling spotlight-arm,books,112,0,0,living_room,112,>
+143,sofa-seat cushion,chandelier-light source,0,0,189,living_room,189,<
+144,drawer-handle,back-rail,34,17,55,kitchen,106,">,<"
+145,arm-arm panel,floor,63,97,0,living_room,160,">,="
+146,floor lamp-highlight,floor lamp-light source,58,11,61,living_room,130,">,<"
+147,book,sofa,16,44,87,living_room,147,"=,<"
+148,plate,coffee table,69,32,0,living_room,101,">,="
+149,books,armchair-leg,241,10,0,living_room,251,>
+150,cabinet-skirt,wall,0,19,287,kitchen,306,<
+151,clock,door-knob,84,0,48,kitchen,132,">,<"
+152,cushion,arm-outside arm,744,121,0,living_room,865,>
+153,stove,chair,65,37,14,kitchen,116,">,="
+154,arm-arm panel,sofa-back pillow,0,48,320,living_room,368,<
+155,arm-inside arm,sofa-seat cushion,482,507,116,living_room,1105,">,="
+156,window,stove-burner,131,0,0,kitchen,131,>
+157,towel,cabinet-drawer,318,72,30,bathroom,420,>
+158,dresser,drawer-handle,167,179,13,bedroom,359,">,="
+159,arm-inside arm,vase,36,82,212,living_room,330,<
+160,door frame,wall,13,145,13,bathroom,171,=
+161,chair,range,21,89,62,kitchen,172,"=,<"
+162,table lamp-base,side table,166,222,43,living_room,431,">,="
+163,sconce,drawer-handle,102,0,12,bathroom,114,>
+164,door-hinge,back-rail,117,0,0,kitchen,117,>
+165,cabinet-door,light troffer,0,11,121,kitchen,132,<
+166,sofa-seat cushion,door-handle,10,12,131,living_room,153,<
+167,books,armchair-seat cushion,170,14,25,living_room,209,>
+168,outlet,oven-door,125,14,16,kitchen,155,>
+169,book,table lamp-column,14,11,97,living_room,122,<
+170,bowl,sink,133,38,43,kitchen,214,>
+171,armchair-back,armchair-leg,375,0,0,living_room,375,>
+172,cabinets,ceiling recessed light,0,36,143,kitchen,179,<
+173,cushion,picture-frame,0,0,312,living_room,312,<
+174,bed-leg,night table-drawer,0,39,262,bedroom,301,<
+175,cabinet,plant,14,36,66,bathroom,116,"=,<"
+176,refrigerator,chair,117,97,0,kitchen,214,">,="
+177,cabinet-front,sash-pane,45,15,121,kitchen,181,<
+178,bed-footboard,pillow,11,48,133,bedroom,192,<
+179,picture,table lamp-column,15,172,245,kitchen,432,"=,<"
+180,back-stile,back-spindle,20,310,20,kitchen,350,=
+181,sofa-back pillow,wall,28,561,32,kitchen,621,=
+182,curtain,armchair-seat cushion,307,0,0,living_room,307,>
+183,window,floor,313,0,0,bathroom,313,>
+184,table lamp-shade,cabinet,70,10,60,kitchen,140,">,<"
+185,armchair-arm,flowers,0,19,194,living_room,213,<
+186,fireplace,floor,283,79,0,living_room,362,>
+187,sofa-leg,table lamp-shade,0,0,130,living_room,130,<
+188,floor,sofa-seat cushion,79,504,234,living_room,817,"=,<"
+189,drawer-handle,oven-button panel,0,10,125,kitchen,135,<
+190,pitcher,door-handle,97,13,75,kitchen,185,">,<"
+191,coffee table-leg,coffee table-top,0,39,212,living_room,251,<
+192,cabinet-door,pendant lamp-chain,0,31,130,kitchen,161,<
+193,window,pot,21,78,30,bathroom,129,=
+194,drawer-handle,mirror,0,0,157,bathroom,157,<
+195,sink,curtain,0,40,193,bathroom,233,<
+196,ceiling recessed light-light source,bottle,378,0,0,kitchen,378,>
+197,cabinets-drawer,plant,17,0,117,kitchen,134,<
+198,arm-inside arm,coffee table,146,140,12,living_room,298,">,="
+199,flowerpot,button panel-dial,94,12,13,kitchen,119,>
+200,paper roll,cabinet,60,15,90,kitchen,165,">,<"
+201,dresser,window,0,37,105,bedroom,142,<
+202,work surface,chair,307,195,103,kitchen,605,">,="
+203,table lamp-light source,window,0,244,222,living_room,466,"=,<"
+204,drawer-knob,door-pane,28,0,1372,kitchen,1400,<
+205,wall,fruits,159,17,0,kitchen,176,>
+206,armchair-arm,armchair-earmuffs,0,13,158,living_room,171,<
+207,sofa-back pillow,sofa-leg,528,0,0,living_room,528,>
+208,cabinet,light switch,250,23,16,bathroom,289,>
+209,chair,faucet,14,28,88,kitchen,130,<
+210,sofa,blind,0,0,148,living_room,148,<
+211,microwave,range,126,32,0,kitchen,158,>
+212,shelf,floor,132,0,0,bathroom,132,>
+213,drawer-handle,stool-leg,116,21,0,kitchen,137,>
+214,mug,plate,146,43,32,kitchen,221,>
+215,bottle,sink,190,47,21,bathroom,258,>
+216,toilet-lid,ceiling,0,0,105,bathroom,105,<
+217,cabinet-door,ceiling spotlight-highlight,0,42,74,kitchen,116,"=,<"
+218,button panel-dial,cabinet-front,83,98,289,kitchen,470,<
+219,ceiling recessed light-light source,pillow,216,0,0,bedroom,216,>
+220,sink-faucet,shelf,13,0,96,bathroom,109,<
+221,tray,chair,76,29,20,kitchen,125,>
+222,coffee table,door-pane,0,14,232,living_room,246,<
+223,baseboard,wall,0,0,124,kitchen,124,<
+224,drawer-handle,bed-headboard,13,55,579,bedroom,647,<
+225,work surface,dishcloth,86,44,16,kitchen,146,">,="
+226,ceiling recessed light,figurine,153,0,0,kitchen,153,>
+227,bookcase-shelf,books,413,18,354,living_room,785,">,<"
+228,pendant lamp-shade,pendant lamp-canopy,0,0,284,kitchen,284,<
+229,pendant lamp-shade,door-pane,88,31,51,kitchen,170,">,<"
+230,oven-door,work surface,23,52,159,kitchen,234,<
+231,cabinet,oven,752,485,269,kitchen,1506,">,="
+232,ceiling spotlight-shade,ceiling spotlight,28,96,40,kitchen,164,=
+233,wall,ball,89,12,0,living_room,101,>
+234,cushion,carpet,947,110,15,living_room,1072,>
+235,night table,table lamp-shade,0,16,970,bedroom,986,<
+236,table lamp-column,sofa-leg,126,0,0,living_room,126,>
+237,music system,picture,0,14,111,living_room,125,<
+238,sofa-seat cushion,floor lamp-column,0,0,123,living_room,123,<
+239,table lamp,ceiling recessed light-highlight,0,0,151,living_room,151,<
+240,outlet,work surface,646,72,63,kitchen,781,>
+241,door,dresser-drawer,89,13,0,bedroom,102,>
+242,bottle,bowl,143,48,17,bathroom,208,>
+243,table lamp-column,cabinet,39,180,41,kitchen,260,=
+244,wall,pendant lamp-chain,0,46,80,kitchen,126,"=,<"
+245,cushion,pillow,156,12,489,living_room,657,<
+246,button panel-screen,drawer-handle,141,0,0,kitchen,141,>
+247,ceiling-beam,window-pane,156,0,0,living_room,156,>
+248,wall,pitcher,10,94,35,bathroom,139,=
+249,back-spindle,chair-seat,90,17,0,kitchen,107,>
+250,picture,cabinet-drawer,115,0,0,bathroom,115,>
+251,cabinet-skirt,chest of drawers-drawer,0,13,96,kitchen,109,<
+252,window,double door-door,70,30,0,kitchen,100,">,="
+253,door-window,ceiling recessed light,0,0,187,kitchen,187,<
+254,armchair-arm,candle holder,25,66,162,living_room,253,<
+255,door-hinge,outlet,87,0,29,kitchen,116,>
+256,coffee table,arm-inside arm,12,140,146,living_room,298,"=,<"
+257,cushion,sconce-highlight,0,12,282,living_room,294,<
+258,table lamp-shade,chandelier-light source,0,0,205,living_room,205,<
+259,work surface,cabinet-front,67,49,203,kitchen,319,<
+260,sofa-seat cushion,ottoman,42,88,18,living_room,148,">,="
+261,chandelier-shade,sofa-seat cushion,167,0,0,living_room,167,>
+262,window-sash,drawer-knob,116,0,0,kitchen,116,>
+263,oven-door,ceiling recessed light-light source,0,0,206,kitchen,206,<
+264,books,bookcase,15,378,106,living_room,499,=
+265,cabinet,door-knob,96,120,32,bathroom,248,">,="
+266,door-knob,ceiling recessed light-highlight,76,12,17,bathroom,105,>
+267,oven,wall,34,297,643,kitchen,974,"=,<"
+268,refrigerator,door-handle,138,416,131,kitchen,685,=
+269,kitchen island-drawer,ceiling recessed light-light source,0,0,122,kitchen,122,<
+270,door-muntin,cabinets-door,48,50,20,kitchen,118,">,="
+271,door-knob,bottle,768,25,47,bathroom,840,>
+272,plate,window,30,39,118,kitchen,187,<
+273,side table,sconce,0,0,123,living_room,123,<
+274,armchair-leg,fireplace,0,12,149,living_room,161,<
+275,sculpture,wall,0,11,136,bathroom,147,<
+276,work surface,vase,14,56,176,kitchen,246,<
+277,door-handle,board,38,14,55,kitchen,107,">,<"
+278,sofa-seat cushion,ceiling,0,0,956,living_room,956,<
+279,cabinet,chair-apron,104,21,0,kitchen,125,>
+280,jar,door-pane,52,0,56,kitchen,108,">,<"
+281,chest of drawers-skirt,door-handle,0,0,129,kitchen,129,<
+282,table lamp-shade,cabinet-door,49,24,52,kitchen,125,">,<"
+283,knife set,cabinet,240,26,329,kitchen,595,">,<"
+284,picture-frame,books,114,47,122,living_room,283,">,<"
+285,lower sash-pane,cabinet,69,0,82,kitchen,151,">,<"
+286,fireplace,table lamp,12,231,46,living_room,289,=
+287,kettle,bottle,16,52,47,kitchen,115,"=,<"
+288,chandelier-light source,sofa-seat cushion,189,0,0,living_room,189,>
+289,vase,table lamp-highlight,54,23,112,living_room,189,">,<"
+290,night table-leg,wall,0,0,161,bedroom,161,<
+291,coffee table-top,sofa-seat cushion,33,133,77,living_room,243,"=,<"
+292,plant,night table,157,27,0,bedroom,184,>
+293,chair-leg,chair-stretcher,174,358,27,kitchen,559,">,="
+294,range,range-oven,60,193,0,kitchen,253,=
+295,chandelier-light source,sconce-shade,73,0,28,bathroom,101,>
+296,books,picture-frame,122,47,114,living_room,283,">,<"
+297,night table-leg,drawer-knob,0,0,114,bedroom,114,<
+298,picture,sculpture,154,48,37,living_room,239,>
+299,ceiling recessed light-light source,microwave,251,0,0,kitchen,251,>
+300,arm-inside arm,wall,0,100,1557,living_room,1657,<
+301,chair,ceiling recessed light-highlight,0,0,104,kitchen,104,<
+302,picture-frame,arm-inside arm,120,0,0,living_room,120,>
+303,sofa,table lamp-highlight,0,87,148,living_room,235,"=,<"
+304,wall,sconce-light source,36,241,79,bathroom,356,=
+305,books,picture,16,303,52,kitchen,371,=
+306,chest of drawers,drawer-handle,140,244,28,kitchen,412,">,="
+307,door-pane,refrigerator,70,85,24,kitchen,179,">,="
+308,picture,chest of drawers-drawer,81,0,21,kitchen,102,>
+309,oven-door,cabinet,62,335,550,kitchen,947,"=,<"
+310,sink-faucet,sink-tap,40,78,20,bathroom,138,">,="
+311,bed-leg,table lamp,0,0,320,bedroom,320,<
+312,work surface,knife set,0,16,107,kitchen,123,<
+313,cabinet-door,pendant lamp,26,506,824,kitchen,1356,"=,<"
+314,drawer,cabinet,0,29,178,kitchen,207,<
+315,chair,cabinet-drawer,189,15,17,bathroom,221,>
+316,toilet-cistern,towel,26,43,126,bathroom,195,<
+317,ceiling recessed light,pitcher,120,0,0,kitchen,120,>
+318,sink-tap,wall,23,111,212,bathroom,346,"=,<"
+319,table lamp-column,flowerpot,168,38,66,living_room,272,>
+320,range-stove,ceiling recessed light,0,0,230,kitchen,230,<
+321,flowers,table lamp-light source,24,15,65,living_room,104,<
+322,extractor hood-vent,door-handle,138,0,0,kitchen,138,>
+323,chair,flowerpot,14,34,72,kitchen,120,"=,<"
+324,fireplace,figurine,24,51,91,living_room,166,"=,<"
+325,drawer-knob,refrigerator,0,65,157,kitchen,222,<
+326,cabinet-door,candle holder,137,28,24,bathroom,189,>
+327,plate,drawer-knob,323,0,25,kitchen,348,>
+328,ceiling spotlight,window,91,15,0,kitchen,106,>
+329,armchair-leg,chair-leg,67,23,58,living_room,148,">,<"
+330,back-stile,door-knob,16,0,131,kitchen,147,<
+331,ceiling recessed light,cabinet-side,348,46,12,kitchen,406,>
+332,armchair-leg,arm-outside arm,21,51,260,living_room,332,<
+333,work surface,door-window,101,0,49,kitchen,150,">,<"
+334,railing,ceiling recessed light,27,17,131,living_room,175,<
+335,sink,cabinets-door,55,0,85,kitchen,140,">,<"
+336,box,work surface,84,37,17,kitchen,138,">,="
+337,sash-pane,sink-faucet,124,0,0,kitchen,124,>
+338,chair,chair-apron,95,70,0,kitchen,165,">,="
+339,armchair,picture,31,200,11,bathroom,242,=
+340,pendant lamp-light source,door-knob,260,0,0,kitchen,260,>
+341,floor lamp-highlight,sofa,91,20,0,living_room,111,>
+342,sofa-arm,chair,27,202,368,living_room,597,"=,<"
+343,bottle,button panel-dial,178,37,46,kitchen,261,>
+344,toaster,door-handle,69,19,92,kitchen,180,">,<"
+345,table,books,38,54,12,kitchen,104,">,="
+346,bowl,plate,122,47,136,kitchen,305,">,<"
+347,sofa,picture,36,208,36,kitchen,280,=
+348,floor,arm-arm panel,0,97,63,living_room,160,"=,<"
+349,sink,outlet,32,20,165,bathroom,217,<
+350,button panel-dial,jar,16,0,170,kitchen,186,<
+351,upper sash-pane,ceiling recessed light-aperture,0,0,129,kitchen,129,<
+352,flowers,coffee table,246,16,0,living_room,262,>
+353,cabinet,flush mount light-shade,0,32,133,kitchen,165,<
+354,chair-back,cushion,93,130,26,living_room,249,">,="
+355,armchair-back pillow,armchair-leg,199,0,0,living_room,199,>
+356,ceiling spotlight-light source,books,248,0,0,living_room,248,>
+357,armchair,armchair-back pillow,16,302,12,living_room,330,=
+358,stove,sink-faucet,0,50,58,kitchen,108,"=,<"
+359,wall,kettle,281,74,0,kitchen,355,>
+360,flowerpot,door-pane,51,10,64,kitchen,125,">,<"
+361,sink,wall,82,465,1444,bathroom,1991,<
+362,arm-inside arm,table lamp-base,21,51,126,living_room,198,<
+363,fireplace,candle holder,44,71,154,living_room,269,"=,<"
+364,night table,bed-footboard,50,124,16,bedroom,190,=
+365,chair-stretcher,back-rail,0,0,183,kitchen,183,<
+366,figurine,curtain,33,64,19,kitchen,116,">,="
+367,bed-leg,curtain,0,0,240,bedroom,240,<
+368,bed-leg,table lamp-column,0,0,199,bedroom,199,<
+369,bottle,stove-burner,134,10,0,kitchen,144,>
+370,cabinet-door,fruit,131,27,77,kitchen,235,">,<"
+371,sofa-back pillow,armchair-seat cushion,179,45,0,living_room,224,>
+372,chandelier-light source,coffee table,101,0,0,living_room,101,>
+373,coffee table,cabinet,0,87,321,living_room,408,<
+374,sofa-back,wall,0,60,344,living_room,404,<
+375,carpet,armchair-seat cushion,0,37,69,living_room,106,"=,<"
+376,cabinet,jar,11,114,36,bathroom,161,=
+377,armchair-seat cushion,shelves-shelf,0,0,111,living_room,111,<
+378,toilet-lid,countertop,0,36,77,bathroom,113,"=,<"
+379,door-handle,kitchen island,75,58,0,kitchen,133,">,="
+380,cabinet-front,button panel-dial,289,98,83,kitchen,470,>
+381,sconce,night table,255,0,0,bedroom,255,>
+382,ceiling recessed light-aperture,sofa-seat cushion,195,0,0,living_room,195,>
+383,table lamp-column,night table,779,80,14,bedroom,873,>
+384,bed,table lamp-light source,0,110,11,living_room,121,=
+385,ceiling,bathtub,234,0,0,bathroom,234,>
+386,table lamp-column,bed-headboard,16,290,181,bedroom,487,"=,<"
+387,sash-muntin,window-sash,0,96,23,kitchen,119,=
+388,cabinet-drawer,knife set,0,0,105,kitchen,105,<
+389,chair,sofa-seat cushion,11,162,21,kitchen,194,=
+390,plant,window-pane,14,132,18,kitchen,164,=
+391,window-pane,floor lamp,62,41,0,living_room,103,">,="
+392,side table,sofa-back pillow,14,277,413,living_room,704,"=,<"
+393,range-stove,bottle,0,22,113,kitchen,135,<
+394,table lamp-light source,armchair,221,0,0,living_room,221,>
+395,sconce-shade,countertop,108,0,0,bathroom,108,>
+396,window,window-pane,28,20,55,bathroom,103,">,<"
+397,wall,oven-door,487,61,0,kitchen,548,>
+398,sofa-seat base,ceiling,0,0,267,living_room,267,<
+399,pot,extractor hood,10,0,112,kitchen,122,<
+400,cabinets-drawer,vase,18,0,83,kitchen,101,<
+401,door-knob,chair-back,220,30,44,kitchen,294,>
+402,sofa,table lamp-base,62,201,42,living_room,305,=
+403,cushion,chandelier-light source,0,0,270,living_room,270,<
+404,fruits,cabinet,96,55,171,kitchen,322,">,<"
+405,cabinet-front,outlet,167,0,79,kitchen,246,">,<"
+406,pendant lamp,extractor hood,61,77,0,kitchen,138,">,="
+407,outlet,pendant lamp-light source,0,0,161,kitchen,161,<
+408,sofa-seat cushion,candle holder,10,65,247,living_room,322,<
+409,window,mirror,24,182,13,bathroom,219,=
+410,armchair-seat cushion,floor,64,134,28,living_room,226,">,="
+411,dishwasher,cabinet-drawer,41,176,48,kitchen,265,=
+412,stool-leg,ceiling recessed light,0,0,136,kitchen,136,<
+413,wardrobe-door,dresser-drawer,84,14,10,bedroom,108,>
+414,bowl,ceiling recessed light,0,0,610,kitchen,610,<
+415,sink-faucet,drawer-knob,177,22,20,bathroom,219,>
+416,chair-back,cabinet,20,127,238,kitchen,385,"=,<"
+417,cabinet-drawer,toilet,18,54,43,bathroom,115,"=,<"
+418,floor lamp-column,window,0,116,10,kitchen,126,=
+419,picture,coffee table,1129,29,0,living_room,1158,>
+420,door-knob,sofa-back pillow,81,16,20,kitchen,117,>
+421,cabinet-drawer,chair-back,56,46,22,kitchen,124,">,="
+422,mirror,drawer-knob,203,0,0,bathroom,203,>
+423,bottle,ceiling recessed light-light source,0,0,378,kitchen,378,<
+424,sofa,armchair-seat cushion,63,55,0,living_room,118,">,="
+425,vase,plant pot,56,16,33,living_room,105,">,<"
+426,wall,armchair-seat base,467,0,0,living_room,467,>
+427,chair-back,door-handle,19,25,164,kitchen,208,<
+428,table lamp-light source,flowerpot,83,0,22,living_room,105,>
+429,coffee table-leg,coffee table,0,209,71,living_room,280,=
+430,door-handle,table,103,28,30,kitchen,161,>
+431,chair-back,back-stile,21,242,0,kitchen,263,=
+432,table,table lamp-shade,0,20,196,living_room,216,<
+433,floor lamp-column,sofa,92,41,0,living_room,133,">,="
+434,curtain,table lamp-highlight,178,126,22,living_room,326,">,="
+435,coffee table,candle holder,0,68,230,living_room,298,<
+436,ceiling,floor lamp-light source,122,0,0,living_room,122,>
+437,sash-rail,door-handle,166,0,65,kitchen,231,>
+438,sconce,drawer-knob,135,0,0,bathroom,135,>
+439,armchair-seat base,books,0,11,148,living_room,159,<
+440,table lamp-light source,picture,200,103,414,living_room,717,">,<"
+441,toilet-cistern,curtain,0,22,85,bathroom,107,<
+442,drawer-knob,cabinet-top,0,0,590,kitchen,590,<
+443,floor,sconce,0,0,193,bathroom,193,<
+444,coffee table-leg,ceiling fan-blade,0,0,119,living_room,119,<
+445,door-knob,dishcloth,169,35,92,kitchen,296,">,<"
+446,stool,cabinet,0,100,10,bathroom,110,=
+447,box,sofa-back pillow,29,19,55,living_room,103,">,<"
+448,window,armchair-seat base,267,0,0,living_room,267,>
+449,drawer-handle,stove-burner,11,0,249,kitchen,260,<
+450,microwave,door-knob,386,82,268,kitchen,736,">,<"
+451,table lamp-highlight,bed,123,188,12,bedroom,323,">,="
+452,stove-dial,drawer-handle,87,0,15,kitchen,102,>
+453,basket,towel,34,16,75,bathroom,125,">,<"
+454,sconce-light source,towel,110,0,0,bathroom,110,>
+455,fireplace,armchair-leg,149,12,0,living_room,161,>
+456,sofa-seat cushion,table lamp-highlight,0,0,308,living_room,308,<
+457,drawer-handle,chair-stretcher,279,0,14,kitchen,293,>
+458,range-stove,range-oven,219,22,0,kitchen,241,>
+459,dishcloth,wall,0,27,241,kitchen,268,<
+460,toilet-cistern,sink-faucet,25,46,74,bathroom,145,"=,<"
+461,arm-outside arm,chair,0,54,200,living_room,254,<
+462,armchair-leg,armchair-back,0,0,375,living_room,375,<
+463,sofa-back pillow,armchair-arm,399,178,30,living_room,607,">,="
+464,bathtub,cabinet,31,176,81,bathroom,288,"=,<"
+465,cabinet-drawer,microwave-button panel,0,0,105,kitchen,105,<
+466,dishwasher-door,cabinet,0,70,108,kitchen,178,"=,<"
+467,work surface,oven-door,159,52,23,kitchen,234,>
+468,curtain,armchair-back,198,25,0,living_room,223,>
+469,chair,picture,60,227,52,bathroom,339,=
+470,window-pane,armchair-back,122,0,0,living_room,122,>
+471,sconce-light source,sink-faucet,119,0,0,bathroom,119,>
+472,ceiling recessed light,sculpture,147,0,0,living_room,147,>
+473,sash-pane,bottle,137,0,0,kitchen,137,>
+474,toilet-lid,window,0,0,120,bathroom,120,<
+475,drawer-knob,dresser,15,216,146,bedroom,377,"=,<"
+476,floor,armchair-back,0,51,110,living_room,161,"=,<"
+477,night table-drawer,night table,17,667,408,bedroom,1092,"=,<"
+478,cabinet-front,window,27,92,69,kitchen,188,"=,<"
+479,picture,curtain rod,0,13,107,living_room,120,<
+480,picture,armchair-back pillow,358,33,0,living_room,391,>
+481,range-stove,microwave,0,0,110,kitchen,110,<
+482,sash-pane,books,383,0,0,living_room,383,>
+483,armchair-arm,door-muntin,0,0,174,living_room,174,<
+484,armchair,chair,54,17,155,kitchen,226,<
+485,window-pane,plant,18,132,14,kitchen,164,=
+486,armchair-arm,armchair-seat cushion,346,375,71,living_room,792,">,="
+487,pendant lamp-tube,pendant lamp,10,176,0,kitchen,186,=
+488,blanket,window,0,11,168,living_room,179,<
+489,ceiling recessed light-light source,flowers,146,0,0,kitchen,146,>
+490,cabinet-door,back-stile,299,64,16,kitchen,379,>
+491,drawer-knob,sash-muntin,0,0,125,kitchen,125,<
+492,sofa-leg,vase,0,0,149,living_room,149,<
+493,table,chair,27,330,119,kitchen,476,=
+494,picture,door-muntin,168,53,37,kitchen,258,>
+495,toilet-bowl,wall,0,20,283,bathroom,303,<
+496,television,sofa-arm,126,21,0,living_room,147,>
+497,cabinet,chair-seat,160,37,0,kitchen,197,>
+498,microwave-door,work surface,105,0,0,kitchen,105,>
+499,armchair-seat cushion,armchair-leg,345,20,14,living_room,379,>
+500,cabinet-door,microwave-door,473,59,228,kitchen,760,">,<"
+501,sofa,armchair-leg,137,16,0,living_room,153,>
+502,sofa-back pillow,table lamp,0,208,16,kitchen,224,=
+503,cabinet-front,sink,118,37,36,kitchen,191,>
+504,drawer-knob,dishcloth,19,18,72,kitchen,109,<
+505,oven-button panel,ceiling recessed light,0,0,101,kitchen,101,<
+506,sofa-back pillow,arm-arm panel,320,48,0,living_room,368,>
+507,range-stove,floor,175,0,0,kitchen,175,>
+508,door-pane,kettle,144,0,0,kitchen,144,>
+509,sofa,door-knob,35,11,57,kitchen,103,">,<"
+510,arm-inside arm,door,0,11,234,living_room,245,<
+511,arm-outside arm,coffee table,19,141,27,living_room,187,=
+512,drawer-knob,table lamp,18,70,22,kitchen,110,=
+513,wall,armchair-earmuffs,118,47,0,living_room,165,>
+514,armchair-seat cushion,table lamp-shade,0,0,148,living_room,148,<
+515,table lamp-shade,side table,748,13,0,living_room,761,>
+516,sofa-back pillow,door-knob,20,16,81,kitchen,117,<
+517,wall,arm-inside arm,1557,100,0,living_room,1657,>
+518,chair,armchair,155,17,54,kitchen,226,>
+519,work surface,coffee maker,0,43,182,kitchen,225,<
+520,chair,pendant lamp-light source,0,0,310,kitchen,310,<
+521,cabinet,bathtub,81,176,31,bathroom,288,">,="
+522,toilet,cabinet-door,36,92,53,bathroom,181,"=,<"
+523,range-stove,stove-burner,32,169,0,kitchen,201,=
+524,bathtub,towel,32,147,240,bathroom,419,"=,<"
+525,chair,books,20,43,60,kitchen,123,"=,<"
+526,sofa-seat base,vase,0,20,130,living_room,150,<
+527,fireplace,armchair,82,266,0,living_room,348,=
+528,back-spindle,door-knob,35,34,371,kitchen,440,<
+529,drawer-handle,chest of drawers,28,244,140,kitchen,412,"=,<"
+530,door,cabinet-door,99,41,253,bathroom,393,<
+531,curtain rod,wall,11,88,11,bathroom,110,=
+532,sink,drawer-handle,154,14,51,bathroom,219,>
+533,window,work surface,799,25,0,kitchen,824,>
+534,books,television,87,36,80,living_room,203,">,<"
+535,armchair-seat base,ceiling recessed light,0,0,180,living_room,180,<
+536,arm-inside arm,armchair,23,431,153,living_room,607,=
+537,table lamp-column,arm-inside arm,290,16,0,living_room,306,>
+538,dresser,picture,0,39,172,bedroom,211,<
+539,cushion,chair-back,26,130,93,living_room,249,"=,<"
+540,books,armchair-back,76,20,34,living_room,130,">,<"
+541,plate,sink-faucet,79,21,43,kitchen,143,">,<"
+542,microwave,pendant lamp,0,0,130,kitchen,130,<
+543,table lamp-shade,blind,0,39,106,living_room,145,<
+544,chest of drawers,cabinet-drawer,26,117,48,kitchen,191,=
+545,bowl,pendant lamp-shade,26,0,88,kitchen,114,<
+546,refrigerator,range,23,105,0,kitchen,128,=
+547,wall,extractor hood-body,22,68,21,kitchen,111,=
+548,picture,cabinet-door,68,11,386,bathroom,465,<
+549,picture,armchair-seat base,371,0,0,living_room,371,>
+550,table lamp-column,box,78,12,36,living_room,126,">,<"
+551,sofa-back,ceiling,0,0,129,living_room,129,<
+552,armchair,sofa-seat base,74,42,0,living_room,116,">,="
+553,door,chest of drawers-drawer,129,10,0,kitchen,139,>
+554,fireplace,floor lamp,0,89,18,living_room,107,=
+555,coffee table,books,12,108,329,living_room,449,<
+556,table,coffee table,108,24,0,living_room,132,>
+557,ceiling recessed light,work surface,1543,0,0,kitchen,1543,>
+558,coffee table-top,coffee table-leg,212,39,0,living_room,251,>
+559,pendant lamp,picture,157,10,0,kitchen,167,>
+560,table lamp,window-pane,0,134,217,living_room,351,"=,<"
+561,stool-seat,cabinet-door,0,11,127,kitchen,138,<
+562,chair-leg,outlet,0,0,109,kitchen,109,<
+563,double door-door,picture,37,167,22,living_room,226,=
+564,oven,plant,19,45,105,kitchen,169,"=,<"
+565,ceiling,armchair-leg,313,0,0,living_room,313,>
+566,table lamp-column,floor lamp-shade,0,17,87,living_room,104,<
+567,ceiling,drawer-handle,122,0,0,bathroom,122,>
+568,ceiling recessed light-light source,oven,410,0,0,kitchen,410,>
+569,cabinet-drawer,back-spindle,131,41,0,kitchen,172,>
+570,microwave,drawer-knob,233,0,0,kitchen,233,>
+571,ceiling fan-blade,bed,131,0,0,bedroom,131,>
+572,cabinet-drawer,work surface,90,208,851,kitchen,1149,<
+573,microwave,oven,85,22,0,kitchen,107,>
+574,armchair-leg,sofa,0,16,137,living_room,153,<
+575,chest of drawers-drawer,plate,17,0,103,kitchen,120,<
+576,towel,sconce-light source,0,0,110,bathroom,110,<
+577,arm-outside arm,plant,0,15,218,living_room,233,<
+578,box,table lamp,46,14,149,living_room,209,<
+579,table lamp-base,armchair-arm,143,29,20,living_room,192,>
+580,door-pane,pendant lamp,0,57,216,kitchen,273,<
+581,pitcher,plate,32,15,57,kitchen,104,">,<"
+582,armchair-arm,vase,23,72,278,living_room,373,<
+583,side table,shelves-shelf,0,0,137,living_room,137,<
+584,floor lamp-column,floor lamp-shade,0,22,170,living_room,192,<
+585,door-handle,sofa-seat cushion,131,12,10,living_room,153,>
+586,table lamp,sofa-back pillow,16,208,0,kitchen,224,=
+587,door-pane,door-knob,2186,125,293,kitchen,2604,>
+588,kitchen island-drawer,cabinet,0,34,174,kitchen,208,<
+589,window-casing,cushion,102,0,0,living_room,102,>
+590,sconce-light source,wall,79,241,36,bathroom,356,=
+591,shelves-shelf,ceiling recessed light-light source,0,0,213,living_room,213,<
+592,door-knob,floor,143,32,14,bathroom,189,>
+593,sofa-back pillow,blind,0,0,169,living_room,169,<
+594,ceiling,cabinet-side,187,30,0,kitchen,217,>
+595,television,coffee table,160,0,0,living_room,160,>
+596,side table,pendant lamp-shade,0,0,126,living_room,126,<
+597,sofa-seat cushion,sofa-arm,147,839,798,living_room,1784,"=,<"
+598,door-pane,chest of drawers-drawer,240,0,0,kitchen,240,>
+599,floor lamp-highlight,floor lamp,54,87,33,living_room,174,">,="
+600,cabinet-door,chest of drawers-skirt,203,0,0,kitchen,203,>
+601,table lamp-highlight,pillow,611,319,82,bedroom,1012,">,="
+602,night table-drawer,ceiling fan-blade,0,0,140,bedroom,140,<
+603,floor lamp-highlight,wall,16,10,192,kitchen,218,<
+604,floor,sofa-back pillow,14,213,17,kitchen,244,=
+605,door-knob,vase,240,23,37,bathroom,300,>
+606,mug,work surface,97,35,14,kitchen,146,>
+607,dresser-drawer,window,0,15,376,bedroom,391,<
+608,sash-pane,door-handle,175,58,40,kitchen,273,>
+609,door-hinge,door-muntin,117,31,116,kitchen,264,">,<"
+610,pendant lamp,button panel-dial,239,0,0,kitchen,239,>
+611,wall,pipe,97,32,0,bathroom,129,>
+612,night table-drawer,box,13,10,82,bedroom,105,<
+613,button panel-dial,drawer-handle,780,36,79,kitchen,895,>
+614,door-handle,plate,192,32,193,kitchen,417,">,<"
+615,sofa,chandelier-shade,0,0,142,living_room,142,<
+616,armchair-seat base,cushion,0,40,305,living_room,345,<
+617,sofa-seat base,floor,19,207,38,living_room,264,=
+618,armchair-back pillow,ceiling,0,0,178,living_room,178,<
+619,cabinet-front,stove-dial,116,15,0,kitchen,131,>
+620,ceiling recessed light-light source,armchair-arm,487,0,0,living_room,487,>
+621,table lamp-highlight,coffee table,146,0,0,living_room,146,>
+622,sofa-seat base,arm-arm panel,0,46,88,living_room,134,"=,<"
+623,cushion,table lamp-column,44,353,1145,living_room,1542,<
+624,armchair-arm,table lamp-light source,0,0,153,living_room,153,<
+625,door-knob,kettle,166,0,100,kitchen,266,">,<"
+626,floor,bed-headboard,0,15,450,bedroom,465,<
+627,sofa-seat base,arm-inside arm,0,105,242,living_room,347,"=,<"
+628,sconce,sofa-seat cushion,180,0,0,living_room,180,>
+629,books,sconce,19,11,77,living_room,107,<
+630,picture-frame,night table,227,0,0,bedroom,227,>
+631,bed-headboard,night table,786,112,0,bedroom,898,>
+632,night table-drawer,bed-headboard,0,0,532,bedroom,532,<
+633,pendant lamp-shade,chest of drawers-drawer,147,0,0,kitchen,147,>
+634,coffee table-leg,table lamp,0,0,174,living_room,174,<
+635,armchair-seat base,floor,0,105,25,living_room,130,=
+636,pendant lamp-canopy,cabinet-door,429,20,10,kitchen,459,>
+637,bottle,oven-door,85,10,10,kitchen,105,>
+638,soap,wall,14,75,185,bathroom,274,<
+639,pillow,chair,65,134,18,bedroom,217,">,="
+640,candle holder,books,175,35,159,living_room,369,">,<"
+641,cushion,floor,12,748,83,kitchen,843,=
+642,flowerpot,chair,72,34,14,kitchen,120,">,="
+643,fireplace,door,0,158,43,living_room,201,=
+644,picture,glass,69,29,53,kitchen,151,">,<"
+645,plant,speaker,74,41,19,living_room,134,">,="
+646,wall,cabinets-door,181,205,92,kitchen,478,">,="
+647,stool-leg,door-handle,0,0,197,kitchen,197,<
+648,ceiling,bed-headboard,508,0,0,bedroom,508,>
+649,mug-handle,cabinet-door,64,15,91,kitchen,170,">,<"
+650,bookcase,books,106,378,15,living_room,499,=
+651,arm-inside arm,table lamp-shade,0,0,331,living_room,331,<
+652,range-oven,chair,20,49,52,kitchen,121,"=,<"
+653,door-handle,extractor hood-body,20,10,131,kitchen,161,<
+654,work surface,range-stove,38,192,42,kitchen,272,=
+655,wall,paper towels,126,66,0,kitchen,192,">,="
+656,cabinet,kitchen island-drawer,174,34,0,kitchen,208,>
+657,cabinet,sconce-light source,0,12,125,bathroom,137,<
+658,kitchen island-door,cabinet-door,0,36,143,kitchen,179,<
+659,refrigerator-door,window,0,108,53,kitchen,161,"=,<"
+660,cabinet,ceiling spotlight-light source,0,20,182,kitchen,202,<
+661,cabinet-skirt,cabinet-top,0,0,147,kitchen,147,<
+662,books,shelf,53,14,78,living_room,145,">,<"
+663,sofa,fireplace,0,159,60,living_room,219,=
+664,towel,bottle,141,71,275,bathroom,487,">,<"
+665,door-muntin,chandelier-shade,0,0,115,living_room,115,<
+666,floor lamp-arm,picture,19,27,59,living_room,105,"=,<"
+667,cabinet-door,picture,386,11,68,bathroom,465,>
+668,armchair-arm,floor lamp-column,0,0,100,living_room,100,<
+669,blind,table lamp-column,122,13,0,living_room,135,>
+670,cabinet-drawer,microwave-door,0,0,187,kitchen,187,<
+671,armchair,ceiling recessed light-highlight,0,0,119,living_room,119,<
+672,ceiling spotlight,sofa,139,0,0,living_room,139,>
+673,flowerpot,pendant lamp,0,0,106,kitchen,106,<
+674,sofa-leg,sofa-back,0,0,113,living_room,113,<
+675,chest of drawers-drawer,table lamp-highlight,17,17,67,bedroom,101,<
+676,night table,door-handle,22,19,120,bedroom,161,<
+677,sconce-shade,chandelier-light source,28,0,73,bathroom,101,<
+678,cabinet-door,pendant lamp-tube,0,51,410,kitchen,461,<
+679,door-pane,button panel-dial,667,0,0,kitchen,667,>
+680,window,wall,109,886,48,bathroom,1043,=
+681,arm-arm panel,sofa,0,105,82,living_room,187,"=,<"
+682,door-hinge,cabinet-drawer,221,0,87,kitchen,308,>
+683,mirror,sofa,148,0,0,living_room,148,>
+684,double door,curtain,0,128,11,living_room,139,=
+685,armchair-arm,table lamp-base,20,29,143,living_room,192,<
+686,bathtub-faucet,bathtub,77,100,0,bathroom,177,">,="
+687,candle holder,fireplace,154,71,44,living_room,269,">,="
+688,armchair-back,table lamp,0,28,106,living_room,134,<
+689,cabinets-drawer,door-pane,0,0,189,kitchen,189,<
+690,ceiling,cabinet-drawer,285,0,0,bathroom,285,>
+691,sofa-arm,coffee table-top,90,79,0,living_room,169,">,="
+692,door,sink,181,78,17,bathroom,276,">,="
+693,sash-rail,sash-muntin,77,13,110,kitchen,200,">,<"
+694,button panel-dial,bowl,48,0,149,kitchen,197,<
+695,ceiling spotlight-shade,sofa-back pillow,100,0,0,living_room,100,>
+696,box,night table,49,52,25,bedroom,126,">,="
+697,table lamp-shade,picture,436,271,11,kitchen,718,">,="
+698,range,extractor hood,0,0,150,kitchen,150,<
+699,ceiling recessed light,towel,180,0,0,bathroom,180,>
+700,curtain,table lamp-column,14,123,0,kitchen,137,=
+701,sconce-light source,cabinet-door,126,0,10,bathroom,136,>
+702,armchair,side table,206,552,48,living_room,806,=
+703,ceiling recessed light-highlight,armchair,119,0,0,living_room,119,>
+704,table lamp-base,door,0,40,140,living_room,180,<
+705,ceiling fan,pillow,114,0,0,bedroom,114,>
+706,mirror,floor,468,0,0,bathroom,468,>
+707,armchair-back,cabinet,14,50,42,living_room,106,"=,<"
+708,wall,cabinet-skirt,287,19,0,kitchen,306,>
+709,range-oven,button panel-dial,0,71,354,kitchen,425,<
+710,dresser-drawer,table lamp-shade,11,20,253,bedroom,284,<
+711,door-knob,pendant lamp-light source,0,0,260,kitchen,260,<
+712,kitchen island,cabinet-door,0,54,224,kitchen,278,<
+713,cabinet-door,book,153,0,51,kitchen,204,>
+714,sink-faucet,countertop,72,182,16,bathroom,270,=
+715,jar,cabinet,36,114,11,bathroom,161,=
+716,sink,oven-door,74,34,18,kitchen,126,">,="
+717,toilet,door,0,60,109,bathroom,169,"=,<"
+718,wall,outlet,156,239,33,bathroom,428,">,="
+719,table lamp-highlight,night table-drawer,508,0,0,bedroom,508,>
+720,cabinet-front,range-oven,68,40,0,kitchen,108,">,="
+721,cabinets-drawer,door-handle,98,18,167,kitchen,283,">,<"
+722,drawer-handle,door-handle,47,23,117,bathroom,187,<
+723,range-button panel,range,0,175,0,kitchen,175,=
+724,sconce,cabinet-door,177,11,67,bathroom,255,>
+725,cabinet-door,lower sash-stile,61,0,43,kitchen,104,">,<"
+726,table lamp-base,night table-drawer,420,10,0,bedroom,430,>
+727,work surface,cabinet-skirt,109,0,11,kitchen,120,>
+728,window,outlet,50,53,0,bathroom,103,">,="
+729,door-pane,window,108,292,82,kitchen,482,=
+730,coffee maker,door-knob,88,0,250,kitchen,338,<
+731,table lamp-light source,table lamp-base,257,0,0,living_room,257,>
+732,basket,chair,117,37,17,kitchen,171,>
+733,sofa-leg,armchair,0,12,92,living_room,104,<
+734,sofa,coffee table-leg,215,18,0,living_room,233,>
+735,extractor hood,range-stove,105,0,0,kitchen,105,>
+736,chandelier-shade,coffee table,122,0,0,living_room,122,>
+737,sink-faucet,oven-door,100,16,0,kitchen,116,>
+738,window,night table-drawer,434,0,0,bedroom,434,>
+739,refrigerator-door,cabinet-side,0,63,53,kitchen,116,"=,<"
+740,blind,picture,243,147,27,living_room,417,">,="
+741,clock,curtain,12,52,36,kitchen,100,"=,<"
+742,cabinet-top,stove-burner,106,0,0,kitchen,106,>
+743,cabinets-drawer,cabinets,13,58,100,kitchen,171,"=,<"
+744,range-oven,oven-door,0,137,0,kitchen,137,=
+745,cushion,sconce-backplate,0,0,154,living_room,154,<
+746,work surface,door-pane,27,0,462,kitchen,489,<
+747,coffee table,sofa,0,262,312,living_room,574,"=,<"
+748,door-handle,baseboard,142,0,0,kitchen,142,>
+749,outlet-sockets,cabinet-door,48,0,66,kitchen,114,">,<"
+750,cushion,side table-leg,140,21,0,living_room,161,>
+751,door-handle,ceiling-beam,0,0,124,kitchen,124,<
+752,bowl,microwave,20,0,99,kitchen,119,<
+753,range,stove-burner,18,183,0,kitchen,201,=
+754,cabinet-door,dishcloth,234,66,95,kitchen,395,>
+755,pillow,vase,82,115,29,living_room,226,">,="
+756,ceiling recessed light,lower sash-pane,139,0,0,kitchen,139,>
+757,sconce-light source,armchair,125,0,0,living_room,125,>
+758,books,clock,16,14,90,living_room,120,<
+759,range-button panel,drawer-handle,172,25,15,kitchen,212,>
+760,sink-faucet,sash-pane,0,0,124,kitchen,124,<
+761,pendant lamp-light source,sink-faucet,121,0,0,kitchen,121,>
+762,sofa-seat cushion,vase,18,123,412,living_room,553,<
+763,candle holder,table lamp-light source,47,10,78,living_room,135,">,<"
+764,button panel-dial,drawer-knob,407,82,221,kitchen,710,">,<"
+765,chandelier-light source,armchair,295,0,0,living_room,295,>
+766,door-hinge,sash-pane,38,12,176,kitchen,226,<
+767,armchair-arm,armchair-back pillow,13,170,357,living_room,540,"=,<"
+768,coffee table-leg,candle holder,0,0,111,living_room,111,<
+769,pendant lamp,sink-faucet,225,0,0,kitchen,225,>
+770,sofa-back pillow,window-pane,0,50,727,living_room,777,<
+771,window,armchair-arm,1082,0,0,living_room,1082,>
+772,pendant lamp-shade,sofa-seat cushion,124,0,0,living_room,124,>
+773,table lamp-highlight,books,101,18,52,living_room,171,">,<"
+774,baseboard,cabinet-door,0,13,234,kitchen,247,<
+775,ceiling recessed light-highlight,cabinet,30,242,64,bathroom,336,=
+776,pendant lamp-canopy,window,137,10,0,kitchen,147,>
+777,sash-stile,door-handle,141,51,41,kitchen,233,>
+778,cabinet,sash-rail,96,48,18,bathroom,162,">,="
+779,door-knob,bowl,335,15,255,kitchen,605,">,<"
+780,toilet paper,towel,29,29,144,bathroom,202,<
+781,sofa-back pillow,chair-leg,209,45,0,living_room,254,>
+782,range-button panel,stove-burner,83,27,59,kitchen,169,">,<"
+783,sconce-highlight,curtain,47,104,10,living_room,161,">,="
+784,chest of drawers-drawer,picture,21,0,81,kitchen,102,<
+785,picture,picture-frame,98,13,195,bathroom,306,">,<"
+786,cabinet-top,door-knob,1498,0,10,kitchen,1508,>
+787,sofa-arm,chandelier-light source,0,0,147,living_room,147,<
+788,vase,plate,58,16,54,kitchen,128,">,<"
+789,armchair,sofa-back pillow,43,350,58,living_room,451,=
+790,chair,arm-arm panel,138,34,0,living_room,172,>
+791,plant,ceiling fan-blade,0,0,158,living_room,158,<
+792,soap dispenser,wall,30,151,181,bathroom,362,"=,<"
+793,window,door,21,101,0,bathroom,122,=
+794,wall,refrigerator,326,822,19,kitchen,1167,=
+795,floor lamp,table lamp-column,51,49,0,living_room,100,">,="
+796,flowers,coffee table-leg,113,0,0,living_room,113,>
+797,door-pane,chandelier-light source,0,0,195,living_room,195,<
+798,sofa-seat cushion,coffee table,167,376,22,living_room,565,">,="
+799,bed-headboard,chest of drawers-drawer,130,34,10,bedroom,174,>
+800,ceiling-beam,picture,180,0,0,living_room,180,>
+801,sofa-seat base,flowerpot,12,26,81,living_room,119,<
+802,side table,armchair-back,15,69,71,living_room,155,"=,<"
+803,stove-burner,window,0,0,131,kitchen,131,<
+804,vase,chest of drawers-drawer,93,11,12,kitchen,116,>
+805,ceiling recessed light-aperture,chair,326,0,0,kitchen,326,>
+806,ceiling recessed light,button panel-dial,600,0,0,kitchen,600,>
+807,rug,work surface,0,0,123,kitchen,123,<
+808,blind,cushion,554,14,0,living_room,568,>
+809,mirror,dresser-drawer,211,0,0,bedroom,211,>
+810,armchair,floor lamp-column,0,66,92,living_room,158,"=,<"
+811,cabinet-door,knife set,301,0,98,kitchen,399,>
+812,cabinets,pot,45,14,52,kitchen,111,">,<"
+813,night table,night table-leg,84,49,0,bedroom,133,">,="
+814,ceiling recessed light,cabinet-skirt,119,0,0,kitchen,119,>
+815,chair-apron,back-stile,0,0,129,kitchen,129,<
+816,ottoman,side table,14,76,96,living_room,186,"=,<"
+817,door-door frame,wall,14,217,19,bathroom,250,=
+818,window-muntin,sash-muntin,38,47,20,living_room,105,">,="
+819,shower screen,ceiling,0,40,76,bathroom,116,"=,<"
+820,armchair-leg,picture,0,0,681,living_room,681,<
+821,door,refrigerator,0,140,0,kitchen,140,=
+822,door-handle,pitcher,75,13,97,kitchen,185,">,<"
+823,button panel-dial,chest of drawers-drawer,362,85,14,kitchen,461,>
+824,night table,picture-frame,0,0,227,bedroom,227,<
+825,floor,carpet,121,22,19,kitchen,162,>
+826,flowerpot,blind,0,0,101,living_room,101,<
+827,double door-door,cushion,210,36,0,living_room,246,>
+828,sash-stile,sash-pane,139,24,21,bathroom,184,>
+829,refrigerator,microwave,0,155,14,kitchen,169,=
+830,wardrobe-door,bed-headboard,69,67,0,bedroom,136,">,="
+831,clock,bed-headboard,0,33,130,bedroom,163,<
+832,cushion,door-door frame,0,11,235,living_room,246,<
+833,sash-rail,drawer-knob,110,0,0,kitchen,110,>
+834,countertop,cabinet,162,148,47,bathroom,357,">,="
+835,button panel-dial,door-knob,485,36,1155,kitchen,1676,<
+836,pot,range-oven,123,0,0,kitchen,123,>
+837,speaker,chair,68,36,25,living_room,129,">,="
+838,bowl,cushion,13,117,341,kitchen,471,<
+839,sash-rail,door-knob,71,0,34,kitchen,105,">,<"
+840,cabinet-door,window-upper sash,10,65,47,kitchen,122,"=,<"
+841,toaster,cabinet,207,24,296,kitchen,527,">,<"
+842,mirror,sink-tap,117,0,0,bathroom,117,>
+843,dishwasher,wall,0,38,701,kitchen,739,<
+844,curtain,night table,1049,67,0,bedroom,1116,>
+845,button panel-dial,pendant lamp,0,0,239,kitchen,239,<
+846,chest of drawers,ceiling recessed light-light source,0,0,179,kitchen,179,<
+847,table lamp-base,armchair-leg,103,0,0,living_room,103,>
+848,armchair-seat base,table lamp,0,0,104,living_room,104,<
+849,table lamp-light source,sofa-arm,203,0,0,living_room,203,>
+850,basket,flowerpot,67,13,32,kitchen,112,">,<"
+851,pendant lamp-tube,pendant lamp-light source,102,0,0,kitchen,102,>
+852,drawer-handle,sideboard-door,0,0,130,kitchen,130,<
+853,coffee table-top,ceiling recessed light-light source,0,0,103,living_room,103,<
+854,sofa-back pillow,plant,53,183,439,living_room,675,<
+855,ceiling,railing,122,39,27,living_room,188,>
+856,sofa,ceiling recessed light,0,0,167,kitchen,167,<
+857,carpet,flowers,0,0,196,living_room,196,<
+858,wall,sideboard-door,16,66,19,kitchen,101,=
+859,vase,mirror,29,23,93,bathroom,145,<
+860,armchair-back,ceiling recessed light,0,0,212,living_room,212,<
+861,cabinets-door,chest of drawers-drawer,128,14,0,kitchen,142,>
+862,side table,flowers,17,50,242,living_room,309,<
+863,books,wall,18,50,165,kitchen,233,<
+864,night table-drawer,clock,0,0,184,bedroom,184,<
+865,door-door frame,cushion,235,11,0,living_room,246,>
+866,range,window,0,11,213,kitchen,224,<
+867,extractor hood,range,150,0,0,kitchen,150,>
+868,pendant lamp-light source,sconce-light source,118,0,0,living_room,118,>
+869,side table,coffee table,244,185,34,living_room,463,">,="
+870,door-pane,chandelier-shade,13,13,224,kitchen,250,<
+871,faucet,cabinet,63,22,26,bathroom,111,>
+872,armchair-earmuffs,picture,19,35,110,living_room,164,<
+873,cabinet-drawer,door-window,93,30,70,kitchen,193,">,<"
+874,drawer-knob,coffee maker,0,0,157,kitchen,157,<
+875,sink,glass,34,27,83,bathroom,144,<
+876,toilet,bathtub,19,166,27,bathroom,212,=
+877,chair-arm,books,0,13,226,living_room,239,<
+878,ceiling spotlight,door-handle,179,0,0,kitchen,179,>
+879,wall,door frame,13,145,13,bathroom,171,=
+880,pendant lamp-shade,outlet,314,0,0,kitchen,314,>
+881,window,armchair,34,173,0,kitchen,207,=
+882,chair-leg,ceiling recessed light,0,0,301,kitchen,301,<
+883,chest of drawers,button panel-dial,0,86,64,kitchen,150,"=,<"
+884,side table,carpet,222,118,13,living_room,353,">,="
+885,pot,cabinet-front,37,17,107,kitchen,161,<
+886,floor lamp-column,wall,0,265,12,kitchen,277,=
+887,arm-inside arm,curtain,0,0,544,living_room,544,<
+888,coffee maker,sink-faucet,32,69,0,kitchen,101,">,="
+889,range-button panel,door-handle,151,56,187,kitchen,394,">,<"
+890,vase,flowers,18,17,82,bathroom,117,<
+891,sash-pane,sofa-seat cushion,176,0,0,living_room,176,>
+892,oven-door,button panel-dial,0,57,321,kitchen,378,<
+893,chair-stretcher,drawer-handle,14,0,279,kitchen,293,<
+894,drawer-knob,pillow,60,83,704,bedroom,847,<
+895,light switch,ceiling recessed light-light source,0,0,134,kitchen,134,<
+896,flowers,night table,177,18,0,bedroom,195,>
+897,book,bookcase-shelf,62,0,79,living_room,141,">,<"
+898,door-knob,dresser-drawer,75,0,34,bedroom,109,">,<"
+899,sofa,carpet,314,113,0,living_room,427,>
+900,door-handle,cabinet-door,75,263,92,bathroom,430,=
+901,sofa,plant,21,226,24,kitchen,271,=
+902,cabinet-front,cabinet-drawer,449,11,29,bathroom,489,>
+903,door-knob,back-spindle,371,34,35,kitchen,440,>
+904,side table,cushion,170,852,867,living_room,1889,"=,<"
+905,curtain,chandelier,0,74,66,living_room,140,"=,<"
+906,sconce,sconce-shade,56,119,23,bathroom,198,">,="
+907,shelves-shelf,plate,65,13,147,living_room,225,">,<"
+908,cabinet,double door,20,54,54,kitchen,128,"=,<"
+909,table lamp-highlight,arm-inside arm,189,0,0,living_room,189,>
+910,picture,button panel-dial,168,0,0,kitchen,168,>
+911,sofa-back pillow,ceiling recessed light,0,0,168,kitchen,168,<
+912,cabinet,cabinet-door,97,369,45,bathroom,511,=
+913,refrigerator,pot,18,90,31,kitchen,139,=
+914,drawer-handle,stove-dial,15,0,87,kitchen,102,<
+915,sofa,television,0,82,112,living_room,194,"=,<"
+916,chair,tray,20,29,76,kitchen,125,<
+917,toilet-cistern,sink,61,109,26,bathroom,196,">,="
+918,armchair-arm,ceiling recessed light,0,0,730,living_room,730,<
+919,window,extractor hood,23,150,53,kitchen,226,=
+920,sink,ceiling recessed light,0,0,166,bathroom,166,<
+921,table lamp,book,124,12,13,living_room,149,>
+922,sofa-back pillow,door-muntin,0,12,97,living_room,109,<
+923,flowerpot,coffee table-leg,118,24,0,living_room,142,>
+924,stove-burner,work surface,51,145,96,kitchen,292,"=,<"
+925,book,box,77,21,11,kitchen,109,>
+926,night table,vase,15,37,201,bedroom,253,<
+927,oven-door,door-handle,65,278,383,kitchen,726,"=,<"
+928,ceiling recessed light-highlight,door-knob,17,12,76,bathroom,105,<
+929,arm-outside arm,sofa,0,105,254,living_room,359,<
+930,chest of drawers-drawer,pillow,50,85,172,bedroom,307,"=,<"
+931,shelves,side table,104,24,0,living_room,128,>
+932,ceiling recessed light,back-rail,117,0,0,kitchen,117,>
+933,sofa-seat base,table lamp,0,0,214,living_room,214,<
+934,oven,button panel-dial,17,78,16,kitchen,111,=
+935,chair,table lamp-light source,0,12,306,living_room,318,<
+936,ceiling recessed light-aperture,armchair-arm,130,0,0,living_room,130,>
+937,candle holder,curtain,12,208,294,living_room,514,"=,<"
+938,curtain,side table,811,23,0,living_room,834,>
+939,drawer-knob,back-rail,55,0,47,kitchen,102,">,<"
+940,mug-handle,cabinet,79,18,94,kitchen,191,">,<"
+941,wall,vase,220,181,24,bathroom,425,">,="
+942,outlet,pillow,17,17,187,bedroom,221,<
+943,lower sash-pane,cabinet-door,111,0,136,kitchen,247,">,<"
+944,cabinet-drawer,curtain,0,0,138,bathroom,138,<
+945,chandelier-shade,table lamp-column,151,0,0,living_room,151,>
+946,sofa-back pillow,sofa-seat cushion,28,186,25,kitchen,239,=
+947,table lamp,cabinet,102,33,76,kitchen,211,">,<"
+948,chair-stretcher,back-spindle,0,0,158,kitchen,158,<
+949,extractor hood-vent,wall,26,77,0,kitchen,103,=
+950,floor,cabinets-door,0,14,131,kitchen,145,<
+951,sofa-seat cushion,flowerpot,74,93,233,living_room,400,<
+952,oven-button panel,drawer-handle,125,10,0,kitchen,135,>
+953,kettle,ceiling recessed light,0,0,232,kitchen,232,<
+954,armchair-back pillow,vase,19,28,58,living_room,105,"=,<"
+955,curtain,chair,18,97,0,bathroom,115,=
+956,sofa-arm,table lamp-column,0,37,370,living_room,407,<
+957,armchair-back pillow,sofa-seat cushion,142,42,0,living_room,184,>
+958,sofa-seat base,chair,0,37,190,living_room,227,<
+959,window,table,151,33,0,kitchen,184,>
+960,bowl,ceiling recessed light-light source,0,0,320,kitchen,320,<
+961,railing,ceiling,27,39,122,living_room,188,<
+962,pillow,bed-headboard,0,656,524,bedroom,1180,"=,<"
+963,table lamp,arm-inside arm,404,16,0,living_room,420,>
+964,window-upper sash,cabinet-door,47,65,10,kitchen,122,">,="
+965,television,books,80,36,87,living_room,203,">,<"
+966,button panel-dial,cabinet-top,0,0,248,kitchen,248,<
+967,chest of drawers-drawer,cabinets-door,0,14,128,kitchen,142,<
+968,cabinet-door,plate,479,162,465,kitchen,1106,">,<"
+969,wall,stool-leg,141,0,0,kitchen,141,>
+970,sofa-back pillow,floor lamp-shade,0,0,229,living_room,229,<
+971,sofa-seat cushion,carpet,236,110,16,living_room,362,">,="
+972,table lamp-base,bed-leg,134,0,0,bedroom,134,>
+973,outlet,door-hinge,29,0,87,kitchen,116,<
+974,coffee maker,ceiling recessed light,0,0,262,kitchen,262,<
+975,wall,sofa-skirt,175,0,0,living_room,175,>
+976,towel,soap dish,48,15,39,bathroom,102,">,<"
+977,plant,cabinet-top,42,29,118,kitchen,189,<
+978,cabinet-drawer,bowl,49,24,338,kitchen,411,<
+979,ceiling,speaker,135,0,0,living_room,135,>
+980,towel,window,0,70,291,bathroom,361,<
+981,table lamp-highlight,chest of drawers-drawer,67,17,17,bedroom,101,>
+982,armchair-seat cushion,cabinet,0,39,132,living_room,171,<
+983,door-knob,jar,396,18,14,bathroom,428,>
+984,sconce-highlight,sofa-seat cushion,121,0,0,living_room,121,>
+985,armchair-back,sofa-back pillow,21,125,40,living_room,186,=
+986,dishwasher,pot,0,0,108,kitchen,108,<
+987,range-button panel,door-pane,0,0,109,kitchen,109,<
+988,range-oven,ceiling recessed light,0,0,243,kitchen,243,<
+989,night table,box,25,52,49,bedroom,126,"=,<"
+990,ceiling recessed light,chandelier-shade,164,12,30,bathroom,206,>
+991,chest of drawers-drawer,button panel-dial,14,85,362,kitchen,461,<
+992,mirror,sink,626,0,0,bathroom,626,>
+993,armchair-seat cushion,table lamp-column,0,0,123,living_room,123,<
+994,cabinets-drawer,door-muntin,0,0,108,kitchen,108,<
+995,drawer-knob,sink-faucet,20,22,177,bathroom,219,<
+996,window-sash,cabinet,15,96,51,bathroom,162,"=,<"
+997,towel,soap,55,24,50,bathroom,129,">,<"
+998,door-handle,stove-burner,383,47,237,kitchen,667,">,<"
+999,cushion,shelves-shelf,13,13,455,living_room,481,<
+1000,pillow,armchair-leg,120,0,0,bedroom,120,>
+1001,cabinet,microwave-screen,61,14,56,kitchen,131,">,<"
+1002,lower sash-stile,upper sash-pane,0,15,88,kitchen,103,<
+1003,shower screen,floor,143,0,0,bathroom,143,>
+1004,door-knob,kitchen island-drawer,119,18,61,kitchen,198,">,<"
+1005,ceiling fan-blade,cabinet,92,15,0,kitchen,107,>
+1006,chair,kettle,18,31,62,kitchen,111,"=,<"
+1007,sink-faucet,plate,43,21,79,kitchen,143,">,<"
+1008,candle holder,flowers,61,50,12,kitchen,123,">,="
+1009,outlet,window,0,53,50,bathroom,103,"=,<"
+1010,pot,figurine,67,11,29,kitchen,107,">,<"
+1011,cabinet,microwave-button panel,146,44,118,kitchen,308,">,<"
+1012,sofa-back pillow,books,115,49,305,living_room,469,<
+1013,sconce-shade,sink-faucet,128,0,0,bathroom,128,>
+1014,work surface,rug,123,0,0,kitchen,123,>
+1015,door-hinge,work surface,125,0,38,kitchen,163,>
+1016,toilet-lid,mirror,0,0,167,bathroom,167,<
+1017,oven-door,wall,0,61,487,kitchen,548,<
+1018,back-rail,drawer-knob,47,0,55,kitchen,102,">,<"
+1019,arm-inside arm,armchair-arm,154,653,171,living_room,978,=
+1020,armchair-back,books,34,20,76,living_room,130,">,<"
+1021,ceiling,cabinets-door,140,12,0,kitchen,152,>
+1022,carpet,sofa-back pillow,0,19,288,living_room,307,<
+1023,armchair-leg,cabinet,0,19,136,living_room,155,<
+1024,chandelier-shade,sofa-arm,132,0,0,living_room,132,>
+1025,armchair-back pillow,side table,84,68,0,living_room,152,">,="
+1026,tray,drawer-handle,139,0,0,kitchen,139,>
+1027,floor lamp,fireplace,18,89,0,living_room,107,=
+1028,sofa-seat cushion,door-pane,0,18,332,living_room,350,<
+1029,door-pane,cabinet-drawer,1376,13,28,kitchen,1417,>
+1030,window-rail,cushion,138,0,0,living_room,138,>
+1031,ceiling fan-blade,books,327,0,0,living_room,327,>
+1032,cushion,music system,29,20,81,living_room,130,<
+1033,extractor hood,work surface,359,0,0,kitchen,359,>
+1034,arm-inside arm,arm-arm panel,129,258,23,living_room,410,">,="
+1035,refrigerator-door,ceiling recessed light-light source,0,11,235,kitchen,246,<
+1036,picture,pendant lamp,0,10,157,kitchen,167,<
+1037,wall,desk,73,32,0,living_room,105,">,="
+1038,window,door-handle,80,348,103,bathroom,531,=
+1039,cabinet,microwave,737,331,735,kitchen,1803,">,<"
+1040,armchair-leg,sofa-leg,49,19,39,living_room,107,">,<"
+1041,box,door-knob,127,0,106,kitchen,233,">,<"
+1042,ceiling spotlight-shade,door-handle,120,0,0,kitchen,120,>
+1043,stove-burner,oven-door,140,0,0,kitchen,140,>
+1044,fireplace,shelves,0,87,24,living_room,111,=
+1045,curtain,sofa-skirt,109,0,0,living_room,109,>
+1046,pendant lamp-canopy,door-handle,205,0,0,kitchen,205,>
+1047,door-knob,stool,105,21,0,kitchen,126,>
+1048,flowers,bowl,89,10,32,kitchen,131,>
+1049,floor lamp-shade,armchair-arm,145,0,0,living_room,145,>
+1050,side table,table lamp-base,43,222,166,living_room,431,"=,<"
+1051,door,cabinet,148,77,11,bathroom,236,">,="
+1052,sink,sink-tap,10,49,80,bathroom,139,"=,<"
+1053,cabinet-door,button panel-buttons,153,24,47,kitchen,224,>
+1054,cabinet-top,sink,181,0,0,kitchen,181,>
+1055,cushion,clock,129,21,198,living_room,348,">,<"
+1056,button panel-dial,microwave-door,0,0,137,kitchen,137,<
+1057,sofa-seat base,arm-outside arm,21,146,42,living_room,209,=
+1058,wall,night table,18,337,29,living_room,384,=
+1059,floor,ceiling,0,0,351,bathroom,351,<
+1060,sofa,figurine,37,58,129,living_room,224,"=,<"
+1061,cabinet,dish rack,62,10,44,kitchen,116,">,<"
+1062,ottoman,cushion,24,97,276,living_room,397,<
+1063,cabinet-door,face-hand,39,81,140,kitchen,260,"=,<"
+1064,stool,ceiling recessed light-light source,0,0,130,kitchen,130,<
+1065,oven,pot,16,35,65,kitchen,116,"=,<"
+1066,floor,toilet paper,0,11,154,bathroom,165,<
+1067,floor lamp-highlight,curtain,22,80,82,living_room,184,"=,<"
+1068,floor,microwave,0,0,269,kitchen,269,<
+1069,sofa-seat cushion,pendant lamp,0,0,119,living_room,119,<
+1070,chest of drawers,ceiling recessed light,0,0,274,kitchen,274,<
+1071,vase,picture-frame,23,12,73,living_room,108,<
+1072,arm-arm panel,curtain,0,0,190,living_room,190,<
+1073,cabinet-drawer,sofa,11,55,37,bathroom,103,"=,<"
+1074,ceiling recessed light,countertop,111,0,0,bathroom,111,>
+1075,window-sash,sash-rail,84,15,12,bathroom,111,>
+1076,ceiling,chandelier-shade,75,20,38,bathroom,133,">,<"
+1077,table lamp-column,chair,25,286,70,kitchen,381,=
+1078,refrigerator-door,cabinet-door,220,379,897,kitchen,1496,<
+1079,arm-arm panel,picture,0,0,313,living_room,313,<
+1080,picture,speaker,174,29,68,living_room,271,>
+1081,plate,mug-handle,24,13,129,kitchen,166,<
+1082,chest of drawers,ceiling,0,0,121,kitchen,121,<
+1083,outlet,pendant lamp-tube,0,0,122,kitchen,122,<
+1084,cabinet,pendant lamp-bulb,12,45,87,kitchen,144,"=,<"
+1085,books,ceiling recessed light,0,0,143,kitchen,143,<
+1086,sink,cabinet-drawer,349,58,23,bathroom,430,>
+1087,ceiling,oven,261,0,0,kitchen,261,>
+1088,chair,ceiling recessed light-light source,0,0,910,kitchen,910,<
+1089,cushion,light switch,10,15,193,living_room,218,<
+1090,night table-leg,night table-drawer,0,0,130,bedroom,130,<
+1091,stove,work surface,30,182,38,kitchen,250,=
+1092,microwave,outlet,202,56,16,kitchen,274,>
+1093,plant,mirror,48,22,53,bathroom,123,">,<"
+1094,sash-muntin,cabinet,145,30,0,kitchen,175,>
+1095,floor lamp,floor lamp-column,36,157,0,living_room,193,=
+1096,jar,cabinets-drawer,82,0,28,kitchen,110,>
+1097,armchair-arm,armchair-back,22,196,363,living_room,581,"=,<"
+1098,night table-drawer,table lamp-base,0,10,420,bedroom,430,<
+1099,range-button panel,drawer-knob,119,28,19,kitchen,166,>
+1100,pot,range,61,70,0,kitchen,131,">,="
+1101,sash-pane,cabinet-top,0,0,100,kitchen,100,<
+1102,toilet paper,wall,17,161,337,bathroom,515,"=,<"
+1103,chair,cushion,1066,21,27,kitchen,1114,>
+1104,microwave,refrigerator,14,155,0,kitchen,169,=
+1105,shelves,figurine,47,72,19,living_room,138,">,="
+1106,side table,vase,70,132,392,living_room,594,<
+1107,curtain,television,130,117,0,living_room,247,">,="
+1108,chest of drawers-skirt,cabinet,0,0,139,kitchen,139,<
+1109,work surface,wall,53,253,2609,kitchen,2915,<
+1110,dishwasher,ceiling recessed light-light source,0,0,222,kitchen,222,<
+1111,cabinet,ceiling fan,0,12,88,kitchen,100,<
+1112,ceiling,window,170,51,56,bathroom,277,>
+1113,cistern-tank lid,wall,0,53,49,bathroom,102,"=,<"
+1114,bed-headboard,bed-leg,306,0,0,bedroom,306,>
+1115,shelves,cabinet,15,97,47,bathroom,159,"=,<"
+1116,cabinet,mug-handle,94,18,79,kitchen,191,">,<"
+1117,coffee table,door,0,0,263,living_room,263,<
+1118,coffee table,armchair-seat cushion,12,62,54,living_room,128,"=,<"
+1119,floor lamp-shade,table lamp,52,66,11,living_room,129,">,="
+1120,arm-inside arm,chandelier-shade,0,0,119,living_room,119,<
+1121,range,ceiling,0,0,238,kitchen,238,<
+1122,curtain,vase,43,178,31,bathroom,252,=
+1123,wall,sconce-bulb,0,99,37,bathroom,136,=
+1124,armchair-back pillow,arm-inside arm,181,89,0,living_room,270,">,="
+1125,outlet,door-pane,0,0,315,kitchen,315,<
+1126,food,cabinets-door,44,0,83,kitchen,127,">,<"
+1127,table lamp-light source,dresser-drawer,183,0,0,bedroom,183,>
+1128,sofa-back pillow,railing,0,21,89,living_room,110,<
+1129,table lamp-column,table,125,58,16,living_room,199,">,="
+1130,button panel-dial,range-drawer,135,0,0,kitchen,135,>
+1131,curtain,ottoman,216,0,0,living_room,216,>
+1132,table,drawer-handle,47,40,15,kitchen,102,">,="
+1133,table lamp-highlight,table lamp-base,238,29,11,living_room,278,>
+1134,armchair,table lamp-column,0,249,261,living_room,510,"=,<"
+1135,armchair-seat cushion,armchair-back,0,37,180,living_room,217,<
+1136,ceiling,sofa-leg,259,0,0,living_room,259,>
+1137,sofa,mirror,0,0,148,living_room,148,<
+1138,curtain,ceiling,0,29,104,bathroom,133,<
+1139,door-muntin,window-pane,74,13,153,kitchen,240,">,<"
+1140,armchair-leg,books,0,10,241,living_room,251,<
+1141,wall,bulb,0,112,32,bathroom,144,=
+1142,drawer-knob,wardrobe-door,0,10,208,bedroom,218,<
+1143,side table,plant,26,110,10,kitchen,146,=
+1144,cabinets,drawer-knob,80,43,14,kitchen,137,">,="
+1145,cabinet,napkin,93,31,18,kitchen,142,>
+1146,ceiling recessed light,armchair-leg,331,0,0,living_room,331,>
+1147,cabinet,paper towels,179,22,135,kitchen,336,">,<"
+1148,soap dispenser,sink-faucet,83,47,10,bathroom,140,">,="
+1149,paper towels,wall,0,66,126,kitchen,192,"=,<"
+1150,flowers,armchair-arm,194,19,0,living_room,213,>
+1151,toilet-lid,curtain,0,0,119,bathroom,119,<
+1152,soap,sink,50,45,13,bathroom,108,">,="
+1153,floor,curtain,0,10,258,bathroom,268,<
+1154,bottle,wall,56,314,392,bathroom,762,"=,<"
+1155,candle holder,sofa-back pillow,169,117,57,living_room,343,">,="
+1156,fireplace,sofa,60,159,0,living_room,219,=
+1157,armchair-back pillow,floor,96,53,0,living_room,149,">,="
+1158,torchiere lamp,cushion,137,10,0,living_room,147,>
+1159,double door,armchair,79,53,0,living_room,132,">,="
+1160,door-muntin,armchair-arm,174,0,0,living_room,174,>
+1161,sash-pane,drawer-knob,312,0,0,kitchen,312,>
+1162,door-pane,picture,81,31,23,kitchen,135,>
+1163,pillow,picture,127,110,49,living_room,286,">,="
+1164,ceiling recessed light,window-pane,79,19,10,kitchen,108,>
+1165,floor lamp-shade,table lamp-shade,48,54,21,living_room,123,">,="
+1166,dresser-drawer,picture,13,21,550,bedroom,584,<
+1167,wall,back-spindle,186,21,0,kitchen,207,>
+1168,ceiling fan-blade,arm-inside arm,130,0,0,living_room,130,>
+1169,coffee table,book,17,95,34,living_room,146,=
+1170,vase,cabinet-door,78,96,13,bathroom,187,">,="
+1171,window,door-pane,82,292,108,kitchen,482,=
+1172,table lamp,wall,14,28,71,bathroom,113,<
+1173,door-pane,window-pane,158,30,33,kitchen,221,>
+1174,button panel-dial,ceiling recessed light,0,0,600,kitchen,600,<
+1175,floor,door,0,36,255,bathroom,291,<
+1176,wall,cabinet-door,837,216,34,bathroom,1087,>
+1177,picture,wall,42,440,89,bathroom,571,=
+1178,jar,vase,23,13,79,bathroom,115,<
+1179,sink-faucet,drawer-handle,113,35,25,bathroom,173,>
+1180,vase,sofa-arm,252,121,47,living_room,420,">,="
+1181,flowers,chandelier-light source,0,0,118,living_room,118,<
+1182,drawer-knob,bed-headboard,0,32,433,bedroom,465,<
+1183,cabinet-skirt,cabinet-drawer,29,0,238,kitchen,267,<
+1184,pendant lamp,pot,193,0,0,kitchen,193,>
+1185,ottoman,chair,0,37,99,living_room,136,<
+1186,chandelier,cushion,224,0,0,living_room,224,>
+1187,bed-leg,chest of drawers-drawer,0,0,155,bedroom,155,<
+1188,shelves-shelf,door-pane,21,43,84,kitchen,148,"=,<"
+1189,extractor hood,chest of drawers-drawer,140,0,0,kitchen,140,>
+1190,vase,table lamp-column,159,75,162,living_room,396,">,<"
+1191,picture,shelves,11,25,106,kitchen,142,<
+1192,candle holder,arm-inside arm,130,51,15,living_room,196,>
+1193,table lamp-base,bed-headboard,0,31,307,bedroom,338,<
+1194,button panel-screen,door-knob,92,0,219,kitchen,311,<
+1195,door-pane,curtain,17,76,40,kitchen,133,"=,<"
+1196,door-knob,back-rail,186,15,19,kitchen,220,>
+1197,door-handle,pot,340,51,26,bathroom,417,>
+1198,cabinet-top,oven-door,120,0,0,kitchen,120,>
+1199,table lamp-highlight,table lamp-column,200,193,48,living_room,441,">,="
+1200,bed,table lamp-shade,0,300,15,living_room,315,=
+1201,window,pendant lamp,0,141,14,bathroom,155,=
+1202,plant,candle holder,13,122,179,bathroom,314,"=,<"
+1203,pitcher,ceiling recessed light,0,0,120,kitchen,120,<
+1204,range-button panel,oven-door,87,17,0,kitchen,104,>
+1205,window,sofa-seat cushion,1590,0,0,living_room,1590,>
+1206,dresser-drawer,table lamp-base,71,33,93,bedroom,197,">,<"
+1207,window,arm-outside arm,503,0,0,living_room,503,>
+1208,ceiling recessed light-light source,coffee table-top,103,0,0,living_room,103,>
+1209,door-pane,table lamp,10,70,28,kitchen,108,=
+1210,window,coffee table-leg,401,0,0,living_room,401,>
+1211,pendant lamp-shade,cabinet,911,667,208,kitchen,1786,">,="
+1212,stove-burner,cabinet-door,412,62,1027,kitchen,1501,<
+1213,books,table lamp-light source,54,13,113,living_room,180,">,<"
+1214,lower sash-pane,cushion,125,11,0,living_room,136,>
+1215,oven,window,0,64,161,kitchen,225,<
+1216,pendant lamp-tube,ceiling recessed light,135,99,41,kitchen,275,">,="
+1217,floor,sofa-arm,35,334,261,living_room,630,"=,<"
+1218,door-handle,towel,50,18,125,bathroom,193,<
+1219,glass,cabinet,50,10,410,bathroom,470,<
+1220,sink-bowl,cabinet-door,99,12,210,kitchen,321,">,<"
+1221,mirror,plant,53,22,48,bathroom,123,">,<"
+1222,pillow,picture-frame,0,11,309,bedroom,320,<
+1223,armchair-leg,table lamp,0,0,215,living_room,215,<
+1224,cabinet-door,door,253,41,99,bathroom,393,>
+1225,door,table lamp-highlight,39,91,11,living_room,141,=
+1226,window-pane,back-spindle,185,0,0,kitchen,185,>
+1227,pendant lamp-tube,outlet,122,0,0,kitchen,122,>
+1228,basket,button panel-dial,86,0,23,kitchen,109,>
+1229,drawer-knob,tray,0,0,118,kitchen,118,<
+1230,pendant lamp-shade,chair,438,0,0,kitchen,438,>
+1231,pendant lamp-shade,pendant lamp-cord,0,18,334,kitchen,352,<
+1232,sofa-skirt,sofa-arm,0,34,115,living_room,149,<
+1233,candle holder,table lamp-column,126,38,122,living_room,286,">,<"
+1234,bottle,bathtub,127,30,0,bathroom,157,>
+1235,mirror,cabinet,359,63,13,bathroom,435,>
+1236,bottle,cabinet-front,29,13,94,kitchen,136,<
+1237,sofa-arm,box,46,17,39,living_room,102,">,<"
+1238,door-knob,baseboard,139,0,0,kitchen,139,>
+1239,sofa-seat cushion,books,46,48,385,living_room,479,<
+1240,door-pane,armchair-arm,423,23,0,living_room,446,>
+1241,armchair-arm,table lamp,0,14,434,living_room,448,<
+1242,door-pane,sink,236,0,26,kitchen,262,>
+1243,door,refrigerator-door,19,81,0,kitchen,100,=
+1244,stool-leg,drawer-handle,0,21,116,kitchen,137,<
+1245,armchair-seat cushion,window-pane,0,0,203,living_room,203,<
+1246,window,chair-back,98,10,0,kitchen,108,>
+1247,wall,step-riser,105,0,0,living_room,105,>
+1248,window-pane,sofa-arm,625,0,0,living_room,625,>
+1249,picture,arm-arm support,176,0,0,living_room,176,>
+1250,door-knob,sash-rail,34,0,71,kitchen,105,">,<"
+1251,sofa,book,87,44,16,living_room,147,">,="
+1252,cabinet,shower screen,0,30,87,bathroom,117,<
+1253,microwave,refrigerator-door,31,85,10,kitchen,126,=
+1254,table lamp,armchair-seat base,104,0,0,living_room,104,>
+1255,arm-inside arm,flowers,0,34,156,living_room,190,<
+1256,jar,chest of drawers-drawer,101,0,0,kitchen,101,>
+1257,books,armchair-seat base,148,11,0,living_room,159,>
+1258,ceiling recessed light-aperture,drawer-knob,139,0,0,kitchen,139,>
+1259,outlet,door-handle,41,111,663,bathroom,815,<
+1260,range-oven,ceiling,0,0,165,kitchen,165,<
+1261,window,floor lamp-highlight,66,96,18,living_room,180,">,="
+1262,kitchen utensils,cabinet,49,0,57,kitchen,106,">,<"
+1263,cabinets-door,basket,54,0,69,kitchen,123,">,<"
+1264,refrigerator,bottle,29,112,30,kitchen,171,=
+1265,table lamp-light source,cushion,676,87,0,living_room,763,>
+1266,chest of drawers-drawer,cabinet-front,0,38,174,kitchen,212,<
+1267,coffee table-leg,armchair-arm,0,44,228,living_room,272,<
+1268,cabinet-front,cabinet-top,0,124,235,kitchen,359,"=,<"
+1269,picture,books,52,303,16,kitchen,371,=
+1270,chest of drawers-drawer,bed-leg,155,0,0,bedroom,155,>
+1271,coffee table-apron,coffee table-leg,60,112,0,living_room,172,">,="
+1272,picture,remote control,98,12,11,living_room,121,>
+1273,microwave-screen,cabinet-door,53,10,118,kitchen,181,">,<"
+1274,kettle,cabinet-door,175,0,316,kitchen,491,">,<"
+1275,ceiling recessed light,armchair-back pillow,240,0,0,living_room,240,>
+1276,sink-faucet,range,48,90,0,kitchen,138,">,="
+1277,stove-dial,door-knob,65,0,215,kitchen,280,<
+1278,coffee table-leg,floor,0,174,74,living_room,248,=
+1279,plant,work surface,486,26,16,kitchen,528,>
+1280,door-knob,mug,113,11,84,kitchen,208,">,<"
+1281,bed,pillow,57,816,0,bedroom,873,=
+1282,ceiling,plate,207,0,0,kitchen,207,>
+1283,stove-burner,outlet,0,0,177,kitchen,177,<
+1284,sink,button panel-dial,130,32,124,kitchen,286,">,<"
+1285,arm-outside arm,sofa-leg,156,40,0,living_room,196,>
+1286,cushion,table lamp,23,285,1678,living_room,1986,<
+1287,table lamp-column,coffee table-leg,146,0,0,living_room,146,>
+1288,microwave,button panel-dial,196,18,0,kitchen,214,>
+1289,sofa-back,sofa-arm,109,148,19,living_room,276,">,="
+1290,sofa-leg,sofa-arm,0,28,471,living_room,499,<
+1291,toilet-lid,door,0,29,82,bathroom,111,<
+1292,armchair-leg,table lamp-shade,0,0,178,living_room,178,<
+1293,floor,coffee table,71,507,30,living_room,608,=
+1294,armchair-back pillow,cabinet,0,75,57,living_room,132,"=,<"
+1295,armchair-leg,cushion,0,34,677,living_room,711,<
+1296,telephone,door-handle,41,20,45,kitchen,106,">,<"
+1297,chandelier-light source,carpet,104,0,0,living_room,104,>
+1298,sofa-back pillow,coffee table-top,187,17,0,living_room,204,>
+1299,cabinet-top,picture,67,11,34,kitchen,112,">,<"
+1300,door-pane,refrigerator-door,116,81,32,kitchen,229,">,="
+1301,cabinet-door,beam,0,10,92,kitchen,102,<
+1302,floor lamp,side table,161,17,0,living_room,178,>
+1303,wall,book,124,22,14,kitchen,160,>
+1304,ceiling recessed light-highlight,work surface,182,0,0,kitchen,182,>
+1305,sofa-seat cushion,floor lamp-shade,0,0,226,living_room,226,<
+1306,picture,clock,12,78,22,kitchen,112,=
+1307,ceiling,oven-door,152,0,0,kitchen,152,>
+1308,cabinets,floor,130,21,0,kitchen,151,>
+1309,figurine,table lamp-shade,72,31,106,living_room,209,">,<"
+1310,sink-faucet,refrigerator,0,115,35,kitchen,150,=
+1311,button panel-dial,chest of drawers,64,86,0,kitchen,150,">,="
+1312,door-handle,oven-button panel,126,37,104,kitchen,267,">,<"
+1313,wall,floor lamp-tube,86,60,0,living_room,146,">,="
+1314,side table,door-muntin,0,0,103,living_room,103,<
+1315,bottle,mirror,0,20,178,bathroom,198,<
+1316,chair-stretcher,door-knob,0,0,185,kitchen,185,<
+1317,cabinet-door,stool-stretcher,187,0,0,kitchen,187,>
+1318,torchiere lamp-column,wall,0,82,22,living_room,104,=
+1319,cabinet-drawer,microwave,0,0,341,kitchen,341,<
+1320,vase,cushion,15,386,377,kitchen,778,"=,<"
+1321,cabinet-door,chair-stretcher,233,13,0,kitchen,246,>
+1322,railing,ceiling recessed light-light source,26,17,85,living_room,128,<
+1323,wall,range-stove,547,56,0,kitchen,603,>
+1324,range-button panel,outlet,16,39,72,kitchen,127,"=,<"
+1325,work surface,curtain,0,0,200,kitchen,200,<
+1326,door-handle,ceiling spotlight,0,0,179,kitchen,179,<
+1327,bed-footboard,curtain,0,20,140,bedroom,160,<
+1328,curtain,plant pot,117,32,0,living_room,149,>
+1329,chair-leg,arm-inside arm,17,49,70,living_room,136,"=,<"
+1330,oven,chest of drawers-drawer,94,52,0,kitchen,146,">,="
+1331,soap,towel,50,24,55,bathroom,129,">,<"
+1332,pot,oven,65,35,16,kitchen,116,">,="
+1333,sofa,chair,23,39,194,kitchen,256,<
+1334,refrigerator,drawer-handle,187,64,0,kitchen,251,>
+1335,sofa-back,sofa,0,205,30,living_room,235,=
+1336,pendant lamp,sofa-seat cushion,119,0,0,living_room,119,>
+1337,books,table,12,54,38,kitchen,104,"=,<"
+1338,floor,button panel-dial,0,19,387,kitchen,406,<
+1339,door-knob,flowers,213,51,23,bathroom,287,>
+1340,outlet,cabinet-door,93,47,17,bathroom,157,">,="
+1341,sofa-leg,sofa-seat base,12,61,198,living_room,271,<
+1342,bed-headboard,table lamp-base,307,31,0,bedroom,338,>
+1343,sofa-seat cushion,figurine,0,25,88,living_room,113,<
+1344,arm-outside arm,vase,0,36,156,living_room,192,<
+1345,arm-inside arm,armchair-seat cushion,165,213,36,living_room,414,">,="
+1346,floor lamp-highlight,sofa-seat cushion,163,0,0,living_room,163,>
+1347,cushion,chair-seat,98,37,22,living_room,157,>
+1348,armchair-back pillow,door-pane,0,17,137,living_room,154,<
+1349,table lamp-base,sofa,42,201,62,living_room,305,=
+1350,chair,pendant lamp-cord,0,0,184,kitchen,184,<
+1351,work surface,door-hinge,38,0,125,kitchen,163,<
+1352,armchair-arm,armchair-apron,136,10,0,living_room,146,>
+1353,drawer-handle,sconce,12,0,102,bathroom,114,<
+1354,shelves,sofa-seat cushion,164,0,0,living_room,164,>
+1355,window,candle holder,16,292,16,bathroom,324,=
+1356,pendant lamp,chair,485,0,0,kitchen,485,>
+1357,armchair-seat base,ceiling,0,0,170,living_room,170,<
+1358,wall,armchair-arm,1703,99,11,living_room,1813,>
+1359,clock,night table,136,105,29,bedroom,270,">,="
+1360,chair-stretcher,chest of drawers-drawer,0,0,144,kitchen,144,<
+1361,sink-faucet,cabinet-drawer,301,23,24,bathroom,348,>
+1362,extractor hood,door-handle,441,75,50,kitchen,566,>
+1363,ceiling recessed light,armchair-seat base,180,0,0,living_room,180,>
+1364,chair,sink-faucet,24,69,11,bathroom,104,=
+1365,cabinet-door,oven-door,766,293,70,kitchen,1129,>
+1366,arm-arm panel,wall,0,17,533,living_room,550,<
+1367,door-handle,sash-rail,65,0,166,kitchen,231,<
+1368,cushion,pot,47,37,157,living_room,241,<
+1369,sofa-seat cushion,table lamp-shade,0,0,591,living_room,591,<
+1370,sink,toilet-cistern,26,109,61,bathroom,196,"=,<"
+1371,picture,sink,146,0,0,bathroom,146,>
+1372,wall,dresser,226,125,0,bedroom,351,">,="
+1373,sofa-seat cushion,sofa-skirt,128,57,0,living_room,185,">,="
+1374,window,sink,285,0,0,bathroom,285,>
+1375,sofa-back pillow,armchair-leg,263,0,0,living_room,263,>
+1376,picture,table lamp-base,738,61,33,living_room,832,>
+1377,sconce-light source,cushion,273,0,0,living_room,273,>
+1378,bed-footboard,table lamp-shade,0,13,88,bedroom,101,<
+1379,countertop,toilet-lid,77,36,0,bathroom,113,">,="
+1380,pillow,bed,0,816,57,bedroom,873,=
+1381,light switch,cushion,193,15,10,living_room,218,>
+1382,curtain,sculpture,71,35,0,living_room,106,">,="
+1383,ceiling recessed light,knife set,161,0,0,kitchen,161,>
+1384,sofa-leg,chair,0,17,219,living_room,236,<
+1385,table lamp-highlight,sofa-arm,233,16,0,living_room,249,>
+1386,carpet,books,0,28,324,living_room,352,<
+1387,flowerpot,chest of drawers-drawer,84,14,23,kitchen,121,>
+1388,wall,plant,135,180,18,bathroom,333,">,="
+1389,sofa-leg,table lamp,0,0,169,living_room,169,<
+1390,kettle,work surface,110,43,0,kitchen,153,>
+1391,ceiling recessed light,refrigerator-door,386,11,0,kitchen,397,>
+1392,jar,cabinets-door,43,12,58,kitchen,113,">,<"
+1393,floor,arm-inside arm,35,293,205,living_room,533,"=,<"
+1394,chair,stove,14,37,65,kitchen,116,"=,<"
+1395,button panel-dial,door-window,189,0,36,kitchen,225,>
+1396,arm-outside arm,picture,0,0,593,living_room,593,<
+1397,ceiling,range-button panel,117,0,0,kitchen,117,>
+1398,night table-drawer,bed-footboard,18,107,48,bedroom,173,"=,<"
+1399,window,range,213,11,0,kitchen,224,>
+1400,sink,mirror,0,0,626,bathroom,626,<
+1401,door-handle,ceiling spotlight-highlight,0,0,101,kitchen,101,<
+1402,place mat,cabinet,0,25,86,kitchen,111,<
+1403,door-muntin,ceiling recessed light,42,11,503,kitchen,556,<
+1404,drawer-knob,kettle,0,0,117,kitchen,117,<
+1405,cabinet-door,curtain,75,14,81,bathroom,170,">,<"
+1406,door,pendant lamp-light source,0,66,35,kitchen,101,"=,<"
+1407,chest of drawers,window,0,18,131,kitchen,149,<
+1408,floor lamp-tube,picture,0,17,96,living_room,113,<
+1409,vase,book,198,18,22,living_room,238,>
+1410,chair,cabinet-front,0,46,100,kitchen,146,"=,<"
+1411,ceiling recessed light,chest of drawers-drawer,566,0,0,kitchen,566,>
+1412,door-hinge,drawer-handle,133,0,52,kitchen,185,>
+1413,plate,oven,62,16,22,kitchen,100,>
+1414,flowers,cushion,614,243,84,living_room,941,>
+1415,button panel-dial,cabinet,451,578,1402,kitchen,2431,<
+1416,ottoman,armchair-arm,10,63,67,living_room,140,"=,<"
+1417,candle holder,window-pane,18,32,121,living_room,171,<
+1418,arm-arm panel,arm-inside arm,23,258,129,living_room,410,"=,<"
+1419,figurine,coffee table,145,34,0,living_room,179,>
+1420,chair,pendant lamp,0,0,485,kitchen,485,<
+1421,cabinet,lower sash-pane,82,0,69,kitchen,151,">,<"
+1422,cabinet-drawer,sink-tap,0,10,100,bathroom,110,<
+1423,sink,soap dispenser,0,22,129,bathroom,151,<
+1424,arm-inside arm,sash-pane,0,0,102,living_room,102,<
+1425,range,drawer-knob,117,93,0,kitchen,210,">,="
+1426,cabinet,railing,10,42,56,kitchen,108,"=,<"
+1427,cabinet,soap dispenser,20,18,68,bathroom,106,<
+1428,sofa,side table,244,511,18,living_room,773,">,="
+1429,chair-leg,chair-apron,17,136,186,kitchen,339,"=,<"
+1430,range-button panel,range-oven,142,40,0,kitchen,182,>
+1431,door-handle,can,72,0,44,kitchen,116,">,<"
+1432,window,cabinets-door,46,79,0,kitchen,125,">,="
+1433,table lamp,picture,375,14,29,kitchen,418,>
+1434,cabinet,telephone,130,42,104,kitchen,276,">,<"
+1435,side table,table lamp-light source,0,0,301,living_room,301,<
+1436,armchair-seat base,armchair-back pillow,0,0,139,living_room,139,<
+1437,sofa,floor lamp-shade,0,0,211,living_room,211,<
+1438,cabinet-drawer,fruit,52,16,72,kitchen,140,">,<"
+1439,bowl,cabinet-drawer,338,24,49,kitchen,411,>
+1440,work surface,stove-dial,91,34,0,kitchen,125,>
+1441,flowerpot,floor,37,101,17,bathroom,155,=
+1442,sofa,window-pane,0,35,282,living_room,317,<
+1443,table lamp-highlight,sofa-seat cushion,308,0,0,living_room,308,>
+1444,bed,vase,14,102,32,bedroom,148,=
+1445,blind,ceiling recessed light,29,21,84,kitchen,134,<
+1446,table lamp-column,clock,155,20,61,living_room,236,>
+1447,ceiling recessed light,plant pot,117,0,0,kitchen,117,>
+1448,cabinets-door,ceiling,0,12,140,kitchen,152,<
+1449,cabinets-door,sink,85,0,55,kitchen,140,">,<"
+1450,table lamp-base,sofa-arm,154,75,30,living_room,259,">,="
+1451,chest of drawers-drawer,bed,17,103,34,bedroom,154,=
+1452,flowerpot,work surface,116,54,16,kitchen,186,">,="
+1453,armchair-leg,window-pane,0,0,188,living_room,188,<
+1454,refrigerator-door,door-pane,32,81,116,kitchen,229,"=,<"
+1455,bottle,mug,28,17,84,kitchen,129,<
+1456,bed-headboard,bed-footboard,117,29,0,bedroom,146,>
+1457,sofa-arm,chair-leg,111,84,34,living_room,229,">,="
+1458,side table,table,15,77,95,living_room,187,"=,<"

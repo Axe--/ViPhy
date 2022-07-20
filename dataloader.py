@@ -71,22 +71,26 @@ class ViPhyDataset(Dataset):
                 return dim
 
     @staticmethod
-    def get_model_type(name):
+    def get_model_type(name: str) -> str:
         if 'bert' in name:
-            return 'MLM'
+            _type = 'MLM'
         elif 'vilt' in name:
-            return 'MLM'
+            _type = 'MLM'
         elif 'clip' in name:
-            return 'MLM'
+            _type = 'MLM'
+        elif 'flava' in name:
+            _type = 'MLM'
         elif 'gpt' in name:
-            return 'CLM'
+            _type = 'CLM'
         elif 'opt' in name:
-            return 'CLM'
+            _type = 'CLM'
         elif 'qa' in name:
-            return 'QA'
+            _type = 'QA'
         else:
             raise ValueError()
-    
+
+        return _type
+
     def _get_labels(self):
         label_set = []
         for d in self.data:
@@ -207,7 +211,7 @@ class ViPhyDataset(Dataset):
 
         # Question-Answer
         else:
-            template = "what is the size of {} in comparison to {}? \n"
+            template = "how is the size of {} in comparison to {}? \n"
             # relation choices
             idx = 'a'
             for _, choice in sign2text.items():
@@ -221,11 +225,6 @@ class ViPhyDataset(Dataset):
             prompt = template.format(rel['o1'], rel['o2'])
 
             labels = rel['typical']
-
-            # skip if both `>,<`
-            if ',' in labels:
-                continue
-
             for sign, text in sign2text.items():
                 labels = labels.replace(sign, text)
 

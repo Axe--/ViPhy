@@ -182,9 +182,17 @@ def dataset_split(data, train_ratio=0.2, dev_ratio=0.1, test_ratio=0.7):
     return data_train, data_val, data_test
 
 
+def _drop_all_label_samples(data, _dim: str):
+    n = 2 if _dim == 'size' else 3
+
+    data = [d for d in data if
+            len(d['typical'].split(',')) < n]
+    return data
+
+
 if __name__ == '__main__':
     # Type
-    dim = 'size'
+    dim = 'spatial'
 
     # Read
     if dim == 'color':
@@ -192,8 +200,10 @@ if __name__ == '__main__':
         inp = [(k, v) for k, v in inp.items()]
     elif dim == 'spatial':
         inp = read_csv('./results/spatial.csv')
+        inp = _drop_all_label_samples(inp, dim)
     else:
         inp = read_csv('./results/size.csv')
+        inp = _drop_all_label_samples(inp, dim)
 
     # Split
     train, val, test = dataset_split(inp)
@@ -212,3 +222,5 @@ if __name__ == '__main__':
         save_csv(train, './dataset/size/train.csv')
         save_csv(val, './dataset/size/val.csv')
         save_csv(test, './dataset/size/test.csv')
+
+    print(len(train), len(val), len(test))

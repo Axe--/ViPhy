@@ -1,7 +1,7 @@
 #!/bin/bash
 
 eval() {
-  python3 eval.py --task "$1" --model "$2" --eval "$3" --gpu "$4" --top_k "$5"
+  python3 eval_zs.py --task "$1" --model "$2" --eval "$3" --gpu "$4" --top_k "$5"
 }
 
 # Args

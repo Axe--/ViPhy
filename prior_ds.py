@@ -96,7 +96,7 @@ def eval_coda():
     print('#Object:', n_objs)
 
 
-def eval_oLMpics():
+def eval_olmpics():
     """
     Reports the alignment (*accuracy) of
     relative object size on ViPhy dataset.
@@ -158,5 +158,5 @@ def eval_oLMpics():
 
 if __name__ == '__main__':
     # eval_coda()
-    # eval_oLMpics()
+    eval_olmpics()
     ...
