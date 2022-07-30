@@ -66,25 +66,27 @@ def eval_coda():
     dataset = train + val + test
 
     # CoDa Dataset
-    coda_model = {}
+    coda_typical = {}
+    coda_prob = {}
 
     for d in dataset:
         obj = d['ngram']
-        dist = d['label']
+        prob = d['label']
         # distribution
-        col_dist = {col: prob for col, prob in zip(color_set, dist)}
+        col_dist = {col: prob for col, prob in zip(color_set, prob)}
 
         # typical colors
         colors = _get_typical(col_dist)
 
-        coda_model[obj] = colors
+        coda_typical[obj] = colors
+        coda_prob[obj] = col_dist
 
     # ViPhy Color dataset
     viphy = read_json('./results/colors.json')
 
     # Relaxed Accuracy
     is_correct = []
-    for obj, pred in coda_model.items():
+    for obj, pred in coda_typical.items():
         if obj in viphy:
             true = viphy[obj]
             is_correct += [1 if set(pred) & set(true) else 0]
@@ -92,8 +94,21 @@ def eval_coda():
     n_objs = len(is_correct)
     acc = sum(is_correct) / n_objs
 
-    print('Accuracy**:', acc)
-    print('#Object:', n_objs)
+    # Confidence
+    conf = []
+    for obj, prob in coda_prob.items():
+        if obj in viphy:
+            true = viphy[obj]
+
+            score = sum(p for c, p in prob.items() if c in true)
+
+            conf += [score]
+
+    conf = sum(conf) / n_objs
+
+    print('r-Accuracy:', acc)
+    print('Confidence:', conf)
+    print('#Objects:', n_objs)
 
 
 def eval_olmpics():
@@ -157,6 +172,6 @@ def eval_olmpics():
 
 
 if __name__ == '__main__':
-    # eval_coda()
-    eval_olmpics()
+    eval_coda()
+    # eval_olmpics()
     ...

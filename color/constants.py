@@ -26,7 +26,7 @@ ALL_COLORS = COLOR_SET + ['grey', 'violet', 'gold', 'golden', 'blond', 'blonde',
 
 # Ignore objects (color)
 IGNORE_OBJECTS = ['person', 'man', 'woman', 'lady', 'boy', 'girl', 'child', 'adult', 'someone', 'part', 'piece', 'edge',
-                  'side', 'background', 'scene', 'distance', 'shadow', 'air', 'pair', 'color', 'colour', 'thing',
+                  'side', 'background', 'scene', 'distance', 'shadow', 'air', 'pair', 'color', 'colour', 'thing', 'guy',
                   'word', 'room', 'silver']
 
 IGNORE_OBJECTS += ['door refrigerator', 'door car']
@@ -37,7 +37,7 @@ DROP_QUALIFIERS = ['color', 'colour', 'word', 'gren', 'blu', 'whtie', 'otuside',
                    'center', 'side', 'front', 'top', 'bottom', 'right', 'left', 'corner',
                    'piece', 'style', 'background', '']  # brass, chrome, metal
 
-DROP_QUALIFIERS += ['dell', '']  # nike
+DROP_QUALIFIERS += ['dell', 'mac']  # nike
 
 
 # Ignore subtypes of objects (color)

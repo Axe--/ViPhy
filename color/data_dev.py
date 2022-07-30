@@ -320,8 +320,9 @@ class ColorDataDev:
         :return: object names
 
         TODO: Include Part-based parsing:
-        `box OF matches` --> `match box`
-        `car HAS door` --> `car door`
+        "box OF matches" --> match box
+        "car HAS door" --> car door
+
         See `self.parts_from_pos_tags()`
         """
         def _singular(_word: str) -> str:

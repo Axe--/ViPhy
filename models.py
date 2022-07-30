@@ -33,8 +33,8 @@ from transformers import DebertaTokenizer, DebertaPreTrainedModel
 from transformers import DebertaV2Tokenizer, DebertaV2ForMaskedLM
 from transformers import T5Tokenizer, T5ForConditionalGeneration as T5
 from transformers import GPT2Tokenizer, GPT2LMHeadModel, GPTNeoForCausalLM
-from transformers import VisualBertForPreTraining, ViltModel
 from transformers import CLIPTokenizerFast, CLIPTextModel, FlavaTextModel
+from transformers import VisualBertForPreTraining, ViltModel
 
 
 # DPT
@@ -160,12 +160,14 @@ class MaskedLM(nn.Module):
             print(f'Model successfully loaded from {path}\n')
 
     def _prepare_vilt(self, inputs):
-        """ Inserts dummy visual inputs for ViLT. """
-        B = len(inputs['input_ids'])
-        D = self.fc.in_features
-        P = 1
-        inputs['image_embeds'] = torch.zeros([B, P, D]).to(self.device)
-        inputs['pixel_mask'] = torch.zeros([B, P]).to(self.device)
+        """ Inserts dummy visual values for ViLT. """
+        if 'pixel_values' not in inputs:
+            B = len(inputs['input_ids'])
+            P, D = (1, self.fc.in_features)
+
+            inputs['image_embeds'] = torch.zeros([B, P, D]).to(self.device)
+            inputs['pixel_mask'] = torch.zeros([B, P]).to(self.device)
+
         return inputs
 
     def forward(self, inputs: Dict[str, Tensor], labels: Tensor = None) -> Tensor:
@@ -975,9 +977,11 @@ if __name__ == '__main__':
 
     inp = dict(input_ids=torch.randint(100, [_B, _L]).to(d),
                attention_mask=torch.ones([_B, _L]).to(d))
-    lbl = torch.randint(3, [_B])
+    lbl = torch.randint(_C, [_B])
 
-    m = MaskedLM('openai/clip-vit-base-patch32', _C, device=d)
+    # inp['pixel_values'] = torch.rand([_B, 3, 384, 384]).to(d)
+
+    m = MaskedLM('dandelin/vilt-b32-mlm', _C, device=d)
 
     # def _to_tensor(data: dict):
     #     return {k: torch.tensor(v) for k, v in data.items()}

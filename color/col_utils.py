@@ -51,7 +51,7 @@ def _to_primary_colors(raw_color_dist: Dict[str, int]) -> Dict[str, int]:
     return color2freq
 
 
-def _cluster_objects_by_color_dist(obj_color_dist, k: int = 4):
+def _cluster_by_color(obj_color_dist, k: int = 4):
     """
     Given object names & associated color distribution,
     clusters all objects based on entropy into `k` sets.
@@ -59,6 +59,7 @@ def _cluster_objects_by_color_dist(obj_color_dist, k: int = 4):
     :param obj_color_dist: object color distributions
     :param k: num of clusters
     """
+    # TODO: Object Overlap of UBTM as defined by `typical-fn()` vs `cluster_k=4`
     pass
 
 
@@ -96,7 +97,7 @@ def _object_typical_colors(obj_color_dists: Dict[str, Dict[str, float]], save_fp
 
         while not done:
             # filter colors
-            _color_dist = {c: p for c, p in _color_dist.items() if p > p_min}
+            _color_dist = {c: p for c, p in _color_dist.items() if p >= p_min}
 
             # re-normalize
             _color_dist = to_prob_dist(_color_dist)
@@ -169,7 +170,8 @@ if __name__ == '__main__':
 
     # Args
     show_viz = False
-    save = '../results/colors{}'
+    min_freq = 10
+    save = None     # '../results/colors{}'
 
     # Raw Colors
     raw_data = read_json('../data/colors_raw.json')
@@ -182,27 +184,24 @@ if __name__ == '__main__':
         color_dist = _to_primary_colors(raw_col)
         freqs = list(color_dist.values())
 
-        # Skip objects with no colors
-        if sum(freqs) == 0:
-            print(obj_name)
-            continue
+        # Objects above threshold
+        if sum(freqs) >= min_freq:
+            # Distribution
+            color_dist = to_prob_dist(color_dist)
 
-        # Distribution
-        color_dist = to_prob_dist(color_dist)
+            # Entropy
+            entropy = compute_entropy(freqs)
 
-        # Entropy
-        entropy = compute_entropy(freqs)
+            # Visualization
+            out = dict(object=obj_name,
+                       entropy=entropy,
+                       total=sum(freqs))
+            out = {**out, **color_dist}
 
-        # Visualization
-        out = dict(object=obj_name,
-                   entropy=entropy,
-                   total=sum(freqs))
-        out = {**out, **color_dist}
+            viz_data.append(out)
 
-        viz_data.append(out)
-
-        # Object-to-Color
-        obj_color_data[obj_name] = color_dist
+            # Object-to-Color
+            obj_color_data[obj_name] = color_dist
 
     # Sort by Entropy
     viz_data = sorted(viz_data, key=lambda x: x['entropy'])
@@ -212,12 +211,12 @@ if __name__ == '__main__':
 
     if save:
         # Typical Primary Colors
-        _object_typical_colors(obj_color_data,
-                               save.format('.json'))
+        save = save.format('.json')
+        _object_typical_colors(obj_color_data, save)
 
         # Primary Colors Frequency
-        # save = save.format('.csv')
-        # pd.DataFrame(viz_data).to_csv(save, sep=',', index=False)
+        save = save.replace('json', 'csv')
+        pd.DataFrame(viz_data).to_csv(save, sep=',', index=False)
 
     # Stacked Bar Plot
     if show_viz:

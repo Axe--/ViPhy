@@ -15,7 +15,7 @@ from torch.utils.data import DataLoader
 from torch.cuda.amp import GradScaler, autocast
 from typing import List, Dict, Union, Any
 from utils import str2bool as s2b
-from utils import print_log, csv2list, setup_logger
+from utils import print_log, csv2list, setup_logger, save_csv
 from dataloader import ViPhyDataset
 from models import MaskedLM, Text2TextLM, UnifiedQA
 
@@ -24,7 +24,7 @@ def main():
     parser = argparse.ArgumentParser(description='ViPhy: Train + Eval')
 
     # Experiment params
-    parser.add_argument('--mode',           type=str,   help='train or test mode', required=True, choices=['train', 'eval'])
+    parser.add_argument('--mode',           type=str,   help='train or test mode', choices=['train', 'eval'])
     parser.add_argument('--expt_dir',       type=str,   help='root directory to save model & summaries')
     parser.add_argument('--expt_name',      type=str,   help='expt_dir/expt_name: organize experiments')
     parser.add_argument('--run_name',       type=str,   help='expt_dir/expt_name/run_name: organize training runs')
@@ -43,7 +43,6 @@ def main():
     parser.add_argument('--val_size',       type=int,   help='validation set size for evaluating metrics', default=512)
     parser.add_argument('--log_interval',   type=int,   help='interval size for logging summaries', default=1000)
     parser.add_argument('--save_all',       type=s2b,   help='if unset, saves only best.pth', default='F')
-    parser.add_argument('--save_interval',  type=int,   help='save model after `n` weight update steps', default=2e5)
 
     # GPU params
     parser.add_argument('--gpus',           type=str,   help='GPU Device ID', default='0')
@@ -51,7 +50,7 @@ def main():
 
     # Misc params
     parser.add_argument('--num_workers',    type=int,   help='number of worker threads for Dataloader', default=1)
-    parser.add_argument('--preds_file',     type=str,   help='predictions on `Test`set (json)', default='pred.json')
+    parser.add_argument('--pred_csv',       type=str,   help='predictions on `Test`set (csv)')
 
     # Args
     args = parser.parse_args()
@@ -104,8 +103,8 @@ def main():
         # model = nn.DataParallel(model, device_ids)
 
         # Dataset
-        train_dataset = ViPhyDataset(args.data_dir, model.tokenizer, split='train')
-        val_dataset = ViPhyDataset(args.data_dir, model.tokenizer, split='val')
+        train_dataset = ViPhyDataset(args.data_dir, args.model, model.tokenizer, split='train')
+        val_dataset = ViPhyDataset(args.data_dir, args.model, model.tokenizer, split='val')
 
         # Dataloader
         loader_params = dict(batch_size=batch_size,
@@ -192,18 +191,6 @@ def main():
 
                     print_log(log_msg, log_file)
 
-                # Interval Save
-                if curr_step % args.save_interval == 0:
-                    filename = 'model_' + str(curr_step) + '.pth'
-                    path = osj(log_dir, filename)
-
-                    state_dict = dict(model_state_dict=model.state_dict(), curr_step=curr_step,
-                                      loss=loss.item(), epoch=epoch, val_acc=best_acc)
-                    torch.save(state_dict, path)
-
-                    log_msg = 'Saving the model at the {} step to directory:{}'.format(curr_step, log_dir)
-                    print_log(log_msg, log_file)
-
                 curr_step += 1
 
             # Validation set metrics
@@ -218,7 +205,7 @@ def main():
 
             print_log(log_msg, log_file)
 
-            # Save best
+            # Save Best
             if metrics['accuracy'] > best_acc:
                 best_acc = metrics['accuracy']
 
@@ -260,7 +247,7 @@ def main():
         model.eval()
 
         # Dataset
-        dataset = ViPhyDataset(args.data_dir, model.tokenizer, split='test')
+        dataset = ViPhyDataset(args.data_dir, args.model, model.tokenizer, split='test')
 
         # Dataloader
         loader = DataLoader(dataset, batch_size, num_workers=args.num_workers)
@@ -271,8 +258,15 @@ def main():
         # Inference
         metrics = compute_eval_metrics(model, loader, device, data_len, t2t, use_tqdm=True)
 
+        meta = metrics.pop('meta')
+
+        # Report
         for metric_name, score in metrics.items():
-            print_log(f'{metric_name}: {score:.4f}', log_file)
+            print(f'{metric_name}: {score:.4f}')
+
+        # Save
+        if args.pred_csv:
+            save_csv(meta, args.pred_csv, index=False)
 
 
 @torch.inference_mode()
@@ -289,7 +283,7 @@ def compute_eval_metrics(model, loader, device, size, t2t, use_tqdm=False) -> Di
     :return: metrics (loss, accuracy)
     """
     def unpack(_labels: str) -> List[Any]:
-        # e.g. '1,2,3' --> [1,2,3]
+        """ Ex: '1,2,3' --> [1,2,3] """
         _labels = _labels.split(',')
         _labels = [int(l) if l.isdigit() else l
                    for l in _labels]
@@ -302,10 +296,15 @@ def compute_eval_metrics(model, loader, device, size, t2t, use_tqdm=False) -> Di
 
     model.eval()
 
-    samples = 0
-    d_loss = []
     d_acc = []
+    d_conf = []
+    d_loss = []
 
+    m_probs = []
+    m_trues = []
+    m_preds = []
+
+    n = 0
     for batch in loader:
         # Load
         labels_b = batch.pop('labels')
@@ -316,35 +315,60 @@ def compute_eval_metrics(model, loader, device, size, t2t, use_tqdm=False) -> Di
         logits_b = model(**batch)
 
         for logits, labels in zip(logits_b, labels_b):
+            # Meta
+            m_trues += [labels]
+
             # Labels
             labels = unpack(labels)
 
-            # Loss
+            # T2T
             if t2t:
+                # Loss
                 d_loss += [-1]
+
+                # Prediction
                 pred = logits
+
+            # MLM
             else:
                 labels = torch.tensor(labels).to(device)
+
+                # Loss
                 for label in labels:
                     loss = F.cross_entropy(logits, label).item()
                     d_loss += [loss]
 
+                # Prediction
                 pred = logits.argmax()
 
-            # *Acc: prediction ∈ ground-truth
-            correct = (1 if pred in labels else 0)
+                # Distribution
+                prob = F.softmax(logits)
 
+                # Conf: sum(P(c) | c ∈ ground-truth)
+                score = prob[labels].sum().item()
+                d_conf += [score]
+
+                # Meta
+                m_preds += [pred.item()]
+                m_probs += [','.join([str(p) for p in prob.tolist()])]
+
+            # *Acc: pred ∈ ground-truth
+            correct = (1 if pred in labels else 0)
             d_acc += [correct]
 
-        samples += batch_size
-        if samples >= size:
+        # progress
+        n += batch_size
+        if n >= size:
             break
 
     # Metrics
     loss = np.mean(d_loss)
     acc = np.mean(d_acc)
+    conf = np.mean(d_conf)
 
-    metrics = {'loss': loss, 'accuracy': acc}
+    meta = dict(true=m_trues, pred=m_preds, prob=m_probs)
+
+    metrics = {'loss': loss, 'accuracy': acc, 'confidence': conf, 'meta': meta}
 
     return metrics
 

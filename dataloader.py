@@ -1,11 +1,14 @@
-import pandas as pd
+import os
 import numpy as np
+from PIL import Image
+from glob import glob
 from os.path import join as osj
 
 import torch
-from transformers import AutoTokenizer
 from torch.utils.data import Dataset, DataLoader
-from typing import List, Dict, Union, Any
+from transformers import AutoTokenizer
+from transformers import AutoFeatureExtractor as AutoFE
+from typing import List, Dict, Tuple, Union, Any, Optional
 from utils import read_json, read_csv
 
 
@@ -21,9 +24,13 @@ class ViPhyDataset(Dataset):
     """
     Dataset for Color, Spatial, and Size relations.
     """
-    def __init__(self, data_dir: str, tokenizer, split: str, zero_shot=False):
+    VG = os.environ['VG']
+    DIMS = ['img_color', 'color', 'spatial', 'size']
+
+    def __init__(self, data_dir: str, model_name: str, tokenizer, split: str, zs=False):
         # Args
-        self.zero_shot = zero_shot
+        self.zero_shot = zs
+        self.vis_feat = None
         self.is_train = (split == 'train')
 
         # Tokenizer
@@ -48,6 +55,16 @@ class ViPhyDataset(Dataset):
             self.label2idx = COLOR_LABELS
             self.max_len = 64 if 'qa' in self.tok_name else 16
 
+        elif self.dim == 'img_color':
+            path = osj(data_dir, f'{split}.json')
+            inp = read_json(path)
+
+            self.data = self._img_color_prompts(inp)
+            self.label2idx = COLOR_LABELS
+            self.max_len = 16
+
+            self.vis_feat = AutoFE.from_pretrained(model_name)
+
         elif self.dim == 'spatial':
             path = osj(data_dir, f'{split}.csv')
             inp = read_csv(path)
@@ -64,9 +81,8 @@ class ViPhyDataset(Dataset):
             self.label2idx = SIZE_LABELS
             self.max_len = 32
 
-    @staticmethod
-    def _get_dim(data_dir):
-        for dim in ['color', 'spatial', 'size']:
+    def _get_dim(self, data_dir):
+        for dim in self.DIMS:
             if dim in data_dir:
                 return dim
 
@@ -139,6 +155,47 @@ class ViPhyDataset(Dataset):
             sample = dict(object=obj, prompt=prompt, labels=labels)
 
             data.append(sample)
+
+        return data
+
+    def _img_color_prompts(self, img_colors: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        """
+        Given image+box, object & colors prepares textual prompts & image paths.
+        """
+        def _build_id2path(vg_dir: str) -> Dict[int, str]:
+            _p1 = glob(osj(vg_dir, 'images_1', '*.jpg'))
+            _p2 = glob(osj(vg_dir, 'images_2', '*.jpg'))
+
+            img_paths = _p1 + _p2
+
+            def _get_id(p: str):
+                p = p.split('/')[-1]
+                p = p.split('.')[0]
+                return int(p)
+
+            img_id2path = {}
+            for path in img_paths:
+                # get id from path
+                img_id = _get_id(path)
+
+                img_id2path[img_id] = path
+
+            return img_id2path
+
+        # Image ID -> Path
+        id2path = _build_id2path(self.VG)
+
+        # Masked LM
+        template = "color of {}"
+
+        data = []
+        for d in img_colors:
+            # Model I/O
+            d['labels'] = [d.pop('color')]
+            d['img_path'] = id2path[d['img_id']]
+            d['prompt'] = template.format(d['object'])
+
+            data.append(d)
 
         return data
 
@@ -252,6 +309,36 @@ class ViPhyDataset(Dataset):
 
         return labels
 
+    def _create_labels(self, input_ids, prompt_len) -> torch.LongTensor:
+        """
+        Generates labels from token-ids for GPT* models.
+        """
+
+        def _token2id(tok: str) -> int:
+            return self.tokenizer.convert_tokens_to_ids(tok)
+
+        def _get_token_idx(query: str) -> int:
+            # token str -> id
+            query = _token2id(query)
+            q_idx = input_ids.index(query)
+            return q_idx
+
+        labels = [-100] * self.max_len
+
+        # Start
+        start_idx = prompt_len
+
+        # End `<\s>`
+        end_idx = _get_token_idx(self.tokenizer.eos_token) + 1
+
+        # Label IDs (ignore prompt & pad)
+        labels[start_idx: end_idx] = input_ids[start_idx: end_idx]
+
+        # To Tensor
+        labels = torch.LongTensor(labels)
+
+        return labels
+
     def _tokenize(self, text: str, max_len=None) -> Dict:
         if max_len is None:
             max_len = self.max_len
@@ -292,34 +379,30 @@ class ViPhyDataset(Dataset):
 
         return text
 
-    def _create_labels(self, input_ids, prompt_len) -> torch.LongTensor:
-        """
-        Generates labels from token-ids for GPT* models.
-        """
-        def _token2id(tok: str) -> int:
-            return self.tokenizer.convert_tokens_to_ids(tok)
+    def _prepare_image(self, path: str, bbox: List[int]) -> Dict:
+        """ Image: read, crop, resize & tensor """
+        # Read
+        img = Image.open(path).convert('RGB')
 
-        def _get_token_idx(query: str) -> int:
-            # token str -> id
-            query = _token2id(query)
-            q_idx = input_ids.index(query)
-            return q_idx
+        # Crop
+        x, y, w, h = bbox
+        coord = [x, y, x+w, y+h]
 
-        labels = [-100] * self.max_len
+        img = img.crop(coord)
 
-        # Start
-        start_idx = prompt_len
+        # Resize (w=h)
+        sz = self.vis_feat.size
+        by = self.vis_feat.resample
 
-        # End `<\s>`
-        end_idx = _get_token_idx(self.tokenizer.eos_token) + 1
-
-        # Label IDs (ignore prompt & pad)
-        labels[start_idx: end_idx] = input_ids[start_idx: end_idx]
+        img = img.resize((sz, sz), by)
 
         # To Tensor
-        labels = torch.LongTensor(labels)
+        img = self.vis_feat(img, return_tensors='pt')
 
-        return labels
+        # Drop batch-dim
+        img = {k: v[0] for k, v in img.data.items()}
+
+        return img
 
     def __getitem__(self, idx):
         record = self.data[idx]
@@ -403,17 +486,27 @@ class ViPhyDataset(Dataset):
             else:
                 labels = self.pack(labels)
 
+        # Image
+        if self.vis_feat:
+            image = self._prepare_image(record['img_path'], record['bbox'])
+            # update
+            prompt = {**prompt, **image}
+
+        # Model I/O
         model_inputs = dict(inputs=prompt, labels=labels)
 
         return model_inputs
 
 
 if __name__ == '__main__':
-    _tok = AutoTokenizer.from_pretrained('allenai/unifiedqa-t5-base')
+    # Args
+    _name = 'dandelin/vilt-b32-mlm'
+
+    _tok = AutoTokenizer.from_pretrained(_name)
     # _tok.pad_token = _tok.eos_token
 
-    ds = ViPhyDataset('./dataset/size', _tok, split='train')
-    dl = DataLoader(ds, batch_size=8)
+    ds = ViPhyDataset('./dataset/img_color', _name, _tok, split='train')
+    dl = DataLoader(ds, batch_size=4)
 
     b = next(iter(dl))
     print(b)
