@@ -33,9 +33,9 @@ from transformers import DebertaTokenizer, DebertaPreTrainedModel
 from transformers import DebertaV2Tokenizer, DebertaV2ForMaskedLM
 from transformers import T5Tokenizer, T5ForConditionalGeneration as T5
 from transformers import GPT2Tokenizer, GPT2LMHeadModel, GPTNeoForCausalLM
-from transformers import CLIPTokenizerFast, CLIPTextModel, FlavaTextModel
+from transformers import CLIPTokenizerFast, CLIPTextModel
 from transformers import VisualBertForPreTraining, ViltModel
-
+from transformers import FlavaTextModel, FlavaModel
 
 # DPT
 if transformers.__version__ >= '4.19.0':
@@ -66,13 +66,14 @@ class MaskedLM(nn.Module):
     """
     Implements Masked Language Models (*BERT).
     """
-    def __init__(self, name: str, num_classes: int, device='cpu', zero_shot=False, ckpt=None):
+    def __init__(self, name: str, num_classes: int, device='cpu', ckpt=None, vl=False, zs=False):
         super().__init__()
 
         # Args
+        self.vl = vl
         self.name = name
         self.device = device
-        self.zero_shot = zero_shot
+        self.zero_shot = zs
 
         # Init
         tok_name, _Tokenizer, _Model = self._init_transformer()
@@ -134,7 +135,7 @@ class MaskedLM(nn.Module):
 
             elif 'flava' in name:
                 _Tokenizer = BertTokenizer
-                _Model = FlavaTextModel
+                _Model = FlavaModel if self.vl else FlavaTextModel
 
             else:
                 if 'visualbert' in name:
@@ -176,7 +177,12 @@ class MaskedLM(nn.Module):
             inputs = self._prepare_vilt(inputs)
 
         # transformer
-        if 'clip' in self.name:
+        if self.vl and 'flava' in self.name:
+            x = self.model(**inputs)
+            x = x.multimodal_output[0]
+            cls_emb = x[:, 0, :]
+
+        elif 'clip' in self.name:
             x = self.model(**inputs)
             cls_emb = x.pooler_output
 
@@ -233,13 +239,13 @@ class Text2TextLM(nn.Module):
     """
     Implements Text-to-Text Language Models (GPT*, T5)
     """
-    def __init__(self, name: str, device='cpu', zero_shot=False, ckpt=None):
+    def __init__(self, name: str, device='cpu', ckpt=None, zs=False):
         super().__init__()
 
         # Args
         self.name = name
         self.device = device
-        self.zero_shot = zero_shot
+        self.zero_shot = zs
 
         # Init
         tok_name, _Tokenizer, _Model = self._init_transformer()
@@ -345,7 +351,7 @@ class UnifiedQA(nn.Module):
     """
     Implements Unified-QA (T5) model.
     """
-    def __init__(self, name: str, device='cpu', zero_shot=False, ckpt=None):
+    def __init__(self, name: str, device='cpu', ckpt=None, zs=False):
         super().__init__()
         # Args
         self.device = device
@@ -676,7 +682,7 @@ class Text2TextSim(nn.Module):
         return best
 
 
-class DPT(nn.Module):
+class DPTDepth(nn.Module):
     """
     Implements DPT Model for monocular depth estimation.
     """
@@ -711,6 +717,14 @@ class DPT(nn.Module):
         depth = Image.fromarray(formatted)
 
         return depth
+
+
+class DPTSemSeg(nn.Module):
+    """
+    TODO: *************************
+    """
+    pass
+
 
 
 class UniCLImageText(nn.Module):
@@ -837,7 +851,7 @@ class UniCLImageText(nn.Module):
 
 class POSTagger(nn.Module):
     """
-    Implements Part-of-Speech Tagger (LSTM-CRF)
+    Implements Part-of-Speech Tagger (BiLSTM-CRF)
     """
 
     def __init__(self):
@@ -854,8 +868,8 @@ class POSTagger(nn.Module):
         tags = [word.value for word in sent.labels]
 
         # Dict
-        token_tag_dict = {word: tag for word, tag
-                          in zip(words, tags)}
+        token_tag_dict = {word: tag for word, tag in zip(words, tags)}
+
         return token_tag_dict
 
 
@@ -914,7 +928,7 @@ def _depth_ade20k():
 
     paths = glob(osj(_dir, '**', '*.jpg'), recursive=True)
 
-    model = DPT(device='cuda:0')
+    model = DPTDepth(device='cuda:0')
 
     for p in tqdm(paths):
         # Image
@@ -939,7 +953,7 @@ def _depth_vg():
 
     paths = glob(osj(_dir, '**', '*.jpg'), recursive=True)
 
-    model = DPT(device='cuda:1')
+    model = DPTDepth(device='cuda:1')
 
     for p in tqdm(paths):
         # Skip corrupt images
@@ -972,16 +986,16 @@ def _prompt():
 
 
 if __name__ == '__main__':
-    d = 'cpu'
+    _d = 'cpu'
     _B, _L, _C = 4, 16, 3
 
-    inp = dict(input_ids=torch.randint(100, [_B, _L]).to(d),
-               attention_mask=torch.ones([_B, _L]).to(d))
+    inp = dict(input_ids=torch.randint(100, [_B, _L]).to(_d),
+               attention_mask=torch.ones([_B, _L]).to(_d))
     lbl = torch.randint(_C, [_B])
 
-    # inp['pixel_values'] = torch.rand([_B, 3, 384, 384]).to(d)
+    inp['pixel_values'] = torch.rand([_B, 3, 224, 224]).to(_d)
 
-    m = MaskedLM('dandelin/vilt-b32-mlm', _C, device=d)
+    m = MaskedLM('facebook/flava-full', _C, _d, vl=True)
 
     # def _to_tensor(data: dict):
     #     return {k: torch.tensor(v) for k, v in data.items()}

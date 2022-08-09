@@ -500,7 +500,7 @@ class ViPhyDataset(Dataset):
 
 if __name__ == '__main__':
     # Args
-    _name = 'dandelin/vilt-b32-mlm'
+    _name = 'facebook/flava-full'
 
     _tok = AutoTokenizer.from_pretrained(_name)
     # _tok.pad_token = _tok.eos_token

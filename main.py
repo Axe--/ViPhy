@@ -31,6 +31,7 @@ def main():
 
     # Model params
     parser.add_argument('--model',          type=str,   help='Transformer backbone', required=True)
+    parser.add_argument('--VL',             type=s2b,   help='vision + language input', default='F')
 
     # Data params
     parser.add_argument('--data_dir',       type=str,   help='path to dataset directory', required=True)
@@ -93,11 +94,11 @@ def main():
         # Model
         if t2t:
             if _type == 'QA':
-                model = UnifiedQA(args.model, device, ckpt=args.ckpt_path)
+                model = UnifiedQA(args.model, device, args.ckpt_path)
             else:
-                model = Text2TextLM(args.model, device, ckpt=args.ckpt_path)
+                model = Text2TextLM(args.model, device, args.ckpt_path)
         else:
-            model = MaskedLM(args.model, num_classes, device, ckpt=args.ckpt_path)
+            model = MaskedLM(args.model, num_classes, device, args.ckpt_path, vl=args.VL)
 
         model.train()
         # model = nn.DataParallel(model, device_ids)
@@ -238,11 +239,11 @@ def main():
         # Model
         if t2t:
             if _type == 'QA':
-                model = UnifiedQA(args.model, device, ckpt=args.ckpt_path)
+                model = UnifiedQA(args.model, device, args.ckpt_path)
             else:
-                model = Text2TextLM(args.model, device, ckpt=args.ckpt_path)
+                model = Text2TextLM(args.model, device, args.ckpt_path)
         else:
-            model = MaskedLM(args.model, num_classes, device, ckpt=args.ckpt_path)
+            model = MaskedLM(args.model, num_classes, device, args.ckpt_path, vl=args.VL)
 
         model.eval()
 
