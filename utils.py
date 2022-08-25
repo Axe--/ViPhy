@@ -192,7 +192,7 @@ def _drop_all_label_samples(data, _dim: str):
 
 if __name__ == '__main__':
     # Type
-    dim = 'spatial'
+    dim = 'size'
 
     # Read
     if dim == 'color':
@@ -203,7 +203,6 @@ if __name__ == '__main__':
         inp = _drop_all_label_samples(inp, dim)
     else:
         inp = read_csv('./results/size.csv')
-        inp = _drop_all_label_samples(inp, dim)
 
     # Split
     train, val, test = dataset_split(inp)

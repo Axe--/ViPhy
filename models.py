@@ -39,7 +39,9 @@ from transformers import FlavaTextModel, FlavaModel
 
 # DPT
 if transformers.__version__ >= '4.19.0':
-    from transformers import DPTFeatureExtractor, DPTForDepthEstimation
+    from transformers import (DPTFeatureExtractor,
+                              DPTForDepthEstimation,
+                              DPTForSemanticSegmentation)
 
 # OFA
 if transformers.__version__ == '4.18.0.dev0':
@@ -721,10 +723,40 @@ class DPTDepth(nn.Module):
 
 class DPTSemSeg(nn.Module):
     """
-    TODO: *************************
+    Implements DPT Model for semantic segmentation.
     """
-    pass
+    def __init__(self, device='cpu'):
+        super().__init__()
 
+        self.feat_ext = DPTFeatureExtractor.from_pretrained("Intel/dpt-large-ade")
+        self.model = DPTForSemanticSegmentation.from_pretrained("Intel/dpt-large-ade")
+
+        self.id2label = self.model.config.id2label
+        self.label2id = {l: i for i, l in enumerate(self.id2label)}
+        self.device = device
+
+        self.to(device)
+
+    @torch.inference_mode()
+    def forward(self, image: Image) -> torch.LongTensor:
+        # prepare image for the model
+        inputs = self.feat_ext(images=image, return_tensors="pt")
+
+        # move to device
+        inputs = {k: v.to(self.device) for k, v in inputs.items()}
+
+        outputs = self.model(**inputs)
+
+        logits = outputs.logits.cpu()
+
+        # pixel-wise class labels
+        pred = torch.nn.functional.interpolate(input=logits,
+                                               size=image.size[::-1],
+                                               mode='bilinear')
+
+        pred = pred.argmax(dim=1)[0]
+
+        return pred
 
 
 class UniCLImageText(nn.Module):

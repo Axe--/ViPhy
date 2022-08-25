@@ -10,15 +10,8 @@ from typing import List, Dict, Union, Any
 import matplotlib.pyplot as plt
 from matplotlib.pyplot import Rectangle
 
-from color.constants import IGNORE_IMAGES
+from color.constants import IGNORE_IMAGES, SKIP_TERMS
 from utils import read_json, read_csv, save_json, save_csv
-
-
-# Ignore object (`endswith`)
-IGNORE_OBJECTS = ['wall', 'floor', 'sky', 'cloud', 'area', 'road', 'pavement', 'street', 'sidewalk', 'sand',
-                  'sea', 'ocean', 'lake', 'river', 'water', 'ground', 'grass',
-                  'picture', 'photo', 'corner', 'line',
-                  'hair']
 
 
 class SizeDataDev:
@@ -120,7 +113,7 @@ class SizeDataDev:
                 c_id = r['cluster']
 
                 # pick first object in caption
-                obj = list(o.values())[0] if len(o) != 0 else 'NULL'
+                obj = list(o.keys())[0] if len(o) != 0 else 'NULL'
 
                 region = dict(name=obj, bbox=box, cluster=c_id)
 
@@ -134,19 +127,36 @@ class SizeDataDev:
         # Save `object -> cluster` mapping
         save_json(objects_clusters, save)
 
-    def compute_size_rel(self, data_obj_cluster: List[Dict], min_freq: int, save: str):
+    def compute_size_rel(self, data_obj_cluster: List[Dict], object2subtype: Dict[str, Dict], min_freq: int, save: str):
         """
         Computes size relations (>, <) and aggregates across dataset to csv.
         """
-        def _ignore(o: str):
+        def _ignore(o: str) -> bool:
             if o == 'NULL':
                 return True
-            for _obj in IGNORE_OBJECTS:
+            for _obj in SKIP_TERMS:
                 if o.endswith(_obj):
                     return True
             return False
 
-        # relation frequency
+        def _uni_samples(data: List[Dict]) -> List[Dict]:
+            """ Drop samples with `<,>` labels. """
+            return [d for d in data if
+                    len(d['typical'].split(',')) < 2]
+
+        def _remove_subtypes(data: List[Dict], o2s: Dict[str, Dict]) -> List[Dict]:
+            """ Removes relations containing subtype names. """
+            objs = {d['o1'] for d in data}
+            # remove subtypes
+            for o, subs in o2s.items():
+                for s in subs:
+                    if o != s:
+                        objs.discard(s)
+            # filter relations
+            data = [d for d in data if d['o1'] in objs and d['o2'] in objs]
+            return data
+
+        # Relation frequency
         freq = {}
         for img in tqdm(data_obj_cluster):
             regions = img['regions']
@@ -170,7 +180,7 @@ class SizeDataDev:
                                     freq[rel] = 0
                                 freq[rel] += 1
 
-        # include `o1 > o2` rels
+        # Include `o1 > o2` freq
         relations = []
         visited = set()
         for r in freq:
@@ -193,17 +203,25 @@ class SizeDataDev:
 
                 relations += [rel]
 
-        # drop relations below threshold
-        relations = [r for r in relations if r['>'] + r['<'] >= min_freq]
+        # Drop relations below threshold
+        relations = [r for r in relations if r['<'] + r['>'] >= min_freq]
 
-        # complementary samples (flip): balanced
+        # Show Stats
+        num_lts = sum(1 for r in relations if r['<'] / (r['<'] + r['>']) >= 0.7)
+        num_gts = sum(1 for r in relations if r['>'] / (r['<'] + r['>']) >= 0.7)
+        print('< :', num_lts)
+        print('> :', num_gts)
+
+        # Complement (flip) to balance
         size_dataset = []
         for r in relations:
-            r_ = {'o1': r['o2'], 'o2': r['o1'],
-                  '>': r['<'], '<': r['>']}
+            r_ = {'o1': r['o2'],
+                  'o2': r['o1'],
+                  '>': r['<'],
+                  '<': r['>']}
             size_dataset += [r, r_]
 
-        # assign typical relation
+        # Assign typical relation
         for r in size_dataset:
             gr = r['>']
             ls = r['<']
@@ -217,6 +235,12 @@ class SizeDataDev:
 
             else:
                 r['typical'] = '>,<'
+
+        # Retain uni-label samples
+        size_dataset = _uni_samples(size_dataset)
+
+        # Remove samples containing subtypes
+        size_dataset = _remove_subtypes(size_dataset, object2subtype)
 
         # Save as CSV
         save_csv(size_dataset, save, index=False)
@@ -299,9 +323,15 @@ if __name__ == '__main__':
     # jsn_reg = read_json(_dir + 'region_graphs.json')    # 'regions/r_1.json'
     # jsn_ros = read_json(_dir + 'region_ros.json')       # 'reg_obj_subtype/ros_1.json'
 
-    # Size Rel
+    # Size Clusters
     obj_cluster_path = '../data/obj_size_k_5.json'
     # ddev.compute_obj_size(jsn_reg, jsn_ros, save=obj_cluster_path)
 
+    obj2sub_path = '../data/object_subtypes_o100_s10.json'
+
+    # Read
     jsn_obj = read_json(obj_cluster_path)
-    ddev.compute_size_rel(jsn_obj, min_freq=100, save='../results/size.csv')
+    jsn_o2s = read_json(obj2sub_path)
+
+    # Size Relations
+    ddev.compute_size_rel(jsn_obj, jsn_o2s, min_freq=100, save='../results/size.csv')
