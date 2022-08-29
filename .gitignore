@@ -3,8 +3,8 @@ log/
 temp/
 *.pkl
 *.pth
-spatial_raw.csv
-obj_size_k_5.json
+spatial_raw*.csv
+obj_size_k_5*.json
 caption_color.json
 
 # Byte-compiled / optimized / DLL files

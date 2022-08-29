@@ -1,7 +1,9 @@
 """
-Build SpatiaCS by inferring Spatial Relations from ADE-20k dataset.
+Derive spatial relations from ADE-20K dataset.
 """
 import json
+import os
+
 import torch
 import numpy as np
 import pandas as pd
@@ -10,12 +12,13 @@ from tqdm import tqdm
 from PIL import Image
 import matplotlib.pyplot as plt
 from os.path import join as osj
-from utils import to_prob_dist
-from typing import List, Dict, Union
+from utils import to_prob_dist, save_csv
+from typing import List, Dict, Union, Any
 
 
-# Erase part names from final dataset
-EXCLUDE_PARTS = ['-light source', '-highlight']
+# Exclude Part Names
+ERASE_PARTS = ['light source', 'highlight', 'aperture', 'buttons', 'blade']
+SKIP = ['wall', 'fs']
 
 
 def read_json(p) -> dict:
@@ -110,50 +113,65 @@ class SpatialDataDev:
             return '>'
         return '='
 
-    def _relations_in_image(self, objects: List[Dict]) -> List[Dict[str, str]]:
+    def _img_relations(self, objects: List[Dict]) -> List[Dict[str, str]]:
         """
         Computes spatial relations for all objects in the image. \n
         Only objects in the same cluster are compared.
         """
-        def _with_part_name(obj: Dict) -> str:
+        def _prepend_to_part(obj: Dict) -> str:
             """
-            Check if `obj` is a part, and prepend to name.
-            (e.g. "knob" -> "drawer-knob")
+            Check if `obj` is a part, and append.
+            (e.g. "knob" -> "drawer knob")
             """
             name = obj['raw_name']
-            part_of = obj['parts']['ispartof']
-            if part_of != []:
+            parent = obj['parts']['ispartof']
+            if parent != []:
                 try:
-                    part_of = [o['raw_name'] for o in objects
-                               if part_of == o['id']][0]
-                    name = part_of + '-' + name
+                    # root parent (0-idx)
+                    parent = [o['raw_name'] for o in objects
+                               if parent == o['id']][0]
+                    name = parent + ' ' + name
                 except IndexError:
                     pass
             return name
 
+        def _clean(o: str) -> str:
+            _ = o.replace('ceiling', '')\
+                .replace('upper', '')\
+                .replace('lower', '').strip()
+            if _ != '':
+                o = ' '.join(_.split())
+            return o
+
         objs_relations = []
         for o1 in objects:
             for o2 in objects:
-                relation = {}
+                record = {}
+                # part-whole & clean
+                _o1 = _prepend_to_part(o1)
+                _o2 = _prepend_to_part(o2)
+                _o1 = _clean(_o1)
+                _o2 = _clean(_o2)
+
                 # if both objects are clustered
                 if o1['cluster'] and o2['cluster']:
                     # ensure same clusters
-                    if o1['id'] != o2['id'] and o1['cluster'] == o2['cluster']:
-                        # relation
-                        relation['rel'] = self._pairwise_rel(o1, o2)
+                    if _o1 != _o2 and o1['cluster'] == o2['cluster']:
+                        # objects
+                        record['o1'] = _o1
+                        record['o2'] = _o2
 
-                        # names
-                        relation['o1'] = _with_part_name(o1)
-                        relation['o2'] = _with_part_name(o2)
+                        # relation
+                        record['rel'] = self._pairwise_rel(o1, o2)
 
                         # cluster
-                        relation['cluster'] = o1['cluster']
+                        record['cluster'] = o1['cluster']
 
-                        objs_relations.append(relation)
+                        objs_relations.append(record)
 
         return objs_relations
 
-    def compute_spatial_relations(self, theme: str, scene: str, k: int) -> List[Dict]:
+    def compute_relations(self, theme: str, scene: str, k: int) -> List[Dict]:
         """
         Computes spatial relations for all images in the given scene.
         """
@@ -169,7 +187,7 @@ class SpatialDataDev:
             annot = self._cluster_objects(path, k)
 
             # Spatial Relations
-            relations = self._relations_in_image(objects=annot['object'])
+            relations = self._img_relations(objects=annot['object'])
 
             # Meta info
             for r in relations:
@@ -183,11 +201,40 @@ class SpatialDataDev:
         return data
 
 
-def _spatial_rel_freq_from_raw(raw_path: str, save_fp: str,
+def _preprocess_spatial(ade_dir, save_fp):
+    """
+    Preprocess raw ADE-20K dataset.
+    """
+    # Init
+    ddev = SpatialDataDev(ade_dir)
+
+    theme = 'home_or_hotel'
+    scenes = {'bedroom': 2, 'living_room': 2, 'kitchen': 2, 'home_office': 2, 'bathroom': 1}
+
+    raw_relations = []
+    # Iterate over scenes
+    for scene, k in scenes.items():
+        # Compute all relations
+        raw_relations += ddev.compute_relations(theme, scene, k)
+
+    raw_relations += ddev.compute_relations('work_place', 'office', k=2)
+
+    # Save
+    save_csv(raw_relations, save_fp, sep=',', index=False)
+
+
+def _compute_spatial_relations(raw_path: str, save_fp: str,
                                min_rel_freq: int, min_co_occur: int):
     """
     Computes relation frequencies from raw data.
     """
+    def _erase_parts(o: str):
+        for p in ERASE_PARTS:
+            if o.endswith(p):
+                o = o.replace(p, '')
+            o = o.strip()
+        return o
+
     def _drop_duplicates(_df):
         """
         Drops duplicated relations (o1, o2) & (o2, o1)
@@ -233,10 +280,26 @@ def _spatial_rel_freq_from_raw(raw_path: str, save_fp: str,
 
         return typ_rels
 
+    def _uni_bi_samples(_data: List[Dict]) -> List[Dict]:
+        """ Drop samples with all labels `<,=,>` """
+        return [d for d in _data if
+                len(d['typical'].split(',')) < 3]
+
+    def _rename_scene(s: str) -> str:
+        return s.replace('home_office', 'office')
+
     # Read raw relations
     raw = pd.read_csv(raw_path)
 
     scene_types = list(raw['scene'].unique())
+
+    # Clean up parts
+    raw['o1'] = raw['o1'].apply(lambda x: _erase_parts(x))
+    raw['o2'] = raw['o2'].apply(lambda x: _erase_parts(x))
+
+    # Skip objects
+    raw = raw[raw['o1'].map(lambda o: o not in SKIP)]
+    raw = raw[raw['o2'].map(lambda o: o not in SKIP)]
 
     data = []
     for _scene in scene_types:
@@ -247,7 +310,7 @@ def _spatial_rel_freq_from_raw(raw_path: str, save_fp: str,
         df = df.groupby(["o1", "o2", "rel"]).size()
         df = df.reset_index(name="freq")
 
-        # Threshold by relation freq
+        # Threshold by "per-relation" freq
         df = df[df['freq'] >= min_rel_freq]
 
         # Drop self relations
@@ -280,6 +343,8 @@ def _spatial_rel_freq_from_raw(raw_path: str, save_fp: str,
     data_cols = []
     for k, v in dataset.items():
         scn = v['scene']
+        scn = _rename_scene(scn)
+
         objs = {'o1': k[0], 'o2': k[1]}
         rels = {'>': v['rel']['>'],
                 '=': v['rel']['='],
@@ -305,19 +370,19 @@ def _spatial_rel_freq_from_raw(raw_path: str, save_fp: str,
 
             data_cols.append(row)
 
-    # Remove part names
-    # TODO: EXCLUDE_PARTS
+    # Retain uni- & bi- label samples
+    data_cols = _uni_bi_samples(data_cols)
 
     # Save
-    pd.DataFrame(data_cols).to_csv(save_fp, sep=',', index=False)
+    save_csv(data_cols, save_fp, sep=',', index=False)
 
 
-def _visualize(n_show=100, scene='bedroom'):
+def _visualize(n_show, _scene='bedroom'):
     # Read dataset
     df = pd.read_csv('../results/spatial.csv', sep=',')
 
     # Filter scene
-    df = df[df['scene'] == scene]
+    df = df[df['scene'] == _scene]
 
     # Pair names
     df['pair'] = df.apply(lambda r: r['o1'] + '\n' + r['o2'], axis=1)
@@ -344,7 +409,7 @@ def _visualize(n_show=100, scene='bedroom'):
     color_set = ['deepskyblue', 'gold', 'green']
 
     # Bar plot
-    df.plot.bar(x='pair', stacked=True, color=color_set, title=scene.upper(),
+    df.plot.bar(x='pair', stacked=True, color=color_set, title=_scene.upper(),
                 edgecolor="lightgray", figsize=(40, 24), rot=60)
     plt.xticks(fontsize=20)
     plt.legend(loc=(1.02, 0), prop={'size': 20})
@@ -353,32 +418,15 @@ def _visualize(n_show=100, scene='bedroom'):
 
 
 if __name__ == '__main__':
-    # Save Dataset
-    # _spatial_rel_freq_from_raw(raw_path='../data/spatial_raw.csv',
-    #                            save_fp='../results/spatial.csv',
-    #                            min_rel_freq=10, min_co_occur=100)
-    # import sys; sys.exit()
+    # Raw Dataset
+    # _preprocess_spatial(ade_dir=os.environ['ADE'],
+    #                     save_fp='../data/spatial_raw.csv')
+
+    # Final Dataset
+    _compute_spatial_relations(raw_path='../data/spatial_raw.csv',
+                               save_fp='../results/spatial.csv',
+                               min_rel_freq=10, min_co_occur=100)
 
     # Visualize
-    theme = 'home_or_hotel'
-    scenes = ['bedroom', 'living_room', 'kitchen', 'bathroom']
-    for s in scenes:
-        _visualize(n_show=30, scene=s)
-    import sys; sys.exit()
-
-    # Init
-    ddev = SpatialDataDev(_dir='/home/axe/Datasets/ADE20K_2021_17_01/images/ADE')
-
-    n_clusters = [2, 2, 2, 1]
-
-    raw_relations = []
-    # Iterate over scenes
-    for scene, n_c in zip(scenes, n_clusters):
-        # Compute all relations
-        res = ddev.compute_spatial_relations(theme, scene, k=n_c)
-
-        raw_relations += res
-
-    # Save
-    save = '../data/spatial_raw.csv'
-    pd.DataFrame(raw_relations).to_csv(save, sep=',', index=False)
+    # for s in ['kitchen', ...]:
+    #     _visualize(n_show=30, _scene=s)

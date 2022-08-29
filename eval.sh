@@ -7,8 +7,8 @@ run() {
 # ------------------------
 LOG="log"
 MODE="eval"
-GPU=0
-DIM="spatial"
+GPU=1
+DIM="color"
 DATA="./dataset/$DIM"
 # ------------------------
 

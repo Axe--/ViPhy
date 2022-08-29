@@ -1,20 +1,26 @@
 """
 Evaluate the performance of prior datasets (Color & Size)
 """
+import os
+import sys
 import pandas as pd
 from datasets import load_dataset
 from typing import Dict, List, Any
+from color.constants import COLOR_SET
 from utils import read_json, read_csv, to_prob_dist
+from color.col_utils import _aggregate_subtype_colors
+
+sys.path.append(os.environ['VisCS'])
 
 
-def eval_coda():
+def eval_coda(viphy: Dict):
     """
     Reports the alignment (*accuracy) of
     object colors in CoDa, on ViPhy dataset.
     """
     # CoDa: Color Set
-    color_set = ['black', 'blue', 'brown', 'gray', 'green',
-                 'orange', 'pink', 'purple', 'red', 'white', 'yellow']
+    coda_color_set = ['black', 'blue', 'brown', 'gray', 'green',
+                      'orange', 'pink', 'purple', 'red', 'white', 'yellow']
 
     def _read(df):
         cols = ['ngram', 'label']
@@ -63,55 +69,70 @@ def eval_coda():
     val = _read(ds['validation'])
 
     # Merge
-    dataset = train + val + test
+    coda = train + val + test
 
     # CoDa Dataset
     coda_typical = {}
     coda_prob = {}
 
-    for d in dataset:
+    for d in coda:
         obj = d['ngram']
         prob = d['label']
-        # distribution
-        col_dist = {col: prob for col, prob in zip(color_set, prob)}
-
+        col_dist = {col: prob for col, prob in zip(coda_color_set, prob)}
         # typical colors
         colors = _get_typical(col_dist)
 
         coda_typical[obj] = colors
         coda_prob[obj] = col_dist
 
-    # ViPhy Color dataset
-    viphy = read_json('./results/colors.json')
+    # ViPhy Dataset
+    subtypes = read_json('./data/object_subtypes_o100_s10.json')
+
+    # Get common objects
+    all_objects = {_['object'] for _ in viphy}
+
+    coda_prob = {o: v for o, v in coda_prob.items() if o in all_objects}
+    coda_typical = {o: v for o, v in coda_typical.items() if o in all_objects}
+
+    temp = {}
+    for d in viphy:
+        # drop
+        d.pop('entropy'); d.pop('total')
+        obj = d.pop('object')
+        prob = d
+
+        temp[obj] = prob
+
+    viphy_color = {}
+    viphy_prob = {}
+    for obj in temp:
+        if obj in coda_typical:
+            # aggregate prob
+            probs = _aggregate_subtype_colors(obj, temp, subtypes)
+
+            # distribution
+            col_dist = {col: p for col, p in zip(COLOR_SET, probs)}
+
+            # typical colors
+            colors = _get_typical(col_dist)
+
+            viphy_color[obj] = colors
+            viphy_prob[obj] = col_dist
 
     # Relaxed Accuracy
     is_correct = []
     for obj, pred in coda_typical.items():
-        if obj in viphy:
-            true = viphy[obj]
-            is_correct += [1 if set(pred) & set(true) else 0]
+        true = viphy_color[obj]
+        is_correct += [1 if set(pred) & set(true) else 0]
 
     n_objs = len(is_correct)
     acc = sum(is_correct) / n_objs
 
-    # Confidence
-    conf = []
-    for obj, prob in coda_prob.items():
-        if obj in viphy:
-            true = viphy[obj]
-
-            score = sum(p for c, p in prob.items() if c in true)
-
-            conf += [score]
-
-    conf = sum(conf) / n_objs
-
     print('r-Accuracy:', acc)
-    print('Confidence:', conf)
     print('#Objects:', n_objs)
 
 
-def eval_olmpics():
+def eval_olmpics(viphy: List):
     """
     Reports the alignment (*accuracy) of
     relative object size on ViPhy dataset.
@@ -138,7 +159,7 @@ def eval_olmpics():
         o2 = o2.strip()
         return dict(o1=o1, o2=o2, rel=rel)
 
-    p = '../../Datasets/oLMpics/size_{}.jsonl'
+    p = os.getcwd() + '/misc/olm_{}.jsonl'
     dataset = _read('train', p) + _read('dev', p)
 
     # Extract <o1, r, o2>
@@ -147,9 +168,6 @@ def eval_olmpics():
         d = _extract_rel(d)
 
         size_model[(d['o1'], d['o2'])] = d['rel']
-
-    # ViPhy Size Dataset
-    viphy = read_csv('./results/size.csv')
 
     # Drop w/ both relations
     viphy = [d for d in viphy if ',' not in d['typical']]
@@ -167,11 +185,15 @@ def eval_olmpics():
     n_objs = len(is_correct)
     acc = sum(is_correct) / n_objs
 
-    print('Accuracy**:', acc)
+    print('Accuracy:', acc)
     print('#Obj-pairs:', n_objs)
 
 
 if __name__ == '__main__':
-    eval_coda()
-    # eval_olmpics()
-    ...
+    print('Color')
+    color_data = read_csv('./results/colors.csv')
+    eval_coda(color_data)
+
+    print('Size')
+    size_data = read_csv('./results/size.csv')
+    eval_olmpics(size_data)
