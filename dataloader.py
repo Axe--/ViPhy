@@ -8,8 +8,9 @@ import torch
 from torch.utils.data import Dataset, DataLoader
 from transformers import AutoTokenizer
 from transformers import AutoFeatureExtractor as AutoFE
+from transformers import DataCollatorForLanguageModeling as DataCollatorMLM
 from typing import List, Dict, Tuple, Union, Any, Optional
-from utils import read_json, read_csv
+from utils import read_json, read_csv, read_txt
 
 
 COLOR_LABELS = {'red': 0, 'orange': 1, 'yellow': 2, 'brown': 3, 'green': 4,
@@ -498,7 +499,77 @@ class ViPhyDataset(Dataset):
         return model_inputs
 
 
-if __name__ == '__main__':
+class CaptionMLMDataset(Dataset):
+    """
+    Caption pre-training dataset (MLM).
+    """
+    def __init__(self, data_dir: str, model_name: str, split: str):
+        # Args
+        self.max_len = 32
+        self.min_cap = 2
+
+        # Load
+        self.data = self._load(data_dir, split)
+
+        # Tokenizer
+        self.tokenizer = AutoTokenizer.from_pretrained(model_name)
+
+        # Masked LM
+        self.mlm_fn = DataCollatorMLM(self.tokenizer)
+
+    def get_collator(self):
+        return self.mlm_fn
+
+    def _load(self, _dir, split) -> List[str]:
+        """
+        Loads captions from specified datasets.
+        """
+        def _coco(fp: str) -> List[str]:
+            inp = read_json(fp)
+            inp = inp['annotations']
+
+            inp = [i['caption'] for i in inp]
+            return inp
+
+        def _cc(fp: str) -> List[str]:
+            inp = read_csv(fp, sep='\t', header=None)
+            inp = [i[0] for i in inp]
+            return inp
+
+        def _vg(fp: str) -> List[str]:
+            inp = read_txt(fp)
+            return inp
+
+        # read captions
+        data = _coco(osj(_dir, 'COCO', f'{split}.json'))
+        data += _cc(osj(_dir, 'CC', f'{split}.tsv'))
+        data += _vg(osj(_dir, 'VG', f'{split}.txt'))
+
+        # threshold by length
+        data = [d for d in data if len(d.split()) >= self.min_cap]
+
+        return data
+
+    def __len__(self):
+        return len(self.data)
+
+    def __getitem__(self, idx):
+        text = self.data[idx]
+
+        # Tokenize
+        text = self.tokenizer(text=text,
+                              truncation=True,
+                              padding='max_length',
+                              max_length=self.max_len,
+                              add_special_tokens=False,
+                              return_special_tokens_mask=True)
+        # To Tensor
+        inputs = {k: torch.tensor(v) for k, v in text.data.items()}
+
+        return inputs
+
+
+def _viphy():
     # Args
     _name = 'facebook/flava-full'
 
@@ -511,6 +582,13 @@ if __name__ == '__main__':
     b = next(iter(dl))
     print(b)
 
-    # for b in dl:
-    #     ...
-    # print('Done!')
+
+if __name__ == '__main__':
+    # Dataset
+    ds = CaptionMLMDataset('../../Datasets/Captions', 'bert-base-uncased', split='val')
+
+    # lens = [len(ds.tokenizer.tokenize(c)) for c in ds.data]
+    # print(np.mean(lens), np.std(lens)); print(sorted(lens, reverse=True)[:200])
+
+    dl = DataLoader(ds, batch_size=4)
+    b = next(iter(dl))
