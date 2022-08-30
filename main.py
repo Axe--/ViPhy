@@ -13,10 +13,12 @@ from os.path import join as osj
 from tensorboardX import SummaryWriter
 from torch.utils.data import DataLoader
 from torch.cuda.amp import GradScaler, autocast
+from sklearn.metrics import f1_score
 from typing import List, Dict, Union, Any
-from utils import str2bool as s2b
-from utils import print_log, csv2list, setup_logger, save_csv
 from dataloader import ViPhyDataset
+from color.col_utils import get_typical
+from utils import csv2list, str2bool as s2b
+from utils import print_log, setup_logger, save_csv
 from models import MaskedLM, Text2TextLM, UnifiedQA
 
 
@@ -42,7 +44,7 @@ def main():
     parser.add_argument('--batch_size',     type=int,   help='batch size', default=8)
     parser.add_argument('--ckpt_path',      type=str,   help='checkpoint path for inference')
     parser.add_argument('--val_size',       type=int,   help='validation set size for evaluating metrics', default=512)
-    parser.add_argument('--log_interval',   type=int,   help='interval size for logging summaries', default=1000)
+    parser.add_argument('--log_it',         type=int,   help='interval size for logging summaries', default=1000)
     parser.add_argument('--save_all',       type=s2b,   help='if unset, saves only best.pth', default='F')
 
     # GPU params
@@ -50,7 +52,7 @@ def main():
     parser.add_argument('--amp',            type=s2b,   help='Automatic-Mixed Precision (T/F)', default='T')
 
     # Misc params
-    parser.add_argument('--num_workers',    type=int,   help='number of worker threads for Dataloader', default=1)
+    parser.add_argument('--num_workers',    type=int,   help='number of worker threads for Dataloader', default=0)
     parser.add_argument('--pred_csv',       type=str,   help='predictions on `Test`set (csv)')
 
     # Args
@@ -163,7 +165,7 @@ def main():
                 optimizer.zero_grad()
 
                 # Interval Log
-                if curr_step % args.log_interval == 0 or curr_step == 1:
+                if curr_step % args.log_it == 0 or curr_step == 1:
                     # Validation set accuracy
                     metrics = compute_eval_metrics(model, val_loader, device, val_used_size, t2t)
 
@@ -366,12 +368,50 @@ def compute_eval_metrics(model, loader, device, size, t2t, use_tqdm=False) -> Di
     loss = np.mean(d_loss)
     acc = np.mean(d_acc)
     conf = np.mean(d_conf)
+    f1 = compute_f1_score(m_trues, m_probs)
 
     meta = dict(true=m_trues, pred=m_preds, prob=m_probs)
 
-    metrics = {'loss': loss, 'accuracy': acc, 'confidence': conf, 'meta': meta}
+    metrics = {'loss': loss, 'accuracy': acc, 'confidence': conf, 'f1-score': f1, 'meta': meta}
 
     return metrics
+
+
+def compute_f1_score(true_labels: List[str], pred_probs: List[str]) -> float:
+    """
+    Thresholds predicted probabilities to compute the F1-score.
+    """
+    def _str2dict(probs):
+        probs = probs.split(',')
+        return {str(i): float(p) for i, p in enumerate(probs)}
+
+    def _str2list(lbs):
+        return [int(_) for _ in lbs.split(',')]
+
+    def _strL2intL(lst: List[str]) -> List[int]:
+        return [int(_) for _ in lst]
+
+    def _to_hot_vec(lbl: List[int], num: int) -> List[int]:
+        """ Multi-hot Vec: e.g. [1, 3], n=4 -> [0, 1, 0, 1]"""
+        return [1 if i in lbl else 0
+                for i in range(num)]
+
+    n_labels = len(pred_probs[0].split(','))
+
+    # Typical labels from prediction
+    pred_probs = [_str2dict(p) for p in pred_probs]
+    pred_probs = [get_typical(p) for p in pred_probs]
+
+    # Reformat inputs for F1-score
+    pred_labels = [_strL2intL(list(p)) for p in pred_probs]
+    pred_labels = [_to_hot_vec(labels, n_labels) for labels in pred_labels]
+
+    true_labels = [_str2list(labels) for labels in true_labels]
+    true_labels = [_to_hot_vec(labels, n_labels) for labels in true_labels]
+
+    f1 = f1_score(true_labels, pred_labels, average='samples')
+
+    return f1
 
 
 if __name__ == '__main__':

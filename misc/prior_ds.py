@@ -6,9 +6,10 @@ import sys
 import pandas as pd
 from datasets import load_dataset
 from typing import Dict, List, Any
+from sklearn.metrics import f1_score
+from utils import read_json, read_csv
 from color.constants import COLOR_SET
-from utils import read_json, read_csv, to_prob_dist
-from color.col_utils import _aggregate_subtype_colors
+from color.col_utils import _aggregate_subtype_colors, get_typical
 
 sys.path.append(os.environ['VisCS'])
 
@@ -28,37 +29,6 @@ def eval_coda(viphy: Dict):
         df = df.drop_duplicates(subset='ngram')
         df = df.to_dict(orient='records')
         return df
-
-    def _get_typical(_color_dist: Dict[str, float]) -> Dict[str, float]:
-        p_min = 0.1
-        done = False
-        n = len(_color_dist)
-
-        while not done:
-            # filter colors
-            _color_dist = {c: p for c, p in _color_dist.items() if p >= p_min}
-
-            # re-normalize
-            _color_dist = to_prob_dist(_color_dist)
-
-            # if unchanged --> done
-            if len(_color_dist) == n:
-                done = True
-
-            # num colors
-            n = len(_color_dist)
-
-            # threshold
-            if n >= 4:
-                p_min = 0.1
-            elif n == 3:
-                p_min = 0.2
-            elif n == 2:
-                p_min = 0.3
-            else:
-                done = True
-
-        return _color_dist
 
     # Load
     ds = load_dataset('corypaik/coda')
@@ -80,13 +50,13 @@ def eval_coda(viphy: Dict):
         prob = d['label']
         col_dist = {col: prob for col, prob in zip(coda_color_set, prob)}
         # typical colors
-        colors = _get_typical(col_dist)
+        colors = get_typical(col_dist)
 
         coda_typical[obj] = colors
         coda_prob[obj] = col_dist
 
     # ViPhy Dataset
-    subtypes = read_json('./data/object_subtypes_o100_s10.json')
+    subtypes = read_json('../data/object_subtypes_o100_s10.json')
 
     # Get common objects
     all_objects = {_['object'] for _ in viphy}
@@ -114,22 +84,32 @@ def eval_coda(viphy: Dict):
             col_dist = {col: p for col, p in zip(COLOR_SET, probs)}
 
             # typical colors
-            colors = _get_typical(col_dist)
+            colors = get_typical(col_dist)
 
             viphy_color[obj] = colors
             viphy_prob[obj] = col_dist
 
     # Relaxed Accuracy
     is_correct = []
+    true_lst, pred_lst = [], []
+
+    def _to_multi_hot(col: Dict[str, float]) -> List[int]:
+        return [1 if c in col else 0 for c in COLOR_SET]
+
     for obj, pred in coda_typical.items():
         true = viphy_color[obj]
         is_correct += [1 if set(pred) & set(true) else 0]
 
-    n_objs = len(is_correct)
-    acc = sum(is_correct) / n_objs
+        true_lst.append(_to_multi_hot(true))
+        pred_lst.append(_to_multi_hot(pred))
+
+    N = len(is_correct)
+    acc = sum(is_correct) / N
+    f1 = f1_score(true_lst, pred_lst, average='samples')
 
     print('r-Accuracy:', acc)
-    print('#Objects:', n_objs)
+    print('F1-score:', f1)
+    print('#Objects:', N)
 
 
 def eval_olmpics(viphy: List):
@@ -159,7 +139,7 @@ def eval_olmpics(viphy: List):
         o2 = o2.strip()
         return dict(o1=o1, o2=o2, rel=rel)
 
-    p = os.getcwd() + '/misc/olm_{}.jsonl'
+    p = './olm_{}.jsonl'
     dataset = _read('train', p) + _read('dev', p)
 
     # Extract <o1, r, o2>
@@ -177,23 +157,29 @@ def eval_olmpics(viphy: List):
 
     # Relaxed Accuracy
     is_correct = []
+    true_lst, pred_lst = [], []
     for objs, pred in size_model.items():
         if objs in viphy:
             true = viphy[objs]
             is_correct += [pred == true]
 
-    n_objs = len(is_correct)
-    acc = sum(is_correct) / n_objs
+            true_lst += [true == '<']
+            pred_lst += [pred == '<']
+
+    N = len(is_correct)
+    acc = sum(is_correct) / N
+    f1 = f1_score(true_lst, pred_lst, average='binary')
 
     print('Accuracy:', acc)
-    print('#Obj-pairs:', n_objs)
+    print('F1-score:', f1)
+    print('#Obj-pairs:', N)
 
 
 if __name__ == '__main__':
     print('Color')
-    color_data = read_csv('./results/colors.csv')
+    color_data = read_csv('../results/colors.csv')
     eval_coda(color_data)
 
-    print('Size')
-    size_data = read_csv('./results/size.csv')
+    print('\nSize')
+    size_data = read_csv('../results/size.csv')
     eval_olmpics(size_data)
