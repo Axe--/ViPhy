@@ -368,7 +368,7 @@ def compute_eval_metrics(model, loader, device, size, t2t, use_tqdm=False) -> Di
     loss = np.mean(d_loss)
     acc = np.mean(d_acc)
     conf = np.mean(d_conf)
-    f1 = compute_f1_score(m_trues, m_probs)
+    f1 = compute_f1_score(m_trues, m_probs) if not t2t else -1
 
     meta = dict(true=m_trues, pred=m_preds, prob=m_probs)
 

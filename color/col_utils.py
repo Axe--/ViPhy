@@ -86,13 +86,18 @@ def _visualize(_df: pd.DataFrame, color_set: List[str]):
 
 
 def get_typical(_color_dist: Dict[str, float]) -> Dict[str, float]:
+    # initial
     p_min = 0.1
-    done = False
     n = len(_color_dist)
+    init_dist = _color_dist.copy()
+    done = False
 
     while not done:
         # filter colors
         _color_dist = {c: p for c, p in _color_dist.items() if p >= p_min}
+
+        if _color_dist == {}:
+            return init_dist
 
         # re-normalize
         _color_dist = to_prob_dist(_color_dist)
