@@ -22,7 +22,6 @@ class SizeDataDev:
         # Clustering model
         self.jnb = JenksNaturalBreaks(nb_class=k)
         self.K = k
-
         self.img_id2path = self.map_id2path(data_dir)
 
     @staticmethod
@@ -313,11 +312,46 @@ class SizeDataDev:
         return img_id2path
 
 
+def _build_size_subtype(test_data: List[Dict], obj2subs: Dict[str, Dict[str, int]], save_fp: str):
+    """
+    Randomly replaces object names with their subtypes
+    to build a new evaluation set.
+    """
+    def _sample(arr: List[str]) -> str:
+        return np.random.choice(arr, size=1)[0]
+
+    def _subtype(o: str) -> str:
+        o2s = obj2subs[o]
+        # exclude parent
+        if o in o2s:
+            o2s.pop(o)
+        # random subtype
+        sub = _sample(list(o2s))
+        return sub
+
+    # Filter
+    eval_data = []
+    for record in test_data:
+        o1 = record['o1']
+        o2 = record['o2']
+
+        if len(obj2subs[o1]) > 1 and len(obj2subs[o2]) > 1:
+            eval_data += [record]
+
+    # Sample
+    for record in eval_data:
+        record['o1'] = _subtype(record['o1'])
+        record['o2'] = _subtype(record['o2'])
+
+    # Save
+    save_csv(eval_data, save_fp, index=False)
+
+
 if __name__ == '__main__':
     _dir = '../../../Datasets/Visual_Genome/'
 
     # Data Dev
-    ddev = SizeDataDev(_dir, k=5)
+    # ddev = SizeDataDev(_dir, k=5)
 
     # Input
     # jsn_reg = read_json(_dir + 'region_graphs.json')    # 'regions/r_1.json'
@@ -330,8 +364,13 @@ if __name__ == '__main__':
     obj2sub_path = '../data/object_subtypes_o100_s10.json'
 
     # Read
-    jsn_obj = read_json(obj_cluster_path)
+    # jsn_obj = read_json(obj_cluster_path)
     jsn_o2s = read_json(obj2sub_path)
 
     # Size Relations
-    ddev.compute_size_rel(jsn_obj, jsn_o2s, min_freq=100, save='../results/size.csv')
+    # ddev.compute_size_rel(jsn_obj, jsn_o2s, min_freq=100, save='../results/size.csv')
+
+    # Size Subtype (eval set)
+    test_csv = read_csv('../dataset/size/test.csv', index_col=0)
+
+    _build_size_subtype(test_csv, jsn_o2s, save_fp='../dataset/size_sub/test.csv')
