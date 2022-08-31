@@ -66,13 +66,9 @@ IGNORE_OBJECTS += ['door refrigerator', 'door car']
 # Drop object qualifiers; See `_drop_objs_and_merge()`
 DROP_QUALIFIERS = ['color', 'colour', 'word', 'gren', 'blu', 'whtie', 'otuside', 'buildinga',
                    'center', 'side', 'front', 'top', 'bottom', 'right', 'left', 'corner',
-                   'piece', 'style', 'background']  # TODO: brass, chrome, metal, wood, steel
+                   'piece', 'style', 'background', 'metal', 'wood', 'steel']
 
 DROP_QUALIFIERS += ['dell', 'mac', 'nike', 'coca cola']
-
-
-# Ignore subtypes of objects (color)
-IGNORE_OBJ_SUBTYPES = []
 
 
 # Include objects

@@ -184,7 +184,7 @@ def dataset_split(data, train_ratio=0.2, dev_ratio=0.1, test_ratio=0.7):
 
 if __name__ == '__main__':
     # Type
-    dim = 'spatial'
+    dim = 'color'
 
     # Read
     if dim == 'color':

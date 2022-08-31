@@ -3,9 +3,9 @@ import pandas as pd
 from tqdm import tqdm
 import matplotlib.pyplot as plt
 from typing import List, Dict, Union
-from utils import read_json, save_json
+from utils import read_json, save_json, save_csv
 from utils import compute_entropy, to_prob_dist
-from color.constants import COLOR_SET, ATTR2COLOR
+from color.constants import COLOR_SET, ATTR2COLOR, DROP_QUALIFIERS
 
 
 def _nearest_color(rgb):
@@ -165,25 +165,28 @@ def _merge_color_jsn(_dir: str, save_fp: str):
 
 
 def _aggregate_subtype_colors(parent_obj: str,
-                              object2color: Dict[str, Dict[str, float]],
-                              object2subtypes: Dict[str, Dict[str, int]]) -> List[float]:
+                              obj2col: Dict[str, Dict[str, float]],
+                              obj2subtypes: Dict[str, Dict[str, int]]) -> Dict[str, float]:
     """
     Computes the mean distribution of colors -- aggregated over all subtypes.
     TODO: Compute Iteratively over Subs!
 
     :return: object color distribution
     """
-
     def _get_prob(o: str) -> List[float]:
-        return list(object2color[o].values())
+        return list(obj2col[o].values())
 
-    # Note: subtype also contains the parent!
+    # Note: subtype also contains parent!
     prob = []
+    for subtype in obj2subtypes[parent_obj]:
+        if subtype in obj2col:
+            prob += [_get_prob(subtype)]
 
-    for subtype in object2subtypes[parent_obj]:
-        prob += [_get_prob(subtype)]
-
+    # Aggregate
     prob = list(np.mean(prob, axis=0))
+
+    # To Dict
+    prob = {c: p for c, p in zip(COLOR_SET, prob)}
 
     return prob
 
@@ -194,15 +197,16 @@ if __name__ == '__main__':
     # import sys; sys.exit()
 
     # Args
-    show_viz = False
     min_freq = 10
-    save = None     # '../results/colors{}'
+    show_viz = False
+    save: str = None    # '../results/colors.json'
 
-    # Raw Colors
+    # Inputs
     raw_data = read_json('../data/colors_raw.json')
+    obj2subs = read_json('../data/object_subtypes_o100_s10.json')
 
-    viz_data = []
-    obj_color_data = {}
+    obj2colors = {}
+    meta_data = []
 
     for obj_name, raw_col in raw_data.items():
         # Primary Colors
@@ -218,36 +222,40 @@ if __name__ == '__main__':
             entropy = compute_entropy(freqs)
 
             # Visualization
-            out = dict(object=obj_name,
-                       entropy=entropy,
-                       total=sum(freqs))
-            out = {**out, **color_dist}
-
-            viz_data.append(out)
+            meta = dict(object=obj_name,
+                        entropy=entropy,
+                        total=sum(freqs))
+            meta_data += [meta]
 
             # Object-to-Color
-            obj_color_data[obj_name] = color_dist
+            obj2colors[obj_name] = color_dist
+
+    # Aggregate Subtypes
+    obj2colors = {obj: _aggregate_subtype_colors(obj, obj2colors, obj2subs) for obj in obj2colors}
+
+    # Filter objects (prefix)
+    obj2colors = {o: c for o, c in obj2colors.items()
+                  if not any(o.startswith(qual) for qual in DROP_QUALIFIERS)}
 
     # Sort by Entropy
-    viz_data = sorted(viz_data, key=lambda x: x['entropy'])
+    meta_data = sorted(meta_data, key=lambda x: x['entropy'])
     # Round-off values
-    viz_data = [{c: round(f, 4) if type(f) == float else f
-                 for c, f in d.items()} for d in viz_data]
+    meta_data = [{c: round(f, 4) if type(f) == float else f
+                  for c, f in d.items()} for d in meta_data]
 
     if save:
         # Typical Primary Colors
-        save = save.format('.json')
-        _object_typical_colors(obj_color_data, save)
+        _object_typical_colors(obj2colors, save)
 
-        # Primary Colors Frequency
-        save = save.replace('json', 'csv')
-        pd.DataFrame(viz_data).to_csv(save, sep=',', index=False)
+        # Meta info
+        save = save.replace('.json', '_meta.csv')
+        save_csv(meta_data, save, sep=',', index=False)
 
     # Stacked Bar Plot
     if show_viz:
-        df = pd.DataFrame(viz_data)
-        # TODO: Filter (~100) before Plotting
+        # TODO: Use `obj2colors` for Visualization!
+        df = pd.DataFrame(meta_data)
         df = df.drop(columns=['entropy', 'total'])
 
-        _visualize(df, COLOR_SET)
-        # TODO: Likewise, Plot Typical colors!
+        # TODO: Filter (~100 rows)
+        _visualize(df.sample(n=20), COLOR_SET)

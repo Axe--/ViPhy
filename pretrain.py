@@ -33,14 +33,14 @@ def main():
     parser.add_argument('--data_dir',       type=str,   help='raw dataset directory', required=True)
 
     # Training params
-    parser.add_argument('--lr',             type=float, help='learning rate', default=1e-4)
+    parser.add_argument('--lr',             type=float, help='learning rate', default=1e-5)
     parser.add_argument('--epochs',         type=int,   help='number of epochs', default=20)
     parser.add_argument('--batch_size',     type=int,   help='batch size', default=8)
     parser.add_argument('--ckpt',           type=str,   help='path to model checkpoint .pth file')
     parser.add_argument('--save',           type=s2b,   help='whether to save models', default='T')
     parser.add_argument('--val_size',       type=int,   help='validation size for evaluating metrics', default=4096)
     parser.add_argument('--log_it',         type=int,   help='interval for logging training summaries', default=100)
-    parser.add_argument('--save_it',        type=int,   help='num of weight updates to save model', default=300)
+    parser.add_argument('--save_it',        type=int,   help='num of weight updates to save model', default=30000)
 
     # GPU params
     parser.add_argument('--gpu_ids',        type=str,   help='GPU Device ID', default='0')
