@@ -39,8 +39,8 @@ def main():
     parser.add_argument('--ckpt',           type=str,   help='path to model checkpoint .pth file')
     parser.add_argument('--save',           type=s2b,   help='whether to save models', default='T')
     parser.add_argument('--val_size',       type=int,   help='validation size for evaluating metrics', default=4096)
-    parser.add_argument('--log_interval',   type=int,   help='interval for logging training summaries', default=100)
-    parser.add_argument('--save_interval',  type=int,   help='num of weight updates to save model', default=30000)
+    parser.add_argument('--log_it',         type=int,   help='interval for logging training summaries', default=100)
+    parser.add_argument('--save_it',        type=int,   help='num of weight updates to save model', default=300)
 
     # GPU params
     parser.add_argument('--gpu_ids',        type=str,   help='GPU Device ID', default='0')
@@ -63,13 +63,13 @@ def main():
     n_epochs = args.epochs
     batch_size = args.batch_size
 
-    # Setup train log directory
+    # Logging directory
     log_dir = osj(args.expt_dir, args.expt_name, args.run_name)
 
     if not os.path.exists(log_dir):
         os.makedirs(log_dir)
 
-    # TensorBoard summaries setup  -->  /expt_dir/expt_name/run_name/
+    # TensorBoard summary  -->  /expt_dir/expt_name/run_name/
     writer = SummaryWriter(log_dir)
 
     # Train log file
@@ -113,26 +113,11 @@ def main():
     curr_step = 1
     best_val_loss = 1e8
 
-    # Load model checkpoint file (if specified)
-    if args.ckpt:
-        checkpoint = torch.load(args.ckpt, map_location='cpu')
-
-        model.load_weights(checkpoint)
-
-        # Load training info
-        curr_step = checkpoint['curr_step']
-        start_epoch = checkpoint['epoch']
-        prev_loss = checkpoint['loss']
-
-        log_msg += 'Resuming Training...\n'
-        log_msg += 'Model successfully loaded from {}\n'.format(args.ckpt)
-        log_msg += 'Training loss: {:2f} (from ckpt)\n'.format(prev_loss)
-
-    # DataParallel (GPU)
-    model = nn.DataParallel(model, device_ids)
+    # Multi-GPU
+    # model = nn.DataParallel(model, device_ids)
     model.to(device)
 
-    # Train mode
+    # Set mode
     model.train()
 
     # Log
@@ -165,7 +150,7 @@ def main():
             optimizer.zero_grad()
 
             # Print Results - Loss
-            if curr_step % args.log_interval == 0 or curr_step == 1:
+            if curr_step % args.log_it == 0 or curr_step == 1:
                 # Validation Loss
                 if val_dataset:
                     metrics = compute_eval_loss(model, val_loader, device, val_used_size)
@@ -193,14 +178,11 @@ def main():
                 print_log(log_msg, log_file)
 
             # Save the model
-            if curr_step % args.save_interval == 0:
-                path = osj(log_dir, 'model_' + str(curr_step) + '.pth')
-
-                state_dict = {'model_state_dict': model.state_dict(), 'val_loss': best_val_loss,
-                              'curr_step': curr_step, 'loss': loss.item(), 'epoch': epoch}
+            if curr_step % args.save_it == 0:
+                path = osj(log_dir, 'model_' + str(curr_step))
 
                 if args.save:
-                    torch.save(state_dict, path)
+                    model.save_pretrained(path)
 
                 log_msg = 'Saving the model at the {} step to directory:{}'.format(curr_step, log_dir)
                 print_log(log_msg, log_file)
@@ -220,16 +202,12 @@ def main():
                 best_val_loss = metrics['loss']
 
                 step = '{:.1f}k'.format(curr_step / 1000) if curr_step > 1000 else f'{curr_step}'
-                filename = 'ep_{}_stp_{}_loss_{:.2f}_model.pth'.format(epoch, step, best_val_loss)
+                filename = 'ep_{}_stp_{}_loss_{:.2f}_model'.format(epoch, step, best_val_loss)
 
                 path = osj(log_dir, filename)
 
-                state_dict = {'model_state_dict': model.state_dict(),
-                              'curr_step': curr_step, 'loss': loss.item(),
-                              'epoch': epoch, 'val_loss': best_val_loss}
-
                 if args.save:
-                    torch.save(state_dict, path)
+                    model.save_pretrained(path)
 
                 log_msg += "\n** Best Performing Model: {:.4f} ** \nSaving weights at {}\n".format(best_val_loss, path)
 
@@ -237,7 +215,7 @@ def main():
 
             print_log(log_msg, log_file)
 
-            # Reset the mode to training
+            # Reset mode
             model.train()
 
     writer.close()
