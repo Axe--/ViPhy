@@ -237,7 +237,7 @@ class ColorDataDev:
                         obj = res['object']
                         subtypes = res['subtypes']
 
-                        # if multiple subtypes
+                        # has subtypes
                         if len(subtypes) > 1:
                             best_subtype = self._get_best_subtype(im_path, bbox, obj, subtypes)
                         else:
@@ -318,12 +318,6 @@ class ColorDataDev:
 
         :param sent: paired word-tag sentence
         :return: object names
-
-        TODO: Include Part-based parsing:
-        "box OF matches" --> match box
-        "car HAS door" --> car door
-
-        See `self.parts_from_pos_tags()`
         """
         def _singular(_word: str) -> str:
             out = self.inflect.singular_noun(_word)
@@ -369,22 +363,6 @@ class ColorDataDev:
             prev_tag = tag
 
         return _objs
-
-    @staticmethod
-    def parts_from_pos_tags(data_pos_tags: List[Dict[str, str]], obj_names: Dict[str, int], min_count: int):
-        """
-        Given POS-Tagged Region captions, extracts part-whole relations for objects.
-
-        e.g. "cat has an ear" --> (cat, ear)
-
-        :param data_pos_tags: dataset captions with POS tags
-        :param obj_names: object-freq dict
-        :param min_count: objects below this frequency are excluded
-        :return: object-part relations
-        :rtype: Dict[str, Dict[str, int]]
-        """
-        # I think we only need to "subtype" the Object (not needed for Part)
-        pass
 
     @staticmethod
     def _get_subtypes(objects: Dict[str, int], obj_name: str) -> Dict[str, int]:
@@ -527,7 +505,7 @@ class ColorDataDev:
             objects = _drop_typos(objects, obj)
 
         # Drop objects that mention color (e.g. blue sky)
-        objects = {o: f for o, f in objects.items() if not _has_color(o)}
+        objects = {o: f for o, f in objects.items() if not _has_color(o)}       # TODO: Review this step!
 
         # Retain only Noun objects
         objects = {o: f for o, f in tqdm(objects.items()) if _is_noun(o)}
@@ -615,7 +593,7 @@ class ColorDataDev:
                 bbox = [b['x'], b['y'], b['width'], b['height']]
                 bbox = self._extend_bbox(bbox, image.size)
 
-                # Duplicate Regions
+                # Repeat Regions (batch inference)
                 images += [self._crop_region(image, bbox)] * len(objects)
 
                 if len(objects) > 0:
@@ -631,16 +609,74 @@ class ColorDataDev:
 
         return obj2colors
 
+    @staticmethod
+    def parts_from_pos_tags(data_pos_tags: List[Dict[str, str]], obj_names: Dict[str, int], min_count: int):
+        """
+        Given POS-Tagged Region captions, extracts part-whole relations for objects.
+
+        e.g. "cat has an ear" --> (cat, ear)
+
+        :param data_pos_tags: dataset captions with POS tags
+        :param obj_names: object-freq dict
+        :param min_count: objects below this frequency are excluded
+        :return: object-part relations
+        :rtype: Dict[str, Dict[str, int]]
+        """
+        # I think we only need to "subtype" the Object (not needed for Part)
+        pass
+
+
+def _pos_tag():
+    parser = argparse.ArgumentParser(description="POS Tagging (regions)")
+
+    parser.add_argument("--inp", type=str, help="path to regions json", required=True)
+    parser.add_argument("--out", type=str, help="path to output json", required=True)
+    parser.add_argument("--gpu", type=int, help="cuda device ID", required=True)
+
+    args = parser.parse_args()
+
+    import flair
+    flair.device = 'cuda:{}'.format(args.gpu)
+
+    # Input
+    data_regions = read_json(args.inp)
+
+    # Tagger
+    dev = ColorDataDev(pos_tag=True)
+
+    # POS Tag & Save
+    dev.compute_pos_tags(data_regions, save_path=args.out)
+
+
+def _obj_names(min_count: int):
+    data_pos = read_json('../VG/regions_pos.json')
+
+    ddev = ColorDataDev(pos_tag=True)
+
+    obj_names = ddev.objects_from_pos_tags(data_pos, min_count)
+
+    save_json(obj_names, f'../data/object_names_c{min_count}.json')
+
+
+def _obj_subtypes(obj_min: int, sub_min: int):
+    objs = read_json('../data/object_names_c5.json')
+
+    ddev = ColorDataDev()
+
+    obj2subs = ddev.subtypes_from_objects(objs, obj_min, sub_min)
+
+    save_json(obj2subs, path=f'../data/object_subtypes_o{obj_min}_s{sub_min}.json')
+
 
 def _reg_obj_subtype():
     parser = argparse.ArgumentParser(description="Region Object Subtypes")
 
-    parser.add_argument("--regions",    type=str, required=True)
-    parser.add_argument("--pos_tags",   type=str, required=True)
-    parser.add_argument("--subtypes",   type=str, required=True)
-    parser.add_argument("--data_dir",   type=str, required=True)
-    parser.add_argument("--out",        type=str, required=True)
-    parser.add_argument("--gpu",        type=int, required=True)
+    parser.add_argument("--regions", type=str, required=True)
+    parser.add_argument("--pos_tags", type=str, required=True)
+    parser.add_argument("--subtypes", type=str, required=True)
+    parser.add_argument("--data_dir", type=str, required=True)
+    parser.add_argument("--out", type=str, required=True)
+    parser.add_argument("--gpu", type=int, required=True)
 
     args = parser.parse_args()
 
@@ -666,16 +702,6 @@ def _reg_obj_subtype():
     save_json(res, path=args.out)
 
 
-def _obj_subtypes(obj_min: int, sub_min: int):
-    objs = read_json('../data/object_names_c5.json')
-
-    ddev = ColorDataDev()
-
-    obj2subs = ddev.subtypes_from_objects(objs, obj_min, sub_min)
-
-    save_json(obj2subs, path=f'../data/object_subtypes_o{obj_min}_s{sub_min}.json')
-
-
 def _part_objs():
     data_pos = read_json('../VG/regions_pos.json')
     object_names = read_json('../data/object_names.json')
@@ -685,38 +711,6 @@ def _part_objs():
     obj_part_rels = ddev.parts_from_pos_tags(data_pos, object_names, min_count=100)
 
     save_json(obj_part_rels, f'../data/obj_part_relations.json')
-
-
-def _obj_names(min_count: int):
-    data_pos = read_json('../VG/regions_pos.json')
-
-    ddev = ColorDataDev(pos_tag=True)
-
-    obj_names = ddev.objects_from_pos_tags(data_pos, min_count)
-
-    save_json(obj_names, f'../data/object_names_c{min_count}.json')
-
-
-def _pos_tag():
-    parser = argparse.ArgumentParser(description="POS Tagging (regions)")
-
-    parser.add_argument("--inp", type=str, help="path to regions json", required=True)
-    parser.add_argument("--out", type=str, help="path to output json", required=True)
-    parser.add_argument("--gpu", type=int, help="cuda device ID", required=True)
-
-    args = parser.parse_args()
-
-    import flair
-    flair.device = 'cuda:{}'.format(args.gpu)
-
-    # Input
-    data_regions = read_json(args.inp)
-
-    # Tagger
-    dev = ColorDataDev(pos_tag=True)
-
-    # POS Tag & Save
-    dev.compute_pos_tags(data_regions, save_path=args.out)
 
 
 def _im_col():
@@ -750,6 +744,7 @@ def _im_col():
 
 
 if __name__ == '__main__':
+    # _pos_tag()
     # _obj_names(min_count=5)
     # _obj_subtypes(obj_min=100, sub_min=10)
     # _reg_obj_subtype()

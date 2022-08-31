@@ -2,6 +2,37 @@
 Stores parameters for building & cleaning the dataset development pipeline.
 """
 
+# VG Images (corrupt IDs)
+IGNORE_IMAGES = [2331541, 2416218, 2325661, 2330142, 2403972, 2400491,
+                 2391568, 2326141, 2316472, 2369516, 2378996, 2415090,
+                 2321571, 2350190, 2337155, 2404941, 2336131, 2417802,
+                 2392406, 2363899, 2335991, 2340698, 2320098, 2378352,
+                 2347067, 2395307, 2336852, 2372979, 2402595, 2336771,
+                 2357002, 2350687, 2345238, 2405946, 2382669, 2394180,
+                 2392550, 2392657, 2401212, 2328613, 2395669, 2328471,
+                 2380334, 2402944, 2373542, 2394503, 2354486, 2393276,
+                 2333919, 2410274, 2393186, 2415989, 2408825, 2386339,
+                 2407337, 2414917, 2354293, 2408461, 2387773, 2335434,
+                 2343497, 2388568, 2379781, 2387074, 2370307, 2339625,
+                 2388085, 2414491, 2417886, 2401793, 2354437, 2388917,
+                 2383685, 2327203, 2346773, 2390387, 2351122, 2397804,
+                 2385744, 2369047, 2412350, 2346745, 2323189, 2316003,
+                 2339038, 2344194, 2389915, 2406223, 2329481, 2370916,
+                 2350125, 2386269, 2368946, 2414809, 2323362, 2396395,
+                 2410589, 2405591, 2357389, 2370544, 2407333, 2396732,
+                 2339452, 2360452, 2337005, 2329477, 2400248, 2408234,
+                 2335721, 2348472, 2319788, 2319311, 2380814, 2374336,
+                 2356194, 2379468, 2318215, 2335839, 2343246, 2384303,
+                 2338403, 2345400, 2360334, 2397721, 2376553, 2346562,
+                 2325435, 2390322, 2370333, 2320630, 2416204, 2370885,
+                 2321051, 2405004, 2400944, 2379210, 2390058, 2374775,
+                 2405254, 2388989, 2356717, 2416776, 2413483, 2344903,
+                 2369711, 2357151, 2344765, 2338884, 2357595, 2359672,
+                 2385366, 2361256, 2379927, 2407778, 2344844, 2340300,
+                 2315674, 2394940, 2325625, 2355831, 2324980, 2388284,
+                 2399366, 2407937, 2354396, 2397424, 2386421]
+
+
 # Threshold values
 OBJECT_MIN_COUNT = 5
 OBJ_SUB_MIN_COUNT = 100
@@ -35,9 +66,9 @@ IGNORE_OBJECTS += ['door refrigerator', 'door car']
 # Drop object qualifiers; See `_drop_objs_and_merge()`
 DROP_QUALIFIERS = ['color', 'colour', 'word', 'gren', 'blu', 'whtie', 'otuside', 'buildinga',
                    'center', 'side', 'front', 'top', 'bottom', 'right', 'left', 'corner',
-                   'piece', 'style', 'background', '']  # brass, chrome, metal
+                   'piece', 'style', 'background']  # TODO: brass, chrome, metal, wood, steel
 
-DROP_QUALIFIERS += ['dell', 'mac']  # nike
+DROP_QUALIFIERS += ['dell', 'mac', 'nike', 'coca cola']
 
 
 # Ignore subtypes of objects (color)
@@ -81,7 +112,24 @@ ADD_OBJECTS += ['tv stand', 'broccoli floret', 'tv screen', 'double-decker bus',
                 'sideview mirror', 'tv cabinet', 'bbq sauce', 'rear-view mirror', 'afternoon sky', 'cd drive']
 
 
-# TODO: Remove `main`
+# Ignore Size
+SKIP_TERMS = ['wall', 'floor', 'sky', 'cloud', 'area', 'road', 'pavement', 'street', 'sidewalk', 'sand', 'street',
+              'sea', 'ocean', 'lake', 'river', 'water', 'ground', 'grass', 'edge', 'top', 'hair', 'part', 'concrete',
+              'picture', 'photo', 'corner', 'line', 'shadow', 'reflection', 'item', 'color', 'mark', 'view', 'grove',
+              'circle', 'par', 'core', 'construction', 'work', 'groove', 'crossing', 'zoo', 'shadow cast', 'engineer',
+              'land', 'dad', 'grout', 'shirt boy', 'mountainside', 'porcelain', 'focus', 'system', 'text', 'toiletry',
+              'structure', 'flop', 'stuff', 'layer', 'angel', 'font', 'steam', 'curve', 'product', 'competition', 'sun',
+              'half', 'support', 'cattle grazing', 'balance scale', 'material', 'profile', 'iii', 'bedding', 'bloat',
+              'empire', 'trio', 'price', 'route', 'flooring', 'statute', 'trick', 'caramel', 'group', 'breakfast',
+              'nick knack', 'image', 'blur', 'chunk', 'algae', 'gravy', 'soil', 'destination', 'water side', 'runner',
+              'art', 'roman', 'season', 'horizon', 'team', 'direction', 'elephant feeding', 'world war', 'dinosaur',
+              'ray', 'maroon', 'mother', 'print', 'food', 'section', 'movie', 'metal', 'cityscape', 'batch', 'birthday',
+              'town', 'xii', 'expression', 'piece', 'habitat', 'word', 'city', 'photographer', 'fall', 'place', 'set',
+              'alphabet', 'scene', 'instruction', 'fun', 'river side', 'car driving', 'game', 'side', 'video', 'front',
+              'position', 'capital', 'business', 'character', 'lot', 'sun', 'moon']
+
+
+# Remove `main`
 if __name__ == '__main__':
     from spellchecker import SpellChecker
     from utils import read_json
@@ -95,34 +143,3 @@ if __name__ == '__main__':
         for typo in typos:
             correction = spell.correction(typo)
             print(multi_word, ':', typo, '-->', correction, '   |   ', freq)
-
-
-# Ignore corrupt images (IDs)
-IGNORE_IMAGES = [2331541, 2416218, 2325661, 2330142, 2403972, 2400491,
-                 2391568, 2326141, 2316472, 2369516, 2378996, 2415090,
-                 2321571, 2350190, 2337155, 2404941, 2336131, 2417802,
-                 2392406, 2363899, 2335991, 2340698, 2320098, 2378352,
-                 2347067, 2395307, 2336852, 2372979, 2402595, 2336771,
-                 2357002, 2350687, 2345238, 2405946, 2382669, 2394180,
-                 2392550, 2392657, 2401212, 2328613, 2395669, 2328471,
-                 2380334, 2402944, 2373542, 2394503, 2354486, 2393276,
-                 2333919, 2410274, 2393186, 2415989, 2408825, 2386339,
-                 2407337, 2414917, 2354293, 2408461, 2387773, 2335434,
-                 2343497, 2388568, 2379781, 2387074, 2370307, 2339625,
-                 2388085, 2414491, 2417886, 2401793, 2354437, 2388917,
-                 2383685, 2327203, 2346773, 2390387, 2351122, 2397804,
-                 2385744, 2369047, 2412350, 2346745, 2323189, 2316003,
-                 2339038, 2344194, 2389915, 2406223, 2329481, 2370916,
-                 2350125, 2386269, 2368946, 2414809, 2323362, 2396395,
-                 2410589, 2405591, 2357389, 2370544, 2407333, 2396732,
-                 2339452, 2360452, 2337005, 2329477, 2400248, 2408234,
-                 2335721, 2348472, 2319788, 2319311, 2380814, 2374336,
-                 2356194, 2379468, 2318215, 2335839, 2343246, 2384303,
-                 2338403, 2345400, 2360334, 2397721, 2376553, 2346562,
-                 2325435, 2390322, 2370333, 2320630, 2416204, 2370885,
-                 2321051, 2405004, 2400944, 2379210, 2390058, 2374775,
-                 2405254, 2388989, 2356717, 2416776, 2413483, 2344903,
-                 2369711, 2357151, 2344765, 2338884, 2357595, 2359672,
-                 2385366, 2361256, 2379927, 2407778, 2344844, 2340300,
-                 2315674, 2394940, 2325625, 2355831, 2324980, 2388284,
-                 2399366, 2407937, 2354396, 2397424, 2386421]

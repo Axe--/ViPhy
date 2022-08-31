@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from typing import List, Dict, Union
 from utils import read_json, save_json
 from utils import compute_entropy, to_prob_dist
-from constants import COLOR_SET, ATTR2COLOR
+from color.constants import COLOR_SET, ATTR2COLOR
 
 
 def _nearest_color(rgb):
@@ -85,47 +85,48 @@ def _visualize(_df: pd.DataFrame, color_set: List[str]):
     plt.show()
 
 
+def get_typical(_color_dist: Dict[str, float]) -> Dict[str, float]:
+    p_min = 0.1
+    done = False
+    n = len(_color_dist)
+
+    while not done:
+        # filter colors
+        _color_dist = {c: p for c, p in _color_dist.items() if p >= p_min}
+
+        # re-normalize
+        _color_dist = to_prob_dist(_color_dist)
+
+        # if unchanged --> done
+        if len(_color_dist) == n:
+            done = True
+
+        # num colors
+        n = len(_color_dist)
+
+        # threshold
+        if n >= 4:
+            p_min = 0.1
+        elif n == 3:
+            p_min = 0.2
+        elif n == 2:
+            p_min = 0.3
+        else:
+            done = True
+
+    return _color_dist
+
+
 def _object_typical_colors(obj_color_dists: Dict[str, Dict[str, float]], save_fp: str):
     """
     Given object names & associated primary color distribution,
     identifies typical colors from the distribution.
     """
-    def _get_typical(_color_dist: Dict[str, float]) -> Dict[str, float]:
-        p_min = 0.1
-        done = False
-        n = len(_color_dist)
-
-        while not done:
-            # filter colors
-            _color_dist = {c: p for c, p in _color_dist.items() if p >= p_min}
-
-            # re-normalize
-            _color_dist = to_prob_dist(_color_dist)
-
-            # if unchanged --> done
-            if len(_color_dist) == n:
-                done = True
-
-            # num colors
-            n = len(_color_dist)
-
-            # threshold
-            if n >= 4:
-                p_min = 0.1
-            elif n == 3:
-                p_min = 0.2
-            elif n == 2:
-                p_min = 0.3
-            else:
-                done = True
-
-        return _color_dist
-
     # Typical Colors
     object2typical = {}
 
     for obj, colors in tqdm(obj_color_dists.items()):
-        object2typical[obj] = _get_typical(colors)
+        object2typical[obj] = get_typical(colors)
 
     # Save to disk
     save_json(object2typical, save_fp, indent=4)
@@ -161,6 +162,30 @@ def _merge_color_jsn(_dir: str, save_fp: str):
     print('Merged: ', _num_instances(object2colors))
 
     save_json(object2colors, save_fp, indent=4)
+
+
+def _aggregate_subtype_colors(parent_obj: str,
+                              object2color: Dict[str, Dict[str, float]],
+                              object2subtypes: Dict[str, Dict[str, int]]) -> List[float]:
+    """
+    Computes the mean distribution of colors -- aggregated over all subtypes.
+    TODO: Compute Iteratively over Subs!
+
+    :return: object color distribution
+    """
+
+    def _get_prob(o: str) -> List[float]:
+        return list(object2color[o].values())
+
+    # Note: subtype also contains the parent!
+    prob = []
+
+    for subtype in object2subtypes[parent_obj]:
+        prob += [_get_prob(subtype)]
+
+    prob = list(np.mean(prob, axis=0))
+
+    return prob
 
 
 if __name__ == '__main__':
