@@ -6,6 +6,8 @@ temp/
 spatial_raw*.csv
 obj_size_k_5*.json
 caption_color.json
+CapBERT
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

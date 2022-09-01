@@ -124,8 +124,6 @@ class MaskedLM(nn.Module):
 
         # CLS model
         else:
-            name = self.name
-
             if 'vilt' in name:
                 name = 'bert-base-uncased'
                 _Tokenizer = BertTokenizerFast
@@ -140,7 +138,7 @@ class MaskedLM(nn.Module):
                 _Model = FlavaModel if self.vl else FlavaTextModel
 
             else:
-                if 'visualbert' in name:
+                if 'visualbert' in name or 'Cap' in name:
                     name = 'bert-base-uncased'
                 _Tokenizer = AutoTokenizer
                 _Model = AutoModel

@@ -89,6 +89,7 @@ class ViPhyDataset(Dataset):
 
     @staticmethod
     def get_model_type(name: str) -> str:
+        name = name.lower()
         if 'bert' in name:
             _type = 'MLM'
         elif 'vilt' in name:
