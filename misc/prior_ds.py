@@ -9,27 +9,21 @@ from typing import Dict, List, Any
 from sklearn.metrics import f1_score
 from utils import read_json, read_csv
 from color.constants import COLOR_SET
-from color.col_utils import _aggregate_subtype_colors, get_typical
+from color.col_utils import get_typical
 
 sys.path.append(os.environ['VisCS'])
 
 
-def eval_coda(viphy: Dict):
-    """
-    Reports the alignment (*accuracy) of
-    object colors in CoDa, on ViPhy dataset.
-    """
-    # CoDa: Color Set
-    coda_color_set = ['black', 'blue', 'brown', 'gray', 'green',
-                      'orange', 'pink', 'purple', 'red', 'white', 'yellow']
-
+def load_coda():
     def _read(df):
         cols = ['ngram', 'label']
         df = pd.DataFrame(df)[cols]
         df = df.drop_duplicates(subset='ngram')
         df = df.to_dict(orient='records')
         return df
-
+    # CoDa: Color Set
+    color_set = ['black', 'blue', 'brown', 'gray', 'green',
+                 'orange', 'pink', 'purple', 'red', 'white', 'yellow']
     # Load
     ds = load_dataset('corypaik/coda')
 
@@ -42,54 +36,36 @@ def eval_coda(viphy: Dict):
     coda = train + val + test
 
     # CoDa Dataset
-    coda_typical = {}
-    coda_prob = {}
+    color_typical = {}
+    color_prob = {}
 
     for d in coda:
-        obj = d['ngram']
+        o = d['ngram']
         prob = d['label']
-        col_dist = {col: prob for col, prob in zip(coda_color_set, prob)}
+        col_dist = {col: prob for col, prob in zip(color_set, prob)}
         # typical colors
         colors = get_typical(col_dist)
 
-        coda_typical[obj] = colors
-        coda_prob[obj] = col_dist
+        color_typical[o] = colors
+        color_prob[o] = col_dist
 
-    # ViPhy Dataset
-    subtypes = read_json('../data/object_subtypes_o100_s10.json')
+    return color_typical, color_prob
 
-    # Get common objects
-    all_objects = {_['object'] for _ in viphy}
 
-    coda_prob = {o: v for o, v in coda_prob.items() if o in all_objects}
-    coda_typical = {o: v for o, v in coda_typical.items() if o in all_objects}
+def eval_coda(viphy: Dict):
+    """
+    Reports the alignment (*accuracy) of
+    object colors in CoDa, on ViPhy dataset.
+    """
+    coda_typical, coda_prob = load_coda()
 
-    temp = {}
-    for d in viphy:
-        # drop
-        d.pop('entropy'); d.pop('total')
-        obj = d.pop('object')
-        prob = d
+    # Common Objects
+    viphy_objects = set(viphy.keys())
 
-        temp[obj] = prob
+    coda_prob = {o: v for o, v in coda_prob.items() if o in viphy_objects}
+    coda_typical = {o: v for o, v in coda_typical.items() if o in viphy_objects}
 
-    viphy_color = {}
-    viphy_prob = {}
-    for obj in temp:
-        if obj in coda_typical:
-            # aggregate prob
-            probs = _aggregate_subtype_colors(obj, temp, subtypes)
-
-            # distribution
-            col_dist = {col: p for col, p in zip(COLOR_SET, probs)}
-
-            # typical colors
-            colors = get_typical(col_dist)
-
-            viphy_color[obj] = colors
-            viphy_prob[obj] = col_dist
-
-    # Relaxed Accuracy
+    # Compute Metrics
     is_correct = []
     true_lst, pred_lst = [], []
 
@@ -97,18 +73,23 @@ def eval_coda(viphy: Dict):
         return [1 if c in col else 0 for c in COLOR_SET]
 
     for obj, pred in coda_typical.items():
-        true = viphy_color[obj]
+        true = viphy[obj]
         is_correct += [1 if set(pred) & set(true) else 0]
 
         true_lst.append(_to_multi_hot(true))
         pred_lst.append(_to_multi_hot(pred))
 
+    # conf = []
+    # for obj, pred in coda_prob.items():
+    #     true = viphy[obj]
+    #     conf += [sum(p for c, p in pred.items() if c in true)]
+
+    # Results
     N = len(is_correct)
     acc = sum(is_correct) / N
     f1 = f1_score(true_lst, pred_lst, average='samples')
 
     print('r-Accuracy:', acc)
-    print('F1-score:', f1)
     print('#Objects:', N)
 
 
@@ -171,13 +152,12 @@ def eval_olmpics(viphy: List):
     f1 = f1_score(true_lst, pred_lst, average='binary')
 
     print('Accuracy:', acc)
-    print('F1-score:', f1)
     print('#Obj-pairs:', N)
 
 
 if __name__ == '__main__':
     print('Color')
-    color_data = read_csv('../results/colors.csv')
+    color_data = read_json('../results/colors.json')
     eval_coda(color_data)
 
     print('\nSize')
