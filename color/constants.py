@@ -68,7 +68,7 @@ DROP_QUALIFIERS = ['color', 'colour', 'word', 'gren', 'blu', 'whtie', 'otuside',
                    'center', 'side', 'front', 'top', 'bottom', 'right', 'left', 'corner',
                    'piece', 'style', 'background', 'metal', 'wood', 'steel']
 
-DROP_QUALIFIERS += ['dell', 'mac', 'nike', 'coca cola']
+DROP_QUALIFIERS += ['dell', 'mac', 'nike', 'coca cola', 'adidas']
 
 
 # Include objects

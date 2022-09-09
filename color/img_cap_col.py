@@ -1,13 +1,13 @@
 """
-Setups the dataset for Img+Txt evaluation,
+Constructs dataset for Img+Txt evaluation,
 with VG captions as ground-truth color.
 """
 import numpy as np
 from tqdm import tqdm
 from typing import List, Dict, Tuple, Union, Any
-from color.col_utils import COLOR_SET, ATTR2COLOR
+from color.col_utils import COLOR_SET
 from color.constants import IGNORE_IMAGES
-from utils import read_json, save_json, dataset_split
+from utils import read_json, save_json
 
 
 def _caption_with_color(data_pos: List[Dict[str, Union[int, List]]],
@@ -40,7 +40,7 @@ def _caption_with_color(data_pos: List[Dict[str, Union[int, List]]],
                     return True
         return False
 
-    def _get_obj_color(pos: Dict[str, str], objs: Dict[str, str]) -> Dict[str, str]:
+    def _get_obj_color(pos: Dict[str, str], objs: Dict[str, str]) -> Dict[str, List[str]]:
         """ Finds object-color pair """
         cap = ' '.join(pos)
         colors = {}
@@ -54,8 +54,10 @@ def _caption_with_color(data_pos: List[Dict[str, Union[int, List]]],
             o_i = cap.find(o)
             for c_i, col in list(colors.items()):
                 if c_i < o_i:
+                    if o not in res:
+                        res[o] = []
                     # save obj-col
-                    res[o] = col
+                    res[o] += [col]
                     # drop assigned color
                     colors.pop(c_i)
         return res
@@ -67,17 +69,23 @@ def _caption_with_color(data_pos: List[Dict[str, Union[int, List]]],
             continue
 
         for caption, objects, regions in zip(dp['pos_tags'], dr['ros'], db['regions']):
-            caption = _replace_attr(caption)
-
-            obj2col = {}
-            if _has_color(caption) and objects != {}:
-                obj2col = _get_obj_color(caption, objects)
-                # replace object w/ subtype
-                obj2col = {objects[o]: c for o, c in obj2col.items()}
-
             # image & bbox
             _id = dp['image_id']
             box = regions['bbox']
+
+            # threshold by area
+            if box[2]*box[3] < 224:
+                continue
+
+            # clean up
+            caption = _replace_attr(caption)
+
+            obj2col = {}
+            # If one object + color(s)
+            if _has_color(caption) and len(objects) == 1:
+                obj2col = _get_obj_color(caption, objects)
+                # replace object w/ subtype
+                obj2col = {objects[o]: c for o, c in obj2col.items()}
 
             # Dataset
             for o, c in obj2col.items():
@@ -97,34 +105,36 @@ def _run_cap_col():
 
     # Captions with Color
     col_caps = _caption_with_color(jsn_pos, jsn_ros, jsn_bbox)
-    save_json(col_caps, path='../data/caption_color.json')
+
+    save_json(col_caps, path='../data/img_color.json')
 
 
-def _build_dataset(save_fp, N=10):
+def _build_dataset(inp_path, save_fp, N=10):
     """
     Constructs the Caption-Color dataset (splits).
     """
     def _to_records(_data: Dict[str, List[Dict]], _obj_split: List[str]) -> List[Dict[str, Any]]:
         dataset = []
         for name in _obj_split:
-            # all instances
-            inst = _data[name]
+            if name in _data:
+                # all instances
+                inst = _data[name]
 
-            # sample `n` per object
-            inst = np.random.choice(inst, size=N, replace=False)
+                # sample `n` per object
+                inst = np.random.choice(inst, size=N, replace=False)
 
-            # Dataset
-            for i in inst:
-                sample = dict(object=name,
-                              color=i['color'],
-                              img_id=i['img_id'],
-                              bbox=i['bbox'])
-                dataset += [sample]
+                # Dataset
+                for i in inst:
+                    sample = dict(object=name,
+                                  color=i['color'],
+                                  img_id=i['img_id'],
+                                  bbox=i['bbox'])
+                    dataset += [sample]
 
         return dataset
 
     # Raw Caption-Color data
-    jsn = read_json('../data/caption_color.json')
+    jsn = read_json(inp_path)
 
     # Group by: object -> [{col, img, box}]
     data = {}
@@ -139,9 +149,10 @@ def _build_dataset(save_fp, N=10):
     # Filter: Freq >= N
     data = {obj: inst for obj, inst in data.items() if len(inst) >= N}
 
-    # Split by Objects
-    objects = list(data)
-    train, val, test = dataset_split(objects)
+    # Split by `color` dataset objects
+    train = list(read_json('../dataset/color/train.json'))
+    test = list(read_json('../dataset/color/test.json'))
+    val = list(read_json('../dataset/color/val.json'))
 
     # Prepare dataset
     train = _to_records(data, train)
@@ -156,4 +167,5 @@ def _build_dataset(save_fp, N=10):
 
 if __name__ == '__main__':
     # _run_cap_col()
-    _build_dataset(save_fp='../dataset/img_color/{}.json')
+    _build_dataset(inp_path='../data/img_color.json', N=10,
+                   save_fp='../dataset/img_color/{}.json')
