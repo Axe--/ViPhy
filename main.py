@@ -409,7 +409,7 @@ def compute_f1_score(true_labels: List[str], pred_probs: List[str]) -> float:
     true_labels = [_str2list(labels) for labels in true_labels]
     true_labels = [_to_hot_vec(labels, n_labels) for labels in true_labels]
 
-    f1 = f1_score(true_labels, pred_labels, average='samples')
+    f1 = f1_score(true_labels, pred_labels, average='macro')
 
     return f1
 

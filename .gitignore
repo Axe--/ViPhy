@@ -1,12 +1,11 @@
-VG
 log/
 temp/
-*.pkl
-*.pth
+temp/misc/
+CapBERT/
 spatial_raw*.csv
 obj_size_k_5*.json
-caption_color.json
-CapBERT
+*.pkl
+*.pth
 
 
 # Byte-compiled / optimized / DLL files

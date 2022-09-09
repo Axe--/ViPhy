@@ -1,17 +1,28 @@
-# VisCS: VISible CommonSense
+# <span style="font-variant:small-caps;">ViPhy</span>
 
-Probing Visual Knowledge (spatial, colors, sizes) via automatically constructed dataset.
+Dataset and Code for the paper: 
+[<span style="font-variant:small-caps;">ViPhy</span>: 
+Probing **Vi**sible **Phy**sical Commonsense](TODO)
 
-
-TODO: requirements.txt
-
-** Visual Genome --> Lowercase all annotations **
-
-
-# Setup 
-
+<!-- 
+### Setup
 ```shell
 export VG=...
 export VisCS=...
 export OFA=...
 ```
+-->
+
+
+### Datasets
+
+Provided in `dataset` directory — `color`, `size` & `spatial`.
+
+
+
+### Experiments
+
+For linear probe training & evaluation refer to `train.sh` & `eval.sh`.
+
+Zero-shot evaluation is provided in `zs.sh`.
+

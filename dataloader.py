@@ -193,7 +193,7 @@ class ViPhyDataset(Dataset):
         data = []
         for d in img_colors:
             # Model I/O
-            d['labels'] = [d.pop('color')]
+            d['labels'] = d.pop('color')
             d['img_path'] = id2path[d['img_id']]
             d['prompt'] = template.format(d['object'])
 
@@ -260,7 +260,7 @@ class ViPhyDataset(Dataset):
         if model_type == 'MLM':
             if self.zero_shot:
                 mask = self.tokenizer.mask_token
-                template = f"the {'{}'} is {mask} than {'{}'}"
+                template = f"the {'{}'} is {mask} than {'{}'} in size"
             else:
                 template = f"the size of {'{}'} in comparison to {'{}'}"
 
@@ -315,7 +315,6 @@ class ViPhyDataset(Dataset):
         """
         Generates labels from token-ids for GPT* models.
         """
-
         def _token2id(tok: str) -> int:
             return self.tokenizer.convert_tokens_to_ids(tok)
 
@@ -570,7 +569,15 @@ class CaptionMLMDataset(Dataset):
         return inputs
 
 
-def _viphy():
+def _cap_mlm():
+    ds = CaptionMLMDataset('../../Datasets/Captions', 'bert-base-uncased', split='val')
+    # lens = [len(ds.tokenizer.tokenize(c)) for c in ds.data]
+    # print(np.mean(lens), np.std(lens)); print(sorted(lens, reverse=True)[:200])
+    dl = DataLoader(ds, batch_size=4)
+    b = next(iter(dl))
+
+
+if __name__ == '__main__':
     # Args
     _name = 'facebook/flava-full'
 
@@ -582,14 +589,3 @@ def _viphy():
 
     b = next(iter(dl))
     print(b)
-
-
-if __name__ == '__main__':
-    # Dataset
-    ds = CaptionMLMDataset('../../Datasets/Captions', 'bert-base-uncased', split='val')
-
-    # lens = [len(ds.tokenizer.tokenize(c)) for c in ds.data]
-    # print(np.mean(lens), np.std(lens)); print(sorted(lens, reverse=True)[:200])
-
-    dl = DataLoader(ds, batch_size=4)
-    b = next(iter(dl))

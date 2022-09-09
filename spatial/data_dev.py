@@ -377,46 +377,6 @@ def _compute_spatial_relations(raw_path: str, save_fp: str,
     save_csv(data_cols, save_fp, sep=',', index=False)
 
 
-def _visualize(n_show, _scene='bedroom'):
-    # Read dataset
-    df = pd.read_csv('../results/spatial.csv', sep=',')
-
-    # Filter scene
-    df = df[df['scene'] == _scene]
-
-    # Pair names
-    df['pair'] = df.apply(lambda r: r['o1'] + '\n' + r['o2'], axis=1)
-
-    # Drop others
-    df = df.drop(columns=['o1', 'o2', 'scene',
-                          'freq', 'typical'])
-    # Select subset
-    df = df.sample(n_show, replace=False)
-
-    # Convert freq to distribution
-    vis_data = []
-    for d in df.to_dict(orient='records'):
-        pair = d.pop('pair')
-        # distribution
-        dist = to_prob_dist(d)
-        dist['pair'] = pair
-
-        vis_data.append(dist)
-
-    df = pd.DataFrame(vis_data)
-
-    # Relations: >, =, <
-    color_set = ['deepskyblue', 'gold', 'green']
-
-    # Bar plot
-    df.plot.bar(x='pair', stacked=True, color=color_set, title=_scene.upper(),
-                edgecolor="lightgray", figsize=(40, 24), rot=60)
-    plt.xticks(fontsize=20)
-    plt.legend(loc=(1.02, 0), prop={'size': 20})
-    plt.margins(x=0.1)
-    plt.show()
-
-
 if __name__ == '__main__':
     # Raw Dataset
     # _preprocess_spatial(ade_dir=os.environ['ADE'],
@@ -426,7 +386,3 @@ if __name__ == '__main__':
     _compute_spatial_relations(raw_path='../data/spatial_raw.csv',
                                save_fp='../results/spatial.csv',
                                min_rel_freq=10, min_co_occur=100)
-
-    # Visualize
-    # for s in ['kitchen', ...]:
-    #     _visualize(n_show=30, _scene=s)

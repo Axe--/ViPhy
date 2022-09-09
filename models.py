@@ -34,8 +34,8 @@ from transformers import DebertaV2Tokenizer, DebertaV2ForMaskedLM
 from transformers import T5Tokenizer, T5ForConditionalGeneration as T5
 from transformers import GPT2Tokenizer, GPT2LMHeadModel, GPTNeoForCausalLM
 from transformers import CLIPTokenizerFast, CLIPTextModel
-from transformers import VisualBertForPreTraining, ViltModel
 from transformers import FlavaTextModel, FlavaModel
+from transformers import VisualBertForPreTraining, ViltModel, ViltForMaskedLM
 
 # DPT
 if transformers.__version__ >= '4.19.0':
@@ -105,10 +105,22 @@ class MaskedLM(nn.Module):
             if name.startswith('bert-'):
                 _Tokenizer = BertTokenizer
                 _Model = BertForMaskedLM
+            elif name.startswith('CapBERT'):
+                name = 'bert-base-uncased'
+                _Tokenizer = BertTokenizer
+                _Model = BertForMaskedLM
             elif 'visualbert' in name:
                 name = 'bert-base-uncased'
                 _Tokenizer = BertTokenizer
                 _Model = VisualBertForPreTraining
+            elif 'vilt' in name:
+                name = 'bert-base-uncased'
+                _Tokenizer = BertTokenizer
+                _Model = ViltForMaskedLM
+            elif 'flava' in name:
+                name = 'bert-base-uncased'
+                _Tokenizer = BertTokenizer
+                _Model = FlavaTextModel
             elif 'roberta' in name:
                 _Tokenizer = RobertaTokenizer
                 _Model = RobertaForMaskedLM
@@ -160,10 +172,11 @@ class MaskedLM(nn.Module):
 
             print(f'Model successfully loaded from {path}\n')
 
-    def _prepare_vilt(self, inputs):
+    def _prepare_vilt(self, inputs: Dict) -> Dict:
         """ Inserts dummy visual values for ViLT. """
         if 'pixel_values' not in inputs:
-            B = len(inputs['input_ids'])
+            B = len(inputs['input_ids']) if not self.zero_shot else 1
+
             P, D = (1, self.fc.in_features)
 
             inputs['image_embeds'] = torch.zeros([B, P, D]).to(self.device)
@@ -204,6 +217,13 @@ class MaskedLM(nn.Module):
 
     @torch.inference_mode()
     def predict(self, text: str, top_k: int) -> List[str]:
+        """
+        Performs Zero-Shot Inference over [MASK].
+
+        :param text: input prompt
+        :param top_k: #labels
+        :return: `top-k` predictions
+        """
         # Special Tokens
         cls = self.tokenizer.cls_token
         sep = self.tokenizer.sep_token
@@ -219,10 +239,17 @@ class MaskedLM(nn.Module):
 
         mask_idx = tokens.index(mask)
 
-        # Predict all tokens
-        outputs = self.model(tokens_tensor)
+        # # Predict all tokens
+        if 'vilt' in self.name:
+            inp = dict(input_ids=tokens_tensor)
+            inp = self._prepare_vilt(inp)
+            outputs = self.model(**inp)
+        else:
+            outputs = self.model(tokens_tensor)
+
         predictions = outputs[0]
 
+        # Top-K
         probs = torch.nn.functional.softmax(predictions[0, mask_idx], dim=-1)
         top_k_weights, top_k_indices = torch.topk(probs, top_k, sorted=True)
 
@@ -351,7 +378,7 @@ class UnifiedQA(nn.Module):
     """
     Implements Unified-QA (T5) model.
     """
-    def __init__(self, name: str, device='cpu', ckpt=None, zs=False):
+    def __init__(self, name: str, device='cpu', ckpt=None):
         super().__init__()
         # Args
         self.device = device
@@ -424,7 +451,7 @@ class UnifiedQA(nn.Module):
             return out.loss
 
     @torch.inference_mode()
-    def predict(self, text: str) -> str:
+    def predict(self, text: str, top_k=None) -> List[str]:
         tokens = self.tokenizer(text, return_tensors="pt")
         tokens = tokens.input_ids.to(self.device)
 
@@ -433,6 +460,7 @@ class UnifiedQA(nn.Module):
 
         pred = self.tokenizer.decode(token_ids=pred[0],
                                      skip_special_tokens=True)
+
         return pred
 
 
@@ -1019,11 +1047,11 @@ if __name__ == '__main__':
     _d = 'cpu'
     _B, _L, _C = 4, 16, 3
 
-    inp = dict(input_ids=torch.randint(100, [_B, _L]).to(_d),
+    _inp = dict(input_ids=torch.randint(100, [_B, _L]).to(_d),
                attention_mask=torch.ones([_B, _L]).to(_d))
-    lbl = torch.randint(_C, [_B])
+    _lbl = torch.randint(_C, [_B])
 
-    inp['pixel_values'] = torch.rand([_B, 3, 224, 224]).to(_d)
+    _inp['pixel_values'] = torch.rand([_B, 3, 224, 224]).to(_d)
 
     m = MaskedLM('facebook/flava-full', _C, _d, vl=True)
 
@@ -1037,5 +1065,5 @@ if __name__ == '__main__':
     # inp = _to_tensor(inp.data)
     # lbl = torch.tensor(lbl.input_ids)
 
-    _o = m(inp, lbl)
+    _o = m(_inp, _lbl)
     print(_o)

@@ -1,37 +1,34 @@
 #!/bin/bash
 
 eval() {
-  python3 eval_zs.py --task "$1" --model "$2" --eval "$3" --gpu "$4" --top_k "$5"
+  python3 zero_shot.py --task "$1" --model "$2" --eval "$3" --gpu "$4" --top_k "$5"
 }
 
 # Args
 T='fill-mask'
-E='color'
+D='spatial'
+k=1
 g=0
 
 
-# *BERT*
-M="bert-base-uncased"
-k=1; eval $T $M $E $g $k
-k=3; eval $T $M $E $g $k
-
 M="bert-large-uncased"
-k=1; eval $T $M $E $g $k
-k=3; eval $T $M $E $g $k
-
-
-# *RoBERTa*
-M="roberta-base"
-k=1; eval $T $M $E $g $k
-k=3; eval $T $M $E $g $k
+eval $T $M $D $g $k
 
 M="roberta-large"
-k=1; eval $T $M $E $g $k
-k=3; eval $T $M $E $g $k
+eval $T $M $D $g $k
 
+M="uclanlp/visualbert-vqa-coco-pre"
+eval $T $M $D $g $k
+
+M="dandelin/vilt-b32-mlm"
+eval $T $M $D $g $k
+
+M="facebook/flava-full"
+eval $T $M $D $g $k
+
+
+T="QA"; M="allenai/unifiedqa-t5-large"
+eval $T $M $D $g $k
 
 # GPT-2
 #T="text-generation"; M="gpt2";
-
-# Unified-QA
-#T="QA"; M="allenai/unifiedqa-t5-base"
