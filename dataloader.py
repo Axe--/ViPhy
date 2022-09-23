@@ -32,7 +32,7 @@ class ViPhyDataset(Dataset):
         # Args
         self.zero_shot = zs
         self.vis_feat = None
-        self.is_train = (split == 'train')
+        self.is_train = ('train' in split)
 
         # Tokenizer
         self.tokenizer = tokenizer
