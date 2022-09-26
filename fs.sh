@@ -5,7 +5,7 @@ run() {
 }
 
 # ------------------------
-DATA="./dataset/fs_color"
+DATA="./dataset/fs_size"
 # ------------------------
 
 MODEL=bert-base-uncased
