@@ -2,6 +2,7 @@ log/
 temp/
 temp/misc/
 CapBERT/
+CBert
 .idea/
 spatial_raw*.csv
 obj_size_k_5*.json

@@ -2,6 +2,7 @@ import os
 import torch
 import numpy as np
 from glob import glob
+from tqdm import tqdm
 from PIL import Image
 import torch.nn as nn
 import torch.nn.functional as F
@@ -20,9 +21,7 @@ from timm.data.constants import IMAGENET_DEFAULT_STD as S
 
 from unicl.config import get_config
 from unicl.model.model import UniCLModel
-
-from tqdm import tqdm
-from utils import read_pkl, read_json, save_pkl
+from utils import read_pkl, read_json, save_pkl, sort_dict
 
 import transformers
 from transformers import AutoTokenizer, AutoModel
@@ -34,7 +33,6 @@ from transformers import DebertaV2Tokenizer, DebertaV2ForMaskedLM
 from transformers import T5Tokenizer, T5ForConditionalGeneration as T5
 from transformers import GPT2Tokenizer, GPT2LMHeadModel, GPTNeoForCausalLM
 from transformers import CLIPTokenizerFast, CLIPTextModel
-from transformers import FlavaTextModel, FlavaModel
 from transformers import VisualBertForPreTraining, ViltModel, ViltForMaskedLM
 
 # DPT
@@ -42,6 +40,7 @@ if transformers.__version__ >= '4.19.0':
     from transformers import (DPTFeatureExtractor,
                               DPTForDepthEstimation,
                               DPTForSemanticSegmentation)
+    from transformers import FlavaTextModel, FlavaModel
 
 # OFA
 if transformers.__version__ == '4.18.0.dev0':
@@ -626,8 +625,7 @@ class CLIPImageText(nn.Module):
                   image: Image,
                   anchor: str,
                   candidates: List[str],
-                  pick_best=False,
-                  caption: str = None) -> Dict[str, float]:
+                  pick_best=False) -> Dict[str, float]:
         """
         Selects `candidates` whose similarity score (dot)
         with query `image` exceeds that of the `anchor`.
@@ -674,9 +672,9 @@ class CLIPImageText(nn.Module):
         return selected
 
 
-class Text2TextSim(nn.Module):
+class TextSim(nn.Module):
     """
-    Implements Text-to-Text Semantic Similarity Transformer.
+    Implements Semantic Similarity Model using Sentence-Transformer.
     """
     def __init__(self, device):
         super().__init__()
@@ -688,9 +686,10 @@ class Text2TextSim(nn.Module):
         return self.inference(**kwargs)
 
     @torch.inference_mode()
-    def inference(self, query: str, candidates: List[str]) -> str:
+    def inference(self, query: str, candidates: List[str], show=False) -> Union[str, Dict[str, float]]:
         """
         Selects best candidate, given the query.
+        Optionally, returns candidates with scores.
         """
         # Compute query & candidate embeddings (normalized)
         embeddings = self.model.encode(sentences=[query] + candidates,
@@ -701,13 +700,21 @@ class Text2TextSim(nn.Module):
         c_emb = embeddings[1:, :]
 
         # Compute similarity (dot)
-        sim_scores = c_emb @ q_emb
+        scores = c_emb @ q_emb
 
-        # Best candidate
-        _i = sim_scores.argmax()
-        best = candidates[_i]
+        if show:
+            # candidate scores
+            scores = {c: score for c, score in zip(candidates, scores)}
+            scores = sort_dict(scores, by='v', reverse=True)
 
-        return best
+            return scores
+
+        else:
+            # best candidate
+            _i = scores.argmax()
+            best = candidates[_i]
+
+            return best
 
 
 class DPTDepth(nn.Module):
@@ -1048,7 +1055,7 @@ if __name__ == '__main__':
     _B, _L, _C = 4, 16, 3
 
     _inp = dict(input_ids=torch.randint(100, [_B, _L]).to(_d),
-               attention_mask=torch.ones([_B, _L]).to(_d))
+                attention_mask=torch.ones([_B, _L]).to(_d))
     _lbl = torch.randint(_C, [_B])
 
     _inp['pixel_values'] = torch.rand([_B, 3, 224, 224]).to(_d)
