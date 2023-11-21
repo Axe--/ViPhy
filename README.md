@@ -26,10 +26,4 @@ For linear probe training & evaluation refer to `train.sh` & `eval.sh`.
 
 Zero-shot evaluation is provided in `zs.sh`.
 
-
-
-----
-
-<i>
-Kindly note project (v1) is under progress / review, and might undergo minor revisions (v2) 
-</i> 
+The CapBERT weights and data is provided at here: https://drive.google.com/drive/folders/1PunfXKVbI3ntjmMQv5k0LjRXi6z2cO7f?usp=sharing
